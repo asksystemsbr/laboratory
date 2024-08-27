@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Status_Pagamento")]
-public class StatusPagamento : IIdentifiable
+[Table("Metodos_Pagamento")]
+public class MetodosPagamento : IIdentifiable
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ID { get; set; }
 
-    [Required]
-    [MaxLength(50)]
-    public string Descricao { get; set; }
+    [StringLength(255)]
+    public string Nome { get; set; }
 
-    public ICollection<Pagamento> Pagamentos { get; set; } = new List<Pagamento>();
+    public ICollection<Contas> Contas { get; set; } = new List<Contas>();
 }

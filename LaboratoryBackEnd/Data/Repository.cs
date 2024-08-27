@@ -77,3 +77,4 @@ namespace LaboratoryBackEnd.Data
             return lastId;
         }
     }
+}

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Clientes")]
-public class Cliente : IIdentifiable
+[Table("Fornecedores")]
+public class Fornecedor : IIdentifiable
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -25,5 +25,6 @@ public class Cliente : IIdentifiable
     [StringLength(100)]
     public string Email { get; set; }
 
+    // Relacionamentos
     public ICollection<Contas> Contas { get; set; } = new List<Contas>();
 }
