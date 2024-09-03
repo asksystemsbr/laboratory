@@ -1,37 +1,48 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Ordem_Servico_Exames")]
-public class OrdemServicoExame : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("ordem_servico_exames")]
+    public class OrdemServicoExame : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("os_exame_id")]
+        public int ID { get; set; }
 
-    [Required]
-    public int OsId { get; set; }
+        [Required]
+        [Column("os_id")]
+        public int OsId { get; set; }
 
-    [Required]
-    public int ExameId { get; set; }
+        [Required]
+        [Column("exame_id")]
+        public int ExameId { get; set; }
 
-    [Required]
-    public int StatusExameId { get; set; }
+        [Required]
+        [Column("status_exame_id")]
+        public int StatusExameId { get; set; }
 
-    [Required]
-    public decimal Preco { get; set; }
+        [Required]
+        [Column(TypeName = "decimal(10, 2)")]
+        public decimal Preco { get; set; }
 
-    public DateTime? DataEntrega { get; set; }
+        [Column("data_entrega")]
+        public DateTime? DataEntrega { get; set; }
 
-    public string TermoAutorizacao { get; set; }
+        [Column("termo_autorizacao", TypeName = "text")]
+        public string TermoAutorizacao { get; set; }
 
-    [ForeignKey("OsId")]
-    public OrdemDeServico OrdemDeServico { get; set; }
+        [ForeignKey("OsId")]
+        public virtual OrdemDeServico OrdemDeServico { get; set; }
 
-    [ForeignKey("ExameId")]
-    public Exame Exame { get; set; }
+        [ForeignKey("ExameId")]
+        public virtual Exame Exame { get; set; }
 
-    [ForeignKey("StatusExameId")]
-    public StatusExame StatusExame { get; set; }
+        [ForeignKey("StatusExameId")]
+        public virtual StatusExame StatusExame { get; set; }
+    }
 }

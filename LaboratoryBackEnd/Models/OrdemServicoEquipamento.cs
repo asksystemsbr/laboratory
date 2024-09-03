@@ -1,27 +1,35 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Ordem_Servico_Equipamentos")]
-public class OrdemServicoEquipamento : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("ordem_servico_equipamentos")]
+    public class OrdemServicoEquipamento : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("os_equipamento_id")]
+        public int ID { get; set; }
 
-    [Required]
-    public int OsId { get; set; }
+        [Required]
+        [Column("os_id")]
+        public int OsId { get; set; }
 
-    [Required]
-    public int EquipamentoId { get; set; }
+        [Required]
+        [Column("equipamento_id")]
+        public int EquipamentoId { get; set; }
 
-    [Required]
-    public DateTime DataUtilizacao { get; set; }
+        [Required]
+        [Column("data_utilizacao")]
+        public DateTime DataUtilizacao { get; set; }
 
-    [ForeignKey("OsId")]
-    public OrdemDeServico OrdemDeServico { get; set; }
+        [ForeignKey("OsId")]
+        public virtual OrdemDeServico OrdemDeServico { get; set; }
 
-    [ForeignKey("EquipamentoId")]
-    public Equipamento Equipamento { get; set; }
+        [ForeignKey("EquipamentoId")]
+        public virtual Equipamento Equipamento { get; set; }
+    }
 }

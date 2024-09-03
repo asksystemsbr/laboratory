@@ -1,30 +1,37 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Fornecedores")]
-public class Fornecedor : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("fornecedores")]
+    public class Fornecedor : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("fornecedor_id")]
+        public int ID { get; set; }
 
-    [StringLength(255)]
-    public string Nome { get; set; }
+        [Required]
+        [MaxLength(255)]
+        [Column("nome_fornecedor")]
+        public string Nome { get; set; }
 
-    [StringLength(20)]
-    public string CpfCnpj { get; set; }
+        [Required]
+        [MaxLength(20)]
+        [Column("cnpj")]
+        public string CpfCnpj { get; set; }
 
-    [StringLength(255)]
-    public string Endereco { get; set; }
+        [MaxLength(255)]
+        [Column("endereco")]
+        public string Endereco { get; set; }
 
-    [StringLength(20)]
-    public string Telefone { get; set; }
+        [MaxLength(20)]
+        [Column("telefone")]
+        public string Telefone { get; set; }
 
-    [StringLength(100)]
-    public string Email { get; set; }
-
-    // Relacionamentos
-    public ICollection<Contas> Contas { get; set; } = new List<Contas>();
+        [MaxLength(100)]
+        [Column("email")]
+        public string Email { get; set; }
+    }
 }

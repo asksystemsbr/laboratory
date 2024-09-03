@@ -1,23 +1,33 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using LaboratoryBackEnd.Data.Interface;
 using System.ComponentModel.DataAnnotations;
-using LaboratoryBackEnd.Data.Interface;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LaboratoryBackEnd.Model
+namespace LaboratoryBackEnd.Models
 {
     [Table("permissoes")]
-    public class Permissao:IIdentifiable
+    public class Permissao : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public int ID { get; set; }
 
-        [Column("tipoPermissao_id")] 
+        [Column("tipo_permissao_id")]
         public int? TipoPermissaoId { get; set; }
 
-        [Column("modulo_id")] 
+        //[ForeignKey("TipoPermissaoId")]
+        //public virtual TipoPermissao TipoPermissao { get; set; }
+
+        [Column("modulo_id")]
         public int? ModuloId { get; set; }
 
-        [Column("grupoUsuario_id")] 
-        public int? GrupoUsuarioId { get; set; }       
+        [ForeignKey("ModuloId")]
+        //public virtual Modulo Modulo { get; set; }
+
+        [Column("grupo_usuario_id")]
+        public int? GrupoUsuarioId { get; set; }
+
+        //[ForeignKey("GrupoUsuarioId")]
+        //public virtual GrupoUsuario GrupoUsuario { get; set; }
     }
 }

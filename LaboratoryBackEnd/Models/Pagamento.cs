@@ -1,36 +1,44 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Pagamentos")]
-public class Pagamento : IIdentifiable
+namespace LaboratoryBackEnd.Model
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("pagamentos")]
+    public class Pagamento : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("pagamento_id")]
+        public int ID { get; set; }
 
-    [Required]
-    public int OsId { get; set; }
+        [Column("compra_id")]
+        public int? CompraId { get; set; }
 
-    [Required]
-    public decimal ValorTotal { get; set; }
+        [Column("metodo_pagamento_id")]
+        public int? MetodoPagamentoId { get; set; }
 
-    [Required]
-    public DateTime DataPagamento { get; set; }
+        [Column("data_pagamento")]
+        public DateTime? DataPagamento { get; set; }
 
-    [Required]
-    public int MetodoPagamentoId { get; set; }
+        //[Column(TypeName = "decimal(10,2)", Name = "valor_pago")]
+        public decimal? ValorPago { get; set; }
 
-    [Required]
-    public int StatusPagamentoId { get; set; }
+        [Column("status_pagamento_id")]
+        public int? StatusPagamentoId { get; set; }
 
-    [ForeignKey("OsId")]
-    public OrdemDeServico OrdemDeServico { get; set; }
+        [Column("boleto_ocr", TypeName = "text")]
+        public string BoletoOCR { get; set; }
 
-    [ForeignKey("MetodoPagamentoId")]
-    public MetodosPagamento MetodosPagamento { get; set; }
+        //[ForeignKey("CompraId")]
+        //public virtual Compra Compra { get; set; }
 
-    [ForeignKey("StatusPagamentoId")]
-    public StatusPagamento StatusPagamento { get; set; }
+        //[ForeignKey("MetodoPagamentoId")]
+        //public virtual MetodoPagamento MetodoPagamento { get; set; }
+
+        [ForeignKey("StatusPagamentoId")]
+        public virtual StatusPagamento StatusPagamento { get; set; }
+    }
 }

@@ -1,19 +1,38 @@
-﻿
+﻿using LaboratoryBackEnd.Data.Interface;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LaboratoryBackEnd.Model
-{   
+namespace LaboratoryBackEnd.Models
+{
     [Table("log_auditoria")]
-    public class LogAuditoria
+    public class LogAuditoria : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public DateTime Timestamp { get; set; }
-        public string ActionType { get; set; }
-        public string TableName { get; set; }
-        public string Data { get; set; }
-        public string UserId { get; set; }
+        [Column("id")]
+        public int ID { get; set; }
+
+        [Required]
+        [Column("data_hora", TypeName = "datetime2(7)")]
+        public DateTime DataHora { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        [Column("tipo_acao")]
+        public string TipoAcao { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        [Column("nome_tabela")]
+        public string NomeTabela { get; set; }
+
+        [Column("dados", TypeName = "nvarchar(max)")]
+        public string Dados { get; set; }
+
+        [Required]
+        [MaxLength(255)]
+        [Column("usuario_id")]
+        public string UsuarioId { get; set; }
     }
 }

@@ -40,7 +40,7 @@ namespace LaboratoryBackEnd.Service
             if (item.ID == 0)
             {
                 item.ID = await GetLasdOrOne();
-                item.DATA_CADASTRO = DateTime.Now;
+                item.DataCadastro = DateTime.Now;
             }
             return await _repository.Post(item);
         }

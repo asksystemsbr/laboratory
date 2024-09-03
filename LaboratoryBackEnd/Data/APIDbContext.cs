@@ -5,8 +5,8 @@ namespace LaboratoryBackEnd.Data
 {
     public class APIDbContext : DbContext
     {        
-        public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<OperationLog> OperationLogs { get; set; }
+        public DbSet<LogAuditoria> LogAuditoria { get; set; }
+        public DbSet<LogOperacao> LogOperacao { get; set; }
         public DbSet<Cliente> Client { get; set; }
         public DbSet<StatusCliente> StatusClient { get; set; }
 

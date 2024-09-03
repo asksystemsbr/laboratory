@@ -1,29 +1,38 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Ordem_Servico_Tecnicos")]
-public class OrdemServicoTecnico : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("ordem_servico_tecnicos")]
+    public class OrdemServicoTecnico : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("os_tecnico_id")]
+        public int ID { get; set; }
 
-    [Required]
-    public int OsId { get; set; }
+        [Required]
+        [Column("os_id")]
+        public int OsId { get; set; }
 
-    [Required]
-    public int TecnicoId { get; set; }
+        [Required]
+        [Column("tecnico_id")]
+        public int TecnicoId { get; set; }
 
-    [Required]
-    public DateTime DataInicio { get; set; }
+        [Required]
+        [Column("data_inicio")]
+        public DateTime DataInicio { get; set; }
 
-    public DateTime? DataFim { get; set; }
+        [Column("data_fim")]
+        public DateTime? DataFim { get; set; }
 
-    [ForeignKey("OsId")]
-    public OrdemDeServico OrdemDeServico { get; set; }
+        [ForeignKey("OsId")]
+        public virtual OrdemDeServico OrdemDeServico { get; set; }
 
-    [ForeignKey("TecnicoId")]
-    public Tecnico Tecnico { get; set; }
+        [ForeignKey("TecnicoId")]
+        public virtual Tecnico Tecnico { get; set; }
+    }
 }

@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Metodos_Pagamento")]
-public class MetodosPagamento : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("metodos_pagamento")]
+    public class MetodosPagamento : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("metodo_pagamento_id")]
+        public int ID { get; set; }
 
-    [StringLength(255)]
-    public string Nome { get; set; }
+        [Required]
+        [MaxLength(50)]
+        [Column("descricao")]
+        public string Descricao { get; set; }
 
-    public ICollection<Contas> Contas { get; set; } = new List<Contas>();
+        public ICollection<Contas> Contas { get; set; } = new List<Contas>();
+    }
 }

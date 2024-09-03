@@ -1,17 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using LaboratoryBackEnd.Data.Interface;
 using System.ComponentModel.DataAnnotations;
-using LaboratoryBackEnd.Data.Interface;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LaboratoryBackEnd.Model
+namespace LaboratoryBackEnd.Models
 {
-    [Table("grupousuario")]
-    public class GrupoUsuario:IIdentifiable
+    [Table("grupo_usuario")]
+    public class GrupoUsuario : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public int ID { get; set; }
 
         [StringLength(255)]
+        [Column("descricao")]
         public string Descricao { get; set; }
     }
 }
