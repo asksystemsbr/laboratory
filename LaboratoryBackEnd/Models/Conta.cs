@@ -4,7 +4,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Contas")]
+[Table("contas")]
 public class Contas : IIdentifiable
 {
     [Key]
@@ -12,7 +12,7 @@ public class Contas : IIdentifiable
     public int ID { get; set; }
 
     [StringLength(255)]
-    [Column("Conta")]
+    [Column("conta")]
     public string ContaNome { get; set; }
 
     [Column(TypeName = "decimal(10, 3)")]
