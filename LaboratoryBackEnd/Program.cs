@@ -86,13 +86,22 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<IAuthorizationHandler, DynamicPermissionHandler>();
 
 //Registro de repositórios
-builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
-builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<Boleto>, Repository<Boleto>>();
+builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
+builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCategorias>>();
+builder.Services.AddScoped<IRepository<Contas>, Repository<Contas>>();
+builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
+builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
+builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
+
 
 //registro de serviços
-builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
+builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
+builder.Services.AddScoped<IContasService, ContasService>();
+builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
+builder.Services.AddScoped<IContasSubCategoriasService, ContasSubCategoriasService>();
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

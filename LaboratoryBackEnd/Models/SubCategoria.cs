@@ -17,5 +17,5 @@ public class SubCategoria : IIdentifiable
     [ForeignKey("Categoria")]
     public int CategoriaId { get; set; }
 
-    public Categoria Categoria { get; set; }
+    public ContasCategorias Categoria { get; set; }
 }

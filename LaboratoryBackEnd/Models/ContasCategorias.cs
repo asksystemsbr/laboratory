@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table("categorias")]
-    public class Categoria : IIdentifiable
+    [Table("contas_categorias")]
+    public class ContasCategorias : IIdentifiable
     {
         [Key]
         [Column("categoria_id")]
