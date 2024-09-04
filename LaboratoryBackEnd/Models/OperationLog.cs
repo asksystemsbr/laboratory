@@ -1,15 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using LaboratoryBackEnd.Data.Interface;
 
 namespace LaboratoryBackEnd.Models
 {
     [Table("log_operacoes")]
-    public class OperationLog
+    public class OperationLog : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
         [Required]
         [Column("data_hora")]
