@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Status_OS")]
-public class StatusOs : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("status_os")]
+    public class StatusOs : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("status_os_id")]
+        public int ID { get; set; }
 
-    [Required]
-    [MaxLength(50)]
-    public string Descricao { get; set; }
+        [Required]
+        [MaxLength(50)]
+        [Column("descricao")]
+        public string Descricao { get; set; }
 
-    public ICollection<OrdemDeServico> OrdensDeServico { get; set; } = new List<OrdemDeServico>();
+        public ICollection<OrdemDeServico> OrdensDeServico { get; set; } = new List<OrdemDeServico>();
+    }
 }

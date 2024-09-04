@@ -1,4 +1,5 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

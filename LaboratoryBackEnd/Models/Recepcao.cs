@@ -5,15 +5,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LaboratoryBackEnd.Models
 {
-    [Table("Recepcoes")]
+    [Table("recepcoes")]
     public class Recepcao : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("recepcao_id")]
         public int ID { get; set; }
 
         [Required]
         [MaxLength(255)]
+        [Column("nome_recepcao")]
         public string NomeRecepcao { get; set; }
 
         public ICollection<UsuarioRecepcao> UsuariosRecepcoes { get; set; } = new List<UsuarioRecepcao>();

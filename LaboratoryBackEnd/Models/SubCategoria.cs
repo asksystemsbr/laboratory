@@ -1,21 +1,26 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("SubCategorias")]
-public class SubCategoria : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("sub_categorias")]
+    public class SubCategoria : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("subcategoria_id")]
+        public int ID { get; set; }
 
-    [StringLength(255)]
-    public string Nome { get; set; }
+        [StringLength(255)]
+        [Column("nome")]
+        public string Nome { get; set; }
 
-    [Required]
-    [ForeignKey("Categoria")]
-    public int CategoriaId { get; set; }
+        [Required]
+        [ForeignKey("Categoria")]
+        [Column("categoria_id")]
+        public int CategoriaId { get; set; }
 
-    public Categoria Categoria { get; set; }
+        public Categoria Categoria { get; set; }
+    }
 }

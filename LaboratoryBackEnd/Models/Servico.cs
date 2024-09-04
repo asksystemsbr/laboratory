@@ -3,21 +3,28 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-[Table("Servicos")]
-public class Servico : IIdentifiable
+namespace LaboratoryBackEnd.Models
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    [Table("Servicos")]
+    public class Servico : IIdentifiable
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("servico_id")]
+        public int ID { get; set; }
 
-    [Required]
-    [MaxLength(255)]
-    public string NomeServico { get; set; }
+        [Required]
+        [MaxLength(255)]
+        [Column("nome_servico")]
+        public string NomeServico { get; set; }
 
-    public string DescricaoServico { get; set; }
+        [Column("descricao_servico")]
+        public string DescricaoServico { get; set; }
 
-    [Required]
-    public decimal Preco { get; set; }
+        [Required]
+        [Column("preco", TypeName = "decimal(10,2)")]
+        public decimal Preco { get; set; }
 
-    public ICollection<OrdemServicoServico> OrdemServicoServicos { get; set; } = new List<OrdemServicoServico>();
+        public ICollection<OrdemServicoServico> OrdemServicoServicos { get; set; } = new List<OrdemServicoServico>();
+    }
 }
