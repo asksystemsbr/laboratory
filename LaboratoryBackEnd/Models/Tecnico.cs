@@ -26,5 +26,7 @@ namespace LaboratoryBackEnd.Models
 
         [MaxLength(255)]
         public string Especialidade { get; set; }
+
+        public ICollection<OrdemServicoTecnico> OrdemServicoTecnicos { get; set; } = new List<OrdemServicoTecnico>();
     }
 }

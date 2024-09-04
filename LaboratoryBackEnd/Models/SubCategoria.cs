@@ -21,6 +21,6 @@ namespace LaboratoryBackEnd.Models
         [Column("categoria_id")]
         public int CategoriaId { get; set; }
 
-        public Categoria Categoria { get; set; }
+        public ContasCategorias Categoria { get; set; }
     }
 }
