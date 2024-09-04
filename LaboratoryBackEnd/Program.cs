@@ -88,9 +88,11 @@ builder.Services.AddSingleton<IAuthorizationHandler, DynamicPermissionHandler>()
 //Registro de repositórios
 builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
+builder.Services.AddScoped<IRepository<Boleto>, Repository<Boleto>>();
 
 //registro de serviços
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IBoletoService, BoletoService>();
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();
