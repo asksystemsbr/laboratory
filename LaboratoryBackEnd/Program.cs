@@ -121,6 +121,7 @@ builder.Services.AddScoped<IRepository<Tecnico>, Repository<Tecnico>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
+builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
 
 
 //registro de serviços
