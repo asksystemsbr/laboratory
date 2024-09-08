@@ -132,6 +132,7 @@ builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
 builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
 builder.Services.AddScoped<IContasSubCategoriasService, ContasSubCategoriasService>();
+builder.Services.AddScoped<IGrupoUsuarioService, GrupoUsuarioService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 // Configuração do serviço de logger

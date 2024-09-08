@@ -1,11 +1,14 @@
 ﻿using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LaboratoryBackEnd.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class GrupoUsuarioController : ControllerBase
     {
@@ -19,6 +22,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<GrupoUsuario>>> GetGrupoUsuarios()
         {
             var items = await _service.GetItems();
@@ -30,6 +34,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<GrupoUsuario>> GetGrupoUsuario(int id)
         {
             var item = await _service.GetItem(id);
@@ -41,6 +46,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutGrupoUsuario(int id, GrupoUsuario grupoUsuario)
         {
             if (id != grupoUsuario.ID)
@@ -64,6 +70,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<GrupoUsuario>> PostGrupoUsuario(GrupoUsuario grupoUsuario)
         {
             var createdGrupoUsuario = await _service.Post(grupoUsuario);
@@ -71,6 +78,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteGrupoUsuario(int id)
         {
             var item = await _service.GetItem(id);
