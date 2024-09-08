@@ -1,5 +1,5 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
-using LaboratoryBackEnd.Model;
+using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 
 namespace LaboratoryBackEnd.Service
@@ -7,30 +7,30 @@ namespace LaboratoryBackEnd.Service
     public class ModuloService : IModuloService
     {
         private readonly ILoggerService _loggerService;
-        private readonly IRepository<Modulo> _repository;
+        private readonly IRepository<Modulos> _repository;
 
-        public ModuloService(ILoggerService loggerService, IRepository<Modulo> repository)
+        public ModuloService(ILoggerService loggerService, IRepository<Modulos> repository)
         {
             _loggerService = loggerService;
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Modulo>> GetItems()
+        public async Task<IEnumerable<Modulos>> GetItems()
         {
             return await _repository.GetItems();
         }
 
-        public async Task<Modulo> GetItem(int id)
+        public async Task<Modulos> GetItem(int id)
         {
             return await _repository.GetItem(id);
         }
 
-        public async Task Put(Modulo item)
+        public async Task Put(Modulos item)
         {
             await _repository.Put(item);
         }
 
-        public async Task<Modulo> Post(Modulo item)
+        public async Task<Modulos> Post(Modulos item)
         {
             return await _repository.Post(item);
         }
@@ -45,7 +45,7 @@ namespace LaboratoryBackEnd.Service
             return _repository.Exists(id);
         }
 
-        public async Task RemoveContex(Modulo item)
+        public async Task RemoveContex(Modulos item)
         {
             _repository.RemoveContex(item);
         }

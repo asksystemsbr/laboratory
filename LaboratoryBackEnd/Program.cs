@@ -3,7 +3,6 @@ using LaboratoryBackEnd.Data;
 using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Extensions;
 using LaboratoryBackEnd.Middleware;
-using LaboratoryBackEnd.Model;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service;
 using LaboratoryBackEnd.Service.Interface;
@@ -25,7 +24,7 @@ builder.Services.AddDbContext<APIDbContext>(x => x.UseSqlServer(
 );
 
 
-#region Permitir CORS Vue
+#region Permitir CORS Next.Js
 // Adiciona serviços ao container.
 builder.Services.AddControllersWithViews();
 
@@ -33,7 +32,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
-        builder.WithOrigins("http://localhost:8080", "https://agreeable-plant-0a420b20f.5.azurestaticapps.net") //mudar aqui para o endereço do front
+        builder.WithOrigins("http://localhost:3000", "https://agreeable-plant-0a420b20f.5.azurestaticapps.net") //mudar aqui para o endereço do front
                .AllowAnyHeader()
                .AllowAnyMethod()
                .WithExposedHeaders("Content-Disposition"));
@@ -86,23 +85,24 @@ builder.Services.AddAuthorization(options =>
 // Registra o handler de autorização
 builder.Services.AddSingleton<IAuthorizationHandler, DynamicPermissionHandler>();
 
-//Registro de repositórios
+//Registro de repositórios em ordem afabética
+builder.Services.AddScoped<IRepository<AuditLog>, Repository<AuditLog>>();
 builder.Services.AddScoped<IRepository<Boleto>, Repository<Boleto>>();
 builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
-builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCategorias>>();
 builder.Services.AddScoped<IRepository<Contas>, Repository<Contas>>();
+builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCategorias>>();
+builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCategorias>>();
 builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
 builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
-builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
-builder.Services.AddScoped<IRepository<AuditLog>, Repository<AuditLog>>();
-builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCategorias>>();
 builder.Services.AddScoped<IRepository<Equipamento>, Repository<Equipamento>>();
 builder.Services.AddScoped<IRepository<Exame>, Repository<Exame>>();
 builder.Services.AddScoped<IRepository<Fornecedor>, Repository<Fornecedor>>();
+builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
 builder.Services.AddScoped<IRepository<GrupoUsuario>, Repository<GrupoUsuario>>();
 builder.Services.AddScoped<IRepository<MetodosPagamento>, Repository<MetodosPagamento>>();
-builder.Services.AddScoped<IRepository<Modulo>, Repository<Modulo>>();
+builder.Services.AddScoped<IRepository<Modulos>, Repository<Modulos>>();
 builder.Services.AddScoped<IRepository<OperationLog>, Repository<OperationLog>>();
+builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
 builder.Services.AddScoped<IRepository<OrdemServicoEquipamento>, Repository<OrdemServicoEquipamento>>();
 builder.Services.AddScoped<IRepository<OrdemServicoExame>, Repository<OrdemServicoExame>>();
@@ -113,15 +113,16 @@ builder.Services.AddScoped<IRepository<Permissao>, Repository<Permissao>>();
 builder.Services.AddScoped<IRepository<Recepcao>, Repository<Recepcao>>();
 builder.Services.AddScoped<IRepository<Servico>, Repository<Servico>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
+builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<StatusExame>, Repository<StatusExame>>();
 builder.Services.AddScoped<IRepository<StatusOs>, Repository<StatusOs>>();
 builder.Services.AddScoped<IRepository<StatusPagamento>, Repository<StatusPagamento>>();
 builder.Services.AddScoped<IRepository<SubCategoria>, Repository<SubCategoria>>();
 builder.Services.AddScoped<IRepository<Tecnico>, Repository<Tecnico>>();
+builder.Services.AddScoped<IRepository<TipoPermissao>, Repository<TipoPermissao>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
-builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
-builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
+
 
 
 //registro de serviços
@@ -131,6 +132,7 @@ builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
 builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
 builder.Services.AddScoped<IContasSubCategoriasService, ContasSubCategoriasService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

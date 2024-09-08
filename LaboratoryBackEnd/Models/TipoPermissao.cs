@@ -1,11 +1,11 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace LaboratoryBackEnd.Models
 {
-    [Table("modulo")]
-    public class Modulos : IIdentifiable
+    [Table("tipo_permissao")]
+    public class TipoPermissao : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
