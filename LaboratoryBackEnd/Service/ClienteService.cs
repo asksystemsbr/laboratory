@@ -4,13 +4,13 @@ using LaboratoryBackEnd.Service.Interface;
 
 namespace LaboratoryBackEnd.Service
 {
-    public class ClientService : IClientService
+    public class ClienteService : IClienteService
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<Cliente> _repository;
         private readonly IRepository<StatusCliente> _repositorySituacaoCliente;
 
-        public ClientService(ILoggerService loggerService,
+        public ClienteService(ILoggerService loggerService,
             IRepository<Cliente> repository,
             IRepository<StatusCliente> repositorySituacaoCliente)
         {

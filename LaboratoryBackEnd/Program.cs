@@ -127,7 +127,7 @@ builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecep
 
 //registro de serviços
 builder.Services.AddScoped<IBoletoService, BoletoService>();
-builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
 builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
