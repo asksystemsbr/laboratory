@@ -95,11 +95,15 @@ builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCateg
 builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
 builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
 builder.Services.AddScoped<IRepository<Equipamento>, Repository<Equipamento>>();
+builder.Services.AddScoped<IRepository<Especialidade>, Repository<Especialidade>>()
 builder.Services.AddScoped<IRepository<Exame>, Repository<Exame>>();
 builder.Services.AddScoped<IRepository<Fornecedor>, Repository<Fornecedor>>();
 builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
 builder.Services.AddScoped<IRepository<GrupoUsuario>, Repository<GrupoUsuario>>();
+builder.Services.AddScoped<IRepository<LaboratorioApoio>, Repository<LaboratorioApoio>>();
+builder.Services.AddScoped<IRepository<MetodoExame>, Repository<MetodoExame>>();
 builder.Services.AddScoped<IRepository<MetodosPagamento>, Repository<MetodosPagamento>>();
+builder.Services.AddScoped<IRepository<Modalidade>, Repository<Modalidade>>();
 builder.Services.AddScoped<IRepository<Modulos>, Repository<Modulos>>();
 builder.Services.AddScoped<IRepository<OperationLog>, Repository<OperationLog>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
@@ -111,7 +115,10 @@ builder.Services.AddScoped<IRepository<OrdemServicoTecnico>, Repository<OrdemSer
 builder.Services.AddScoped<IRepository<Pagamento>, Repository<Pagamento>>();
 builder.Services.AddScoped<IRepository<Permissao>, Repository<Permissao>>();
 builder.Services.AddScoped<IRepository<Recepcao>, Repository<Recepcao>>();
+builder.Services.AddScoped<IRepository<RecipienteAmostra>, Repository<RecipienteAmostra>>();
+builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
 builder.Services.AddScoped<IRepository<Servico>, Repository<Servico>>();
+builder.Services.AddScoped<IRepository<Setor>, Repository<Setor>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<StatusExame>, Repository<StatusExame>>();
