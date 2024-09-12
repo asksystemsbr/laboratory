@@ -49,6 +49,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<TipoPermissao> TipoPermissao { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioRecepcao> UsuariosRecepcoes { get; set; }
+        public DbSet<Empresa> Empresas { get; set; }
 
 
 

@@ -95,7 +95,7 @@ builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCateg
 builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
 builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
 builder.Services.AddScoped<IRepository<Equipamento>, Repository<Equipamento>>();
-builder.Services.AddScoped<IRepository<Especialidade>, Repository<Especialidade>>()
+builder.Services.AddScoped<IRepository<Especialidade>, Repository<Especialidade>>();
 builder.Services.AddScoped<IRepository<Exame>, Repository<Exame>>();
 builder.Services.AddScoped<IRepository<Fornecedor>, Repository<Fornecedor>>();
 builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
@@ -129,6 +129,7 @@ builder.Services.AddScoped<IRepository<Tecnico>, Repository<Tecnico>>();
 builder.Services.AddScoped<IRepository<TipoPermissao>, Repository<TipoPermissao>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
+builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 
 
 
