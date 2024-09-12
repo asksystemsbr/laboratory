@@ -37,11 +37,6 @@ namespace LaboratoryBackEnd.Service
 
         public async Task<Cliente> Post(Cliente item)
         {
-            if (item.ID == 0)
-            {
-                item.ID = await GetLasdOrOne();
-                item.DataCadastro = DateTime.Now;
-            }
             return await _repository.Post(item);
         }
 
