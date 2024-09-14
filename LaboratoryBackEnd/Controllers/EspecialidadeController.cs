@@ -27,10 +27,7 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<IEnumerable<Especialidade>>> GetEspecialidades()
         {
             var items = await _service.GetItems();
-            if (items == null || !items.Any())
-            {
-                return NotFound();
-            }
+
             return Ok(items);
         }
 
