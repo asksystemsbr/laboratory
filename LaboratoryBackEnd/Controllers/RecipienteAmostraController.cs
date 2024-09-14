@@ -23,17 +23,15 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecipienteAmostra>>> GetRecipienteAmostras()
         {
             var items = await _service.GetItems();
-            if (items == null || !items.Any())
-            {
-                return NotFound();
-            }
             return Ok(items);
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<RecipienteAmostra>> GetRecipienteAmostra(int id)
         {
             var item = await _service.GetItem(id);
@@ -45,6 +43,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutRecipienteAmostra(int id, RecipienteAmostra recipienteAmostra)
         {
             if (id != recipienteAmostra.ID)
@@ -79,6 +78,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<RecipienteAmostra>> PostRecipienteAmostra(RecipienteAmostra recipienteAmostra)
         {
             try
@@ -95,6 +95,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteRecipienteAmostra(int id)
         {
             var item = await _service.GetItem(id);

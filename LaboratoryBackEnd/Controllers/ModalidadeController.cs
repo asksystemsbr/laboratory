@@ -23,6 +23,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<Modalidade>>> GetModalidades()
         {
             var items = await _service.GetItems();
@@ -30,6 +31,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<Modalidade>> GetModalidade(int id)
         {
             var item = await _service.GetItem(id);
@@ -41,6 +43,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutModalidade(int id, Modalidade modalidade)
         {
             if (id != modalidade.ID)
@@ -75,6 +78,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<Modalidade>> PostModalidade(Modalidade modalidade)
         {
             try
@@ -91,6 +95,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteModalidade(int id)
         {
             var item = await _service.GetItem(id);

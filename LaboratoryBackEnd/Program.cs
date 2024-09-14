@@ -150,6 +150,7 @@ builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<IGrupoUsuarioService, GrupoUsuarioService>();
 builder.Services.AddScoped<ILaboratorioApoioService, LaboratorioApoioService>();
 builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<IMetodoExameService, MetodoExameService>();
 builder.Services.AddScoped<IMetodosPagamentoService, MetodosPagamentoService>();
 builder.Services.AddScoped<IModalidadeService, ModalidadeService>();
 builder.Services.AddScoped<IModuloService, ModuloService>();

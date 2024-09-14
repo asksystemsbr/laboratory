@@ -11,12 +11,12 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class SetorController : ControllerBase
+    public class MetodoExameController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly ISetorService _service;
+        private readonly IMetodoExameService _service;
 
-        public SetorController(ILoggerService loggerService, ISetorService service)
+        public MetodoExameController(ILoggerService loggerService, IMetodoExameService service)
         {
             _loggerService = loggerService;
             _service = service;
@@ -24,7 +24,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<Setor>>> GetSetores()
+        public async Task<ActionResult<IEnumerable<MetodoExame>>> GetSetores()
         {
             var items = await _service.GetItems();
             return Ok(items);
@@ -32,7 +32,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<Setor>> GetSetor(int id)
+        public async Task<ActionResult<MetodoExame>> GetSetor(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -44,23 +44,23 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutSetor(int id, Setor setor)
+        public async Task<IActionResult> PutSetor(int id, MetodoExame metodoExame)
         {
-            if (id != setor.ID)
+            if (id != metodoExame.ID)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _service.Put(setor);
+                await _service.Put(metodoExame);
                 return NoContent();
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                await _service.RemoveContex(setor);
-                await _loggerService.LogError<Setor>(HttpContext.Request.Method, setor, User, ex);
-                if (!SetorExists(id))
+                await _service.RemoveContex(metodoExame);
+                await _loggerService.LogError<MetodoExame>(HttpContext.Request.Method, metodoExame, User, ex);
+                if (!MetodoExameExists(id))
                 {
                     return NotFound();
                 }
@@ -71,32 +71,32 @@ namespace LaboratoryBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                await _service.RemoveContex(setor);
-                await _loggerService.LogError<Setor>(HttpContext.Request.Method, setor, User, ex);
+                await _service.RemoveContex(metodoExame);
+                await _loggerService.LogError<MetodoExame>(HttpContext.Request.Method, metodoExame, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<Setor>> PostSetor(Setor setor)
+        public async Task<ActionResult<MetodoExame>> PostSetor(MetodoExame metodoExame)
         {
             try
             {
-                var created = await _service.Post(setor);
+                var created = await _service.Post(metodoExame);
                 return CreatedAtAction("GetSetor", new { id = created.ID }, created);
             }
             catch (Exception ex)
             {
-                await _service.RemoveContex(setor);
-                await _loggerService.LogError<Setor>(HttpContext.Request.Method, setor, User, ex);
+                await _service.RemoveContex(metodoExame);
+                await _loggerService.LogError<MetodoExame>(HttpContext.Request.Method, metodoExame, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpDelete("{id}")]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> DeleteSetor(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -112,12 +112,12 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Setor>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<MetodoExame>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
-        private bool SetorExists(int id)
+        private bool MetodoExameExists(int id)
         {
             return _service.Exists(id);
         }
