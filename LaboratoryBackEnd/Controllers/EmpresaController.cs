@@ -1,23 +1,29 @@
-﻿using LaboratoryBackEnd.Models;
-using LaboratoryBackEnd.Service.Interface;
+﻿using LaboratoryBackEnd.Service.Interface;
+using LaboratoryBackEnd.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using LaboratoryBackEnd.Models;
 
 namespace LaboratoryBackEnd.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")] // Adicionando CORS
     [ApiController]
     public class EmpresaController : ControllerBase
     {
+        private readonly ILoggerService _loggerService;
         private readonly IEmpresaService _service;
 
-        public EmpresaController(IEmpresaService service)
+        public EmpresaController(ILoggerService loggerService, IEmpresaService service)
         {
+            _loggerService = loggerService;
             _service = service;
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")] // Adicionando autorização de leitura
         public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresas()
         {
             var items = await _service.GetItems();
@@ -29,6 +35,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanRead")] // Adicionando autorização de leitura
         public async Task<ActionResult<Empresa>> GetEmpresa(int id)
         {
             var item = await _service.GetItem(id);
@@ -39,14 +46,8 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
-        {
-            var created = await _service.Post(empresa);
-            return CreatedAtAction(nameof(GetEmpresa), new { id = created.ID }, created);
-        }
-
         [HttpPut("{id}")]
+        [Authorize(Policy = "CanWrite")] // Adicionando autorização de escrita
         public async Task<IActionResult> PutEmpresa(int id, Empresa empresa)
         {
             if (id != empresa.ID)
@@ -54,20 +55,80 @@ namespace LaboratoryBackEnd.Controllers
                 return BadRequest();
             }
 
-            await _service.Put(empresa);
+            try
+            {
+                await _service.Put(empresa);
+                return NoContent();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                await _service.RemoveContex(empresa);
+                await _loggerService.LogError<Empresa>(HttpContext.Request.Method, empresa, User, ex);
+                if (!EmpresaExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                await _service.RemoveContex(empresa);
+
+                await _loggerService.LogError<Empresa>(HttpContext.Request.Method, empresa, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
             return NoContent();
         }
 
+        [HttpPost]
+        [Authorize(Policy = "CanWrite")] // Adicionando autorização de escrita
+        public async Task<ActionResult<Empresa>> PostEmpresa(Empresa empresa)
+        {
+            try
+            {
+                var created = await _service.Post(empresa);
+                return CreatedAtAction("GetEmpresa", new { id = created.ID }, created);
+            }
+            catch (Exception ex)
+            {
+                await _service.RemoveContex(empresa);
+                await _loggerService.LogError<Empresa>(HttpContext.Request.Method, empresa, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWrite")] // Adicionando autorização de escrita
         public async Task<IActionResult> DeleteEmpresa(int id)
         {
-            var result = await _service.Delete(id);
-            if (!result)
+            var item = await _service.GetItem(id);
+            if (item == null)
             {
                 return NotFound();
             }
 
+            try
+            {
+                await _service.Delete(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                await _service.RemoveContex(item);
+                await _loggerService.LogError<Empresa>(HttpContext.Request.Method, item, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
             return NoContent();
+        }
+
+        private bool EmpresaExists(int id)
+        {
+            return _service.Exists(id);
         }
     }
 }
