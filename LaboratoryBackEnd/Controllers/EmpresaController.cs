@@ -27,10 +27,10 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<IEnumerable<Empresa>>> GetEmpresas()
         {
             var items = await _service.GetItems();
-            if (items == null || !items.Any())
-            {
-                return NotFound();
-            }
+            //if (items == null || !items.Any())
+            //{
+            //    return NotFound();
+            //}
             return Ok(items);
         }
 

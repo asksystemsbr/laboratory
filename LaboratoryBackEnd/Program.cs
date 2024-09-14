@@ -95,6 +95,7 @@ builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCateg
 builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
 builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
 builder.Services.AddScoped<IRepository<Equipamento>, Repository<Equipamento>>();
+builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 builder.Services.AddScoped<IRepository<Especialidade>, Repository<Especialidade>>();
 builder.Services.AddScoped<IRepository<Exame>, Repository<Exame>>();
 builder.Services.AddScoped<IRepository<Fornecedor>, Repository<Fornecedor>>();
@@ -129,18 +130,46 @@ builder.Services.AddScoped<IRepository<Tecnico>, Repository<Tecnico>>();
 builder.Services.AddScoped<IRepository<TipoPermissao>, Repository<TipoPermissao>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
-builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 
 
 
 //registro de serviços
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
-builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
+builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasSubCategoriasService, ContasSubCategoriasService>();
+builder.Services.AddScoped<IEmpresaService, EmpresaService>();
+builder.Services.AddScoped<IEquipamentoService, EquipamentoService>();
+builder.Services.AddScoped<IEspecialidadeService, EspecialidadeService>();
+builder.Services.AddScoped<IExameService, ExameService>();
+builder.Services.AddScoped<IFornecedorService, FornecedorService>();
+builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<IGrupoUsuarioService, GrupoUsuarioService>();
+builder.Services.AddScoped<ILaboratorioApoioService, LaboratorioApoioService>();
+builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<IMetodosPagamentoService, MetodosPagamentoService>();
+builder.Services.AddScoped<IModalidadeService, ModalidadeService>();
+builder.Services.AddScoped<IModuloService, ModuloService>();
+builder.Services.AddScoped<IOperationLogService, OperationLogService>();
+builder.Services.AddScoped<IOrdemDeServicoService, OrdemDeServicoService>();
+builder.Services.AddScoped<IOrdemServicoEquipamentoService, OrdemServicoEquipamentoService>();
+builder.Services.AddScoped<IOrdemServicoExameService, OrdemServicoExameService>();
+builder.Services.AddScoped<IOrdemServicoServicoService, OrdemServicoServicoService>();
+builder.Services.AddScoped<IOrdemServicoTecnicoService, OrdemServicoTecnicoService>();
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
+builder.Services.AddScoped<IPermissaoService, PermissaoService>();
+builder.Services.AddScoped<IRecepcaoService, RecepcaoService>();
+builder.Services.AddScoped<IRecipienteAmostraService, RecipienteAmostraService>();
+builder.Services.AddScoped<IRotinaExameService, RotinaExameService>();
+builder.Services.AddScoped<ISetorService, SetorService>();
+builder.Services.AddScoped<IStatusClienteService, StatusClienteService>();
+builder.Services.AddScoped<IStatusExameService, StatusExameService>();
+builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
+builder.Services.AddScoped<ISubCategoriaService, SubCategoriaService>();
+builder.Services.AddScoped<IUsuarioRecepcaoService, UsuarioRecepcaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 // Configuração do serviço de logger
