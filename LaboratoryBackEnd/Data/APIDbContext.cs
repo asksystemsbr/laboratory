@@ -20,9 +20,11 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Equipamento> Equipamentos { get; set; }
         public DbSet<Especialidade> Especialidade { get; set; }
         public DbSet<Exame> Exames { get; set; }
+        public DbSet<ExameApoio> ExameApoio { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<GrupoUsuario> GruposUsuarios { get; set; }
         public DbSet<LaboratorioApoio> LaboratorioApoio { get; set; }
+        public DbSet<MaterialApoio> MaterialApoio { get; set; }
         public DbSet<MetodoExame> MetodoExame { get; set; }
         public DbSet<MetodosPagamento> MetodosPagamentos { get; set; }
         public DbSet<Modalidade> Modalidade { get; set; }

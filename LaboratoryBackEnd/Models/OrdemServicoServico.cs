@@ -20,9 +20,11 @@ public class OrdemServicoServico : IIdentifiable
     public int Quantidade { get; set; }
 
     [Required]
+    [Column("preco_unitario", TypeName = "decimal(10,2)")]
     public decimal PrecoUnitario { get; set; }
 
     [Required]
+    [Column("preco_total", TypeName = "decimal(10,2)")]
     public decimal PrecoTotal { get; set; }
 
     [ForeignKey("OsId")]

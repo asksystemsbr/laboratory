@@ -1,4 +1,5 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -52,6 +53,7 @@ namespace LaboratoryBackEnd.Models
         public string SituacaoCadastral { get; set; }
 
         [Column("capital_social")]
+        [Precision(19, 2)]
         public decimal? CapitalSocial { get; set; }
     }
 }
