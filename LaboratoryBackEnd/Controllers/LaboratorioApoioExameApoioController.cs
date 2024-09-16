@@ -11,27 +11,19 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class LaboratorioApoioController : ControllerBase
+    public class LaboratorioApoioExameApoioController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly ILaboratorioApoioService _service;
-        private readonly ILaboratorioApoioExameApoioService _serviceExame;
-        private readonly ILaboratorioApoioMateriaisService _serviceMaterialApoio;
+        private readonly ILaboratorioApoioExameApoioService _service;
 
-        public LaboratorioApoioController(ILoggerService loggerService
-            , ILaboratorioApoioService service
-            , ILaboratorioApoioExameApoioService serviceExame
-            , ILaboratorioApoioMateriaisService serviceMaterialApoio)
+        public LaboratorioApoioExameApoioController(ILoggerService loggerService, ILaboratorioApoioExameApoioService service)
         {
             _loggerService = loggerService;
             _service = service;
-            _serviceExame = serviceExame;
-            _serviceMaterialApoio = serviceMaterialApoio;
         }
 
         [HttpGet]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<LaboratorioApoio>>> GetLaboratorioApoios()
+        public async Task<ActionResult<IEnumerable<LaboratorioApoioExameApoio>>> GetLaboratorioApoios()
         {
             var items = await _service.GetItems();
 
@@ -39,8 +31,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<LaboratorioApoio>> GetLaboratorioApoio(int id)
+        public async Task<ActionResult<LaboratorioApoioExameApoio>> GetLaboratorioApoio(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -50,9 +41,20 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("getbylab/{id}")]
+        public async Task<ActionResult<IEnumerable<ExameApoio>>> GetItemByLaboratorio(int id)
+        {
+            var item = await _service.GetExameApoioItemByLaboratorio(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+
         [HttpPut("{id}")]
-        [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutLaboratorioApoio(int id, LaboratorioApoio laboratorioApoio)
+        public async Task<IActionResult> PutLaboratorioApoio(int id, LaboratorioApoioExameApoio laboratorioApoio)
         {
             if (id != laboratorioApoio.ID)
             {
@@ -67,7 +69,7 @@ namespace LaboratoryBackEnd.Controllers
             catch (DbUpdateConcurrencyException ex)
             {
                 await _service.RemoveContex(laboratorioApoio);
-                await _loggerService.LogError<LaboratorioApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
+                await _loggerService.LogError<LaboratorioApoioExameApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
                 if (!LaboratorioApoioExists(id))
                 {
                     return NotFound();
@@ -80,14 +82,13 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(laboratorioApoio);
-                await _loggerService.LogError<LaboratorioApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
+                await _loggerService.LogError<LaboratorioApoioExameApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpPost]
-        [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<LaboratorioApoio>> PostLaboratorioApoio(LaboratorioApoio laboratorioApoio)
+        public async Task<ActionResult<LaboratorioApoioExameApoio>> PostLaboratorioApoio(LaboratorioApoioExameApoio laboratorioApoio)
         {
             try
             {
@@ -97,13 +98,12 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(laboratorioApoio);
-                await _loggerService.LogError<LaboratorioApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
+                await _loggerService.LogError<LaboratorioApoioExameApoio>(HttpContext.Request.Method, laboratorioApoio, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteLaboratorioApoio(int id)
         {
             var item = await _service.GetItem(id);
@@ -114,15 +114,29 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _serviceMaterialApoio.DeleteByLaboratorio(id);
-                await _serviceExame.DeleteByLaboratorio(id);
                 await _service.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<LaboratorioApoio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<LaboratorioApoioExameApoio>(HttpContext.Request.Method, item, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("deletebylab/{id}")]
+        public async Task<IActionResult> DeleteLaboratorioApoiobylab(int id)
+        {
+            try
+            {
+                await _service.DeleteByLaboratorio(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                //await _service.RemoveContex(item);
+                await _loggerService.LogError<LaboratorioApoioExameApoio>(HttpContext.Request.Method, null, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

@@ -24,6 +24,8 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<GrupoUsuario> GruposUsuarios { get; set; }
         public DbSet<LaboratorioApoio> LaboratorioApoio { get; set; }
+        public DbSet<LaboratorioApoioExameApoio> LaboratorioApoioExameApoio { get; set; }
+        public DbSet<LaboratorioApoioMateriais> LaboratorioApoioMateriais { get; set; }
         public DbSet<MaterialApoio> MaterialApoio { get; set; }
         public DbSet<MetodoExame> MetodoExame { get; set; }
         public DbSet<MetodosPagamento> MetodosPagamentos { get; set; }
