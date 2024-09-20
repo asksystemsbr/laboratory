@@ -32,7 +32,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", builder =>
-        builder.WithOrigins("http://localhost:3000", "https://nice-hill-0e9fa5e1e-5.westus2.5.azurestaticapps.net/") //mudar aqui para o endereço do front
+        builder.WithOrigins("http://localhost:3000", "https://nice-hill-0e9fa5e1e-5.westus2.5.azurestaticapps.net") //mudar aqui para o endereço do front
                .AllowAnyHeader()
                .AllowAnyMethod()
                .WithExposedHeaders("Content-Disposition"));
