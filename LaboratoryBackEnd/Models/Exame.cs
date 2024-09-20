@@ -123,6 +123,21 @@ namespace LaboratoryBackEnd.Models
         [Column("ESTABILIDADE")]
         public string ESTABILIDADE { get; set; }
 
+        [Column("TUSS")]
+        public string TUSS { get; set; }
+
+        [Column("MEIOS_DE_COLETA")]
+        public string MEIOS_DE_COLETA { get; set; }
+
+        [Column("COLETAPAC")]
+        public string COLETAPAC { get; set; }
+
+        [Column("COLETAPACF")]
+        public string COLETAPACF { get; set; }
+
+        [Column("COLETAPACC")]
+        public string COLETAPACC { get; set; }
+
         [Column("MATERIAL_APOIO_ID")]
         public int MATERIAL_APOIO_ID { get; set; }
 
