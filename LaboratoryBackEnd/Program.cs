@@ -95,11 +95,20 @@ builder.Services.AddScoped<IRepository<ContasCategorias>, Repository<ContasCateg
 builder.Services.AddScoped<IRepository<ContasHistorico>, Repository<ContasHistorico>>();
 builder.Services.AddScoped<IRepository<ContasSubCategorias>, Repository<ContasSubCategorias>>();
 builder.Services.AddScoped<IRepository<Equipamento>, Repository<Equipamento>>();
+builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
+builder.Services.AddScoped<IRepository<Especialidade>, Repository<Especialidade>>();
 builder.Services.AddScoped<IRepository<Exame>, Repository<Exame>>();
+builder.Services.AddScoped<IRepository<ExameApoio>, Repository<ExameApoio>>();
 builder.Services.AddScoped<IRepository<Fornecedor>, Repository<Fornecedor>>();
 builder.Services.AddScoped<IRepository<Funcionario>, Repository<Funcionario>>();
 builder.Services.AddScoped<IRepository<GrupoUsuario>, Repository<GrupoUsuario>>();
+builder.Services.AddScoped<IRepository<LaboratorioApoio>, Repository<LaboratorioApoio>>();
+builder.Services.AddScoped<IRepository<LaboratorioApoioMateriais>, Repository<LaboratorioApoioMateriais>>();
+builder.Services.AddScoped<IRepository<LaboratorioApoioExameApoio>, Repository<LaboratorioApoioExameApoio>>();
+builder.Services.AddScoped<IRepository<MaterialApoio>, Repository<MaterialApoio>>();
+builder.Services.AddScoped<IRepository<MetodoExame>, Repository<MetodoExame>>();
 builder.Services.AddScoped<IRepository<MetodosPagamento>, Repository<MetodosPagamento>>();
+builder.Services.AddScoped<IRepository<Modalidade>, Repository<Modalidade>>();
 builder.Services.AddScoped<IRepository<Modulos>, Repository<Modulos>>();
 builder.Services.AddScoped<IRepository<OperationLog>, Repository<OperationLog>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
@@ -111,7 +120,10 @@ builder.Services.AddScoped<IRepository<OrdemServicoTecnico>, Repository<OrdemSer
 builder.Services.AddScoped<IRepository<Pagamento>, Repository<Pagamento>>();
 builder.Services.AddScoped<IRepository<Permissao>, Repository<Permissao>>();
 builder.Services.AddScoped<IRepository<Recepcao>, Repository<Recepcao>>();
+builder.Services.AddScoped<IRepository<RecipienteAmostra>, Repository<RecipienteAmostra>>();
+builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
 builder.Services.AddScoped<IRepository<Servico>, Repository<Servico>>();
+builder.Services.AddScoped<IRepository<Setor>, Repository<Setor>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<StatusCliente>, Repository<StatusCliente>>();
 builder.Services.AddScoped<IRepository<StatusExame>, Repository<StatusExame>>();
@@ -126,13 +138,47 @@ builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecep
 
 
 //registro de serviços
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
-builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IContasCategoriasService, ContasCategoriasService>();
-builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasHistoricoService, ContasHistoricoService>();
+builder.Services.AddScoped<IContasService, ContasService>();
 builder.Services.AddScoped<IContasSubCategoriasService, ContasSubCategoriasService>();
+builder.Services.AddScoped<IEmpresaService, EmpresaService>();
+builder.Services.AddScoped<IEquipamentoService, EquipamentoService>();
+builder.Services.AddScoped<IEspecialidadeService, EspecialidadeService>();
+builder.Services.AddScoped<IExameApoioService, ExameApoioService>();
+builder.Services.AddScoped<IExameService, ExameService>();
+builder.Services.AddScoped<IFornecedorService, FornecedorService>();
+builder.Services.AddScoped<IFuncionarioService, FuncionarioService>();
 builder.Services.AddScoped<IGrupoUsuarioService, GrupoUsuarioService>();
+builder.Services.AddScoped<ILaboratorioApoioService, LaboratorioApoioService>();
+builder.Services.AddScoped<ILaboratorioApoioExameApoioService, LaboratorioApoioExameApoioService>();
+builder.Services.AddScoped<ILaboratorioApoioMateriaisService, LaboratorioApoioMateriaisService>();
+builder.Services.AddScoped<ILoggerService, LoggerService>();
+builder.Services.AddScoped<IMaterialApoioService, MaterialApoioService>();
+builder.Services.AddScoped<IMetodoExameService, MetodoExameService>();
+builder.Services.AddScoped<IMetodosPagamentoService, MetodosPagamentoService>();
+builder.Services.AddScoped<IModalidadeService, ModalidadeService>();
+builder.Services.AddScoped<IModuloService, ModuloService>();
+builder.Services.AddScoped<IOperationLogService, OperationLogService>();
+builder.Services.AddScoped<IOrdemDeServicoService, OrdemDeServicoService>();
+builder.Services.AddScoped<IOrdemServicoEquipamentoService, OrdemServicoEquipamentoService>();
+builder.Services.AddScoped<IOrdemServicoExameService, OrdemServicoExameService>();
+builder.Services.AddScoped<IOrdemServicoServicoService, OrdemServicoServicoService>();
+builder.Services.AddScoped<IOrdemServicoTecnicoService, OrdemServicoTecnicoService>();
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
+builder.Services.AddScoped<IPermissaoService, PermissaoService>();
+builder.Services.AddScoped<IRecepcaoService, RecepcaoService>();
+builder.Services.AddScoped<IRecipienteAmostraService, RecipienteAmostraService>();
+builder.Services.AddScoped<IRotinaExameService, RotinaExameService>();
+builder.Services.AddScoped<ISetorService, SetorService>();
+builder.Services.AddScoped<IStatusClienteService, StatusClienteService>();
+builder.Services.AddScoped<IStatusExameService, StatusExameService>();
+builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
+builder.Services.AddScoped<ISubCategoriaService, SubCategoriaService>();
+builder.Services.AddScoped<IUsuarioRecepcaoService, UsuarioRecepcaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 // Configuração do serviço de logger

@@ -10,12 +10,12 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class ClientController : ControllerBase
+    public class ClienteController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly IClientService _service;
+        private readonly IClienteService _service;
 
-        public ClientController(ILoggerService loggerService, IClientService service)
+        public ClienteController(ILoggerService loggerService, IClienteService service)
         {
             _loggerService = loggerService;
             _service = service;
@@ -23,7 +23,7 @@ namespace LaboratoryBackEnd.Controllers
 
         // GET: api/Cliente
         [HttpGet]
-        //[Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
         {
             var items = await _service.GetItems();
@@ -36,7 +36,7 @@ namespace LaboratoryBackEnd.Controllers
 
         // GET: api/Cliente/5
         [HttpGet("{id}")]
-        //[Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<Cliente>> GetCliente(int id)
         {
             var item = await _service.GetItem(id);
@@ -50,7 +50,7 @@ namespace LaboratoryBackEnd.Controllers
         // PUT: api/Cliente/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutCliente(int id, Cliente cliente)
         {
             if (id != cliente.ID)
@@ -92,7 +92,7 @@ namespace LaboratoryBackEnd.Controllers
         // POST: api/Cliente
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
         {
 
@@ -115,7 +115,7 @@ namespace LaboratoryBackEnd.Controllers
 
         // DELETE: api/Cliente/5
         [HttpDelete("{id}")]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteCliente(int id)
         {
             var item = await _service.GetItem(id);

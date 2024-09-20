@@ -1,5 +1,6 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,7 +24,7 @@ namespace LaboratoryBackEnd.Models
         [Column("data_pagamento")]
         public DateTime? DataPagamento { get; set; }
 
-        //[Column(TypeName = "decimal(10,2)", Name = "valor_pago")]
+        [Column("valor_pago" , TypeName = "decimal(10,2)")]
         public decimal? ValorPago { get; set; }
 
         [Column("status_pagamento_id")]

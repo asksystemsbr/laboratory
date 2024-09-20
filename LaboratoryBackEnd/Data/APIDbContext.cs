@@ -18,10 +18,18 @@ namespace LaboratoryBackEnd.Data
         public DbSet<ContasHistorico> ContasHistorico { get; set; }
         public DbSet<ContasSubCategorias> ContasSubCategorias { get; set; }
         public DbSet<Equipamento> Equipamentos { get; set; }
+        public DbSet<Especialidade> Especialidade { get; set; }
         public DbSet<Exame> Exames { get; set; }
+        public DbSet<ExameApoio> ExameApoio { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<GrupoUsuario> GruposUsuarios { get; set; }
+        public DbSet<LaboratorioApoio> LaboratorioApoio { get; set; }
+        public DbSet<LaboratorioApoioExameApoio> LaboratorioApoioExameApoio { get; set; }
+        public DbSet<LaboratorioApoioMateriais> LaboratorioApoioMateriais { get; set; }
+        public DbSet<MaterialApoio> MaterialApoio { get; set; }
+        public DbSet<MetodoExame> MetodoExame { get; set; }
         public DbSet<MetodosPagamento> MetodosPagamentos { get; set; }
+        public DbSet<Modalidade> Modalidade { get; set; }
         public DbSet<Modulos> Modulos { get; set; }
         public DbSet<OrdemDeServico> OrdensDeServicos { get; set; }
         public DbSet<OrdemServicoEquipamento> OrdensServicosEquipamentos { get; set; }
@@ -31,7 +39,10 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<Permissao> Permissoes { get; set; }
         public DbSet<Recepcao> Recepcoes { get; set; }
+        public DbSet<RecipienteAmostra> RecipienteAmostra { get; set; }
+        public DbSet<RotinaExame> RotinaExame { get; set; }
         public DbSet<Servico> Servicos { get; set; }
+        public DbSet<Setor> Setor { get; set; }
         public DbSet<StatusCliente> StatusClient { get; set; }
         public DbSet<StatusCliente> StatusClientes { get; set; }
         public DbSet<StatusExame> StatusExames { get; set; }
@@ -42,6 +53,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<TipoPermissao> TipoPermissao { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioRecepcao> UsuariosRecepcoes { get; set; }
+        public DbSet<Empresa> Empresas { get; set; }
 
 
 

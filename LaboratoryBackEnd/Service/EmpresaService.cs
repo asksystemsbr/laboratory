@@ -4,44 +4,35 @@ using LaboratoryBackEnd.Service.Interface;
 
 namespace LaboratoryBackEnd.Service
 {
-    public class ClientService : IClientService
+    public class EmpresaService : IEmpresaService
     {
+        private readonly IRepository<Empresa> _repository;
         private readonly ILoggerService _loggerService;
-        private readonly IRepository<Cliente> _repository;
-        private readonly IRepository<StatusCliente> _repositorySituacaoCliente;
 
-        public ClientService(ILoggerService loggerService,
-            IRepository<Cliente> repository,
-            IRepository<StatusCliente> repositorySituacaoCliente)
+        public EmpresaService(ILoggerService loggerService,
+            IRepository<Empresa> repository)
         {
             _loggerService = loggerService;
             _repository = repository;
-            _repositorySituacaoCliente = repositorySituacaoCliente;
         }
 
-        public async Task<IEnumerable<Cliente>> GetItems()
+        public async Task<IEnumerable<Empresa>> GetItems()
         {
             return await _repository.GetItems();
         }
 
-        public async Task<Cliente> GetItem(int id)
+        public async Task<Empresa> GetItem(int id)
         {
-            var item = await _repository.GetItem(id);
-            return item;
+            return await _repository.GetItem(id);
         }
 
-        public async Task Put(Cliente item)
+        public async Task Put(Empresa item)
         {
             await _repository.Put(item);
         }
 
-        public async Task<Cliente> Post(Cliente item)
+        public async Task<Empresa> Post(Empresa item)
         {
-            if (item.ID == 0)
-            {
-                item.ID = await GetLasdOrOne();
-                item.DataCadastro = DateTime.Now;
-            }
             return await _repository.Post(item);
         }
 
@@ -55,7 +46,7 @@ namespace LaboratoryBackEnd.Service
             return _repository.Exists(id);
         }
 
-        public async Task RemoveContex(Cliente item)
+        public async Task RemoveContex(Empresa item)
         {
             _repository.RemoveContex(item);
         }
@@ -64,6 +55,5 @@ namespace LaboratoryBackEnd.Service
         {
             return _repository.GetLasdOrOne();
         }
-       
     }
 }

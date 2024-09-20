@@ -1,6 +1,6 @@
 ﻿namespace LaboratoryBackEnd.Service.Interface
 {
-    public interface IClientService
+    public interface IClienteService
     {
         Task<IEnumerable<Cliente>> GetItems();
         Task<Cliente> GetItem(int id);
