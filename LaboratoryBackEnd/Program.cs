@@ -13,6 +13,9 @@ using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +43,13 @@ builder.Services.AddCors(options =>
 #endregion
 
 builder.Services.AddControllers();
+    //.AddJsonOptions(options =>
+    //{
+    //    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    //    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
+    //});
+
 
 //configuração JWT
 builder.Services.AddAuthentication(options =>

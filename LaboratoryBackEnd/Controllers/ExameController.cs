@@ -22,10 +22,10 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<IEnumerable<Exame>>> GetExames()
         {
             var items = await _service.GetItems();
-            if (items == null || !items.Any())
-            {
-                return NotFound();
-            }
+            //if (items == null || !items.Any())
+            //{
+            //    return NotFound();
+            //}
             return Ok(items);
         }
 
