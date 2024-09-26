@@ -20,9 +20,9 @@ public class Cliente : IIdentifiable
     [Column("cpf_cnpj")]
     public string CpfCnpj { get; set; }
 
-    [StringLength(255)]
-    [Column("endereco")]
-    public string Endereco { get; set; }
+    [Required] 
+    [Column("endereco_id")]
+    public int EnderecoId { get; set; }
 
     [StringLength(20)]
     [Column("telefone")]
@@ -41,7 +41,6 @@ public class Cliente : IIdentifiable
     [Column("data_cadastro")]
     public DateTime DataCadastro { get; set; }
 
-    // Novos campos adicionados de acordo com a tabela
     [StringLength(1)]
     [Column("sexo")]
     public string Sexo { get; set; }
@@ -84,5 +83,8 @@ public class Cliente : IIdentifiable
     [StringLength(20)]
     [Column("telefone_responsavel")]
     public string TelefoneResponsavel { get; set; }
-}
 
+    // Propriedade de navegação opcional
+    [ForeignKey("EnderecoId")]
+    public virtual Endereco Endereco { get; set; }
+}
