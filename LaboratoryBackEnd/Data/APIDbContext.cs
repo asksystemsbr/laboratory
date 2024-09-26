@@ -13,10 +13,11 @@ namespace LaboratoryBackEnd.Data
 
         public DbSet<Boleto> Boleto { get; set; }
         public DbSet<Cliente> Client { get; set; }
-        public DbSet<Contas> Contas { get; set; }
+        public DbSet<Contas> Contas { get; set; }        
         public DbSet<ContasCategorias> CategoriasContas { get; set; }
         public DbSet<ContasHistorico> ContasHistorico { get; set; }
         public DbSet<ContasSubCategorias> ContasSubCategorias { get; set; }
+        public DbSet<Convenio> Convenio { get; set; }
         public DbSet<Equipamento> Equipamentos { get; set; }
         public DbSet<Especialidade> Especialidade { get; set; }
         public DbSet<Exame> Exames { get; set; }
@@ -38,11 +39,13 @@ namespace LaboratoryBackEnd.Data
         public DbSet<OrdemServicoTecnico> OrdensServicosTecnicos { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<Permissao> Permissoes { get; set; }
+        public DbSet<Plano> Plano { get; set; }
         public DbSet<Recepcao> Recepcoes { get; set; }
         public DbSet<RecipienteAmostra> RecipienteAmostra { get; set; }
         public DbSet<RotinaExame> RotinaExame { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<Setor> Setor { get; set; }
+        public DbSet<Solicitante> Solicitante { get; set; }
         public DbSet<StatusCliente> StatusClient { get; set; }
         public DbSet<StatusCliente> StatusClientes { get; set; }
         public DbSet<StatusExame> StatusExames { get; set; }
