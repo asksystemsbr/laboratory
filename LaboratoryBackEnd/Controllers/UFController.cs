@@ -11,20 +11,20 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class SolicitanteController : ControllerBase
+    public class UFController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly ISolicitanteService _service;
+        private readonly IUFService _service;
 
-        public SolicitanteController(ILoggerService loggerService, ISolicitanteService service)
+        public UFController(ILoggerService loggerService, IUFService service)
         {
             _loggerService = loggerService;
             _service = service;
         }
 
         [HttpGet]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<Solicitante>>> GetItems()
+        //[Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<UF>>> GetItems()
         {
             var items = await _service.GetItems();
 
@@ -32,8 +32,8 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<Solicitante>> GetItem(int id)
+        //[Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<UF>> GetItem(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -43,21 +43,9 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
-        [HttpGet("existsByCPF/{cpf}")]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<bool>> ExistsByCPF(string cpf)
-        {
-            var item = await _service.GetItemByCPF(cpf);
-            if (item == null)
-            {
-                return Ok(false); 
-            }
-            return Ok(true); 
-        }
-
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutItem(int id, Solicitante item)
+        public async Task<IActionResult> PutItem(int id, UF item)
         {
             if (id != item.ID)
             {
@@ -72,7 +60,7 @@ namespace LaboratoryBackEnd.Controllers
             catch (DbUpdateConcurrencyException ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Solicitante>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<UF>(HttpContext.Request.Method, item, User, ex);
                 if (!ItemExists(id))
                 {
                     return NotFound();
@@ -85,24 +73,24 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Solicitante>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<UF>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<Solicitante>> PostItem(Solicitante item)
+        public async Task<ActionResult<UF>> PostItem(UF item)
         {
             try
             {
                 var created = await _service.Post(item);
-                return CreatedAtAction("GetPlano", new { id = created.ID }, created);
+                return CreatedAtAction("GetUF", new { id = created.ID }, created);
             }
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Solicitante>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<UF>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -125,7 +113,7 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Solicitante>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<UF>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

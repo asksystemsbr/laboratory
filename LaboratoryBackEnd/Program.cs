@@ -145,6 +145,8 @@ builder.Services.AddScoped<IRepository<StatusPagamento>, Repository<StatusPagame
 builder.Services.AddScoped<IRepository<SubCategoria>, Repository<SubCategoria>>();
 builder.Services.AddScoped<IRepository<Tecnico>, Repository<Tecnico>>();
 builder.Services.AddScoped<IRepository<TipoPermissao>, Repository<TipoPermissao>>();
+builder.Services.AddScoped<IRepository<TipoSolicitante>, Repository<TipoSolicitante>>();
+builder.Services.AddScoped<IRepository<UF>, Repository<UF>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
 
@@ -194,6 +196,8 @@ builder.Services.AddScoped<IStatusClienteService, StatusClienteService>();
 builder.Services.AddScoped<IStatusExameService, StatusExameService>();
 builder.Services.AddScoped<IStatusPagamentoService, StatusPagamentoService>();
 builder.Services.AddScoped<ISubCategoriaService, SubCategoriaService>();
+builder.Services.AddScoped<ITipoSolicitanteService, TipoSolicianteService>();
+builder.Services.AddScoped<IUFService, UFService>();
 builder.Services.AddScoped<IUsuarioRecepcaoService, UsuarioRecepcaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 

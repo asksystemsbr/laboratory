@@ -54,6 +54,8 @@ namespace LaboratoryBackEnd.Data
         public DbSet<SubCategoria> SubCategorias { get; set; }
         public DbSet<Tecnico> Tecnicos { get; set; }
         public DbSet<TipoPermissao> TipoPermissao { get; set; }
+        public DbSet<TipoSolicitante> TipoSolicitante { get; set; }        
+        public DbSet<UF> UF { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioRecepcao> UsuariosRecepcoes { get; set; }
         public DbSet<Empresa> Empresas { get; set; }

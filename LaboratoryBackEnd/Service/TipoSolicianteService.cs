@@ -1,45 +1,36 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
-using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace LaboratoryBackEnd.Service
 {
-    public class SolicianteService : ISolicitanteService
+    public class TipoSolicianteService : ITipoSolicitanteService
     {
         private readonly ILoggerService _loggerService;
-        private readonly IRepository<Solicitante> _repository;
+        private readonly IRepository<TipoSolicitante> _repository;
 
-        public SolicianteService(ILoggerService loggerService, IRepository<Solicitante> repository)
+        public TipoSolicianteService(ILoggerService loggerService, IRepository<TipoSolicitante> repository)
         {
             _loggerService = loggerService;
             _repository = repository;
         }
 
-        public async Task<IEnumerable<Solicitante>> GetItems()
+        public async Task<IEnumerable<TipoSolicitante>> GetItems()
         {
             return await _repository.GetItems();
         }
 
-        public async Task<Solicitante> GetItem(int id)
+        public async Task<TipoSolicitante> GetItem(int id)
         {
             return await _repository.GetItem(id);
         }
 
-        public async Task<Solicitante> GetItemByCPF(string cpf)
-        {
-            return await _repository.Query()
-                .Where(x => x.Cpf != null && x.Cpf == cpf)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task Put(Solicitante item)
+        public async Task Put(TipoSolicitante item)
         {
             await _repository.Put(item);
         }
 
-        public async Task<Solicitante> Post(Solicitante item)
+        public async Task<TipoSolicitante> Post(TipoSolicitante item)
         {
             return await _repository.Post(item);
         }
@@ -54,7 +45,7 @@ namespace LaboratoryBackEnd.Service
             return _repository.Exists(id);
         }
 
-        public async Task RemoveContex(Solicitante item)
+        public async Task RemoveContex(TipoSolicitante item)
         {
             _repository.RemoveContex(item);
         }
