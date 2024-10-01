@@ -15,19 +15,21 @@ namespace LaboratoryBackEnd.Models
         [Column("tipo_permissao_id")]
         public int? TipoPermissaoId { get; set; }
 
-        //[ForeignKey("TipoPermissaoId")]
-        //public virtual TipoPermissao TipoPermissao { get; set; }
+        // Propriedades de navegação
+
+        [ForeignKey("TipoPermissaoId")]
+        public virtual TipoPermissao TipoPermissao { get; set; }  
 
         [Column("modulo_id")]
         public int? ModuloId { get; set; }
 
         [ForeignKey("ModuloId")]
-        //public virtual Modulo Modulo { get; set; }
+        public virtual Modulo Modulo { get; set; }  
 
         [Column("grupo_usuario_id")]
         public int? GrupoUsuarioId { get; set; }
 
-        //[ForeignKey("GrupoUsuarioId")]
-        //public virtual GrupoUsuario GrupoUsuario { get; set; }
+        [ForeignKey("GrupoUsuarioId")]
+        public virtual GrupoUsuario GrupoUsuario { get; set; } 
     }
 }

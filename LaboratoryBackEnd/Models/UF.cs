@@ -1,5 +1,4 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -26,7 +25,5 @@ namespace LaboratoryBackEnd.Models
         [MaxLength(2)]
         [Column("sigla_uf")]
         public string SiglaUf { get; set; }
-
-
     }
 }

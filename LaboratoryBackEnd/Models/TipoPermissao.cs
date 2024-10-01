@@ -9,9 +9,11 @@ namespace LaboratoryBackEnd.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("id")]
         public int ID { get; set; }
 
         [StringLength(255)]
-        public string Descricao { get; set; }
+        [Column("descricao")]
+        public string? Descricao { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel;
 
 namespace LaboratoryBackEnd.Models
 {
@@ -14,13 +13,13 @@ namespace LaboratoryBackEnd.Models
         public int ID { get; set; }
 
         [Column("usuario_id")]
-        public int? UsuarioId { get; set; }
+        public int? UsuarioId { get; set; }  // Permite nulo
 
         [ForeignKey("UsuarioId")]
         public virtual Usuario Usuario { get; set; }
 
         [Column("recepcao_id")]
-        public int? RecepcaoId { get; set; }
+        public int? RecepcaoId { get; set; }  // Permite nulo
 
         [ForeignKey("RecepcaoId")]
         public virtual Recepcao Recepcao { get; set; }

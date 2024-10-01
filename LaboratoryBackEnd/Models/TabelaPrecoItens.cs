@@ -12,12 +12,11 @@ namespace LaboratoryBackEnd.Models
         [Column("id")]
         public int ID { get; set; }
 
-        
         [Column("tabela_preco_id")]
-        public int TabelaPrecoId { get; set; }
+        public int? TabelaPrecoId { get; set; }
 
         [Column("exame_id")]
-        public int ExameId { get; set; }
+        public int? ExameId { get; set; }
 
         [Column("valor")]
         public decimal? Valor { get; set; }
@@ -27,8 +26,10 @@ namespace LaboratoryBackEnd.Models
 
         [Column("custo_horario")]
         public decimal? CustoHorario { get; set; }
+
         [Column("filme")]
         public decimal? Filme { get; set; }
+
         [Column("codigo_arnb")]
         public string? CodigoArnb { get; set; }
     }

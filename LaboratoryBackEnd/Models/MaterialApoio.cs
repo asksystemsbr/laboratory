@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using LaboratoryBackEnd.Data.Interface;
 
 namespace LaboratoryBackEnd.Models
 {
     [Table("material_apoio")]
-    public class MaterialApoio: IIdentifiable
+    public class MaterialApoio : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,7 +13,7 @@ namespace LaboratoryBackEnd.Models
         public int ID { get; set; }
 
         [Column("codigo_material", TypeName = "text")]
-        public string CodigoMaterial { get; set; }
+        public string? CodigoMaterial { get; set; } 
 
         [Required]
         [MaxLength(255)]

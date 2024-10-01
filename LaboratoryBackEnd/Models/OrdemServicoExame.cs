@@ -14,13 +14,11 @@ namespace LaboratoryBackEnd.Models
         [Column("os_exame_id")]
         public int ID { get; set; }
 
-        [Required]
         [Column("os_id")]
-        public int OsId { get; set; }
+        public int? OsId { get; set; }  // Permite nulo
 
-        [Required]
         [Column("exame_id")]
-        public int ExameId { get; set; }
+        public int? ExameId { get; set; }  // Permite nulo
 
         [Required]
         [Column("status_exame_id")]
@@ -31,11 +29,12 @@ namespace LaboratoryBackEnd.Models
         public decimal Preco { get; set; }
 
         [Column("data_entrega")]
-        public DateTime? DataEntrega { get; set; }
+        public DateTime? DataEntrega { get; set; }  // Permite nulo
 
         [Column("termo_autorizacao", TypeName = "text")]
-        public string TermoAutorizacao { get; set; }
+        public string? TermoAutorizacao { get; set; }  // Permite nulo
 
+        // Propriedades de navegação
         [ForeignKey("OsId")]
         public virtual OrdemDeServico OrdemDeServico { get; set; }
 

@@ -12,9 +12,7 @@ namespace LaboratoryBackEnd.Models
         [Column("id")]
         public int ID { get; set; }
 
-        
         [Column("nome")]
-        public string Nome { get; set; }
-
+        public string? Nome { get; set; }  // Permite nulo
     }
 }

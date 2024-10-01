@@ -14,7 +14,7 @@ namespace LaboratoryBackEnd.Models
 
         [StringLength(255)]
         [Column("descricao")]
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }  // Permite nulo
 
         [Column("crm")]
         public string? Crm { get; set; }

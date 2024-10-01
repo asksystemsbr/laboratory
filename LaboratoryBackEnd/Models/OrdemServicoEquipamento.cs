@@ -14,18 +14,17 @@ namespace LaboratoryBackEnd.Models
         [Column("os_equipamento_id")]
         public int ID { get; set; }
 
-        [Required]
         [Column("os_id")]
-        public int OsId { get; set; }
+        public int? OsId { get; set; }  // Permite nulo
 
-        [Required]
         [Column("equipamento_id")]
-        public int EquipamentoId { get; set; }
+        public int? EquipamentoId { get; set; }  // Permite nulo
 
         [Required]
         [Column("data_utilizacao")]
         public DateTime DataUtilizacao { get; set; }
 
+        // Propriedades de navegação
         [ForeignKey("OsId")]
         public virtual OrdemDeServico OrdemDeServico { get; set; }
 

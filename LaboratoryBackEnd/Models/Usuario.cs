@@ -29,14 +29,12 @@ namespace LaboratoryBackEnd.Models
 
         [Column("email")]
         [MaxLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Column("ativo")]
+        public bool? Ativo { get; set; } 
 
-        public bool? Ativo { get; set; } // Nullable bit field
-
-
-        [Column("GrupoUsuario_Id")] // Define o nome da coluna no banco de dados
+        [Column("GrupoUsuario_Id")]
         public int? GrupoUsuarioId { get; set; }
     }
 }

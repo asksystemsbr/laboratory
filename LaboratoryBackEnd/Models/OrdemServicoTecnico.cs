@@ -14,13 +14,11 @@ namespace LaboratoryBackEnd.Models
         [Column("os_tecnico_id")]
         public int ID { get; set; }
 
-        [Required]
         [Column("os_id")]
-        public int OsId { get; set; }
+        public int? OsId { get; set; }
 
-        [Required]
         [Column("tecnico_id")]
-        public int TecnicoId { get; set; }
+        public int? TecnicoId { get; set; }
 
         [Required]
         [Column("data_inicio")]
@@ -29,6 +27,7 @@ namespace LaboratoryBackEnd.Models
         [Column("data_fim")]
         public DateTime? DataFim { get; set; }
 
+        // Propriedades de navegação
         [ForeignKey("OsId")]
         public virtual OrdemDeServico OrdemDeServico { get; set; }
 
