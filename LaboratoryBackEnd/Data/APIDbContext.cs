@@ -14,7 +14,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Boleto> Boleto { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Cliente> Client { get; set; }
-        public DbSet<Contas> Contas { get; set; }        
+        public DbSet<Contas> Contas { get; set; }
         public DbSet<ContasCategorias> CategoriasContas { get; set; }
         public DbSet<ContasHistorico> ContasHistorico { get; set; }
         public DbSet<ContasSubCategorias> ContasSubCategorias { get; set; }
@@ -25,6 +25,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<ExameApoio> ExameApoio { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<GrupoUsuario> GruposUsuarios { get; set; }
+        public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<LaboratorioApoio> LaboratorioApoio { get; set; }
         public DbSet<LaboratorioApoioExameApoio> LaboratorioApoioExameApoio { get; set; }
         public DbSet<LaboratorioApoioMateriais> LaboratorioApoioMateriais { get; set; }
@@ -32,7 +33,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<MetodoExame> MetodoExame { get; set; }
         public DbSet<MetodosPagamento> MetodosPagamentos { get; set; }
         public DbSet<Modalidade> Modalidade { get; set; }
-        public DbSet<Modulos> Modulos { get; set; }
+        public DbSet<Modulo> Modulo { get; set; }
         public DbSet<OrdemDeServico> OrdensDeServicos { get; set; }
         public DbSet<OrdemServicoEquipamento> OrdensServicosEquipamentos { get; set; }
         public DbSet<OrdemServicoExame> OrdensServicosExames { get; set; }
@@ -57,17 +58,16 @@ namespace LaboratoryBackEnd.Data
         public DbSet<TabelaPrecoItens> TabelaPrecoItens { get; set; }
         public DbSet<Tecnico> Tecnicos { get; set; }
         public DbSet<TipoPermissao> TipoPermissao { get; set; }
-        public DbSet<TipoSolicitante> TipoSolicitante { get; set; }        
+        public DbSet<TipoSolicitante> TipoSolicitante { get; set; }
         public DbSet<UF> UF { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioRecepcao> UsuariosRecepcoes { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
 
-
-
         public APIDbContext(DbContextOptions<APIDbContext> options) : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
         }
