@@ -12,6 +12,7 @@ namespace LaboratoryBackEnd.Data
         #endregion
 
         public DbSet<Boleto> Boleto { get; set; }
+        public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Cliente> Client { get; set; }
         public DbSet<Contas> Contas { get; set; }        
         public DbSet<ContasCategorias> CategoriasContas { get; set; }

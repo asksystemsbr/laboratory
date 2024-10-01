@@ -41,7 +41,7 @@ public class Cliente : IIdentifiable
     [Column("data_cadastro")]
     public DateTime DataCadastro { get; set; }
 
-    [StringLength(1)]
+    [StringLength(10)]
     [Column("sexo")]
     public string Sexo { get; set; }
 
