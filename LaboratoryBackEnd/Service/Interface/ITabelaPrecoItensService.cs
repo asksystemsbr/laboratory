@@ -6,6 +6,8 @@ namespace LaboratoryBackEnd.Service.Interface
     {
         Task<IEnumerable<TabelaPrecoItens>> GetItems();
         Task<TabelaPrecoItens> GetItem(int id);
+
+        Task<List<TabelaPrecoItens>> GetItemsByTable(int id);
         Task Put(TabelaPrecoItens item);
         Task<TabelaPrecoItens> Post(TabelaPrecoItens item);
         Task Delete(int id);

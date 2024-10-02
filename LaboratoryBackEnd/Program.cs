@@ -121,7 +121,7 @@ builder.Services.AddScoped<IRepository<MaterialApoio>, Repository<MaterialApoio>
 builder.Services.AddScoped<IRepository<MetodoExame>, Repository<MetodoExame>>();
 builder.Services.AddScoped<IRepository<MetodosPagamento>, Repository<MetodosPagamento>>();
 builder.Services.AddScoped<IRepository<Modalidade>, Repository<Modalidade>>();
-builder.Services.AddScoped<IRepository<Modulos>, Repository<Modulos>>();
+builder.Services.AddScoped<IRepository<Modulo>, Repository<Modulo>>();
 builder.Services.AddScoped<IRepository<OperationLog>, Repository<OperationLog>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();
 builder.Services.AddScoped<IRepository<OrdemDeServico>, Repository<OrdemDeServico>>();

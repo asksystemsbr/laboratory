@@ -15,14 +15,14 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<GrupoUsuario> _repositoryGrupoUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
         private readonly IRepository<TipoPermissao> _repositoryTipoPermissao;
-        private readonly IRepository<Modulos> _repositoryModulos;
+        private readonly IRepository<Modulo> _repositoryModulos;
 
         public UsuarioService(ILoggerService loggerService,
         IRepository<Usuario> repository,
         IRepository<GrupoUsuario> repositoryGrupoUsuario,
         IRepository<Permissao> repositoryPermissao,
         IRepository<TipoPermissao> repositoryTipoPermissao,
-        IRepository<Modulos> repositoryModulos)
+        IRepository<Modulo> repositoryModulos)
         {
             _loggerService = loggerService;
             _repository = repository;

@@ -144,7 +144,7 @@ namespace LaboratoryBackEnd.Models
         [Column("MATERIAL_APOIO_ID")]
         public int MaterialApoioId { get; set; }
 
-        [Column("ESPECIALIDADE_ID")]
+        [Column("especialidade_id")]
         public int? EspecialidadeId { get; set; }
 
         [Column("SETOR_ID")]

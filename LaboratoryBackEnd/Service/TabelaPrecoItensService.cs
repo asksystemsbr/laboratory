@@ -1,6 +1,7 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaboratoryBackEnd.Service
 {
@@ -25,6 +26,12 @@ namespace LaboratoryBackEnd.Service
             return await _repository.GetItem(id);
         }
 
+        public async Task<List<TabelaPrecoItens>> GetItemsByTable(int id)
+        {
+            return await _repository.Query().Where(x=>x.TabelaPrecoId==id).ToListAsync();
+        }
+
+
         public async Task Put(TabelaPrecoItens item)
         {
             await _repository.Put(item);
@@ -39,7 +46,6 @@ namespace LaboratoryBackEnd.Service
         {
             await _repository.Delete(id);
         }
-
         public bool Exists(int id)
         {
             return _repository.Exists(id);

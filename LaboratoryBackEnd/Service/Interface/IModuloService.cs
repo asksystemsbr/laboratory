@@ -4,13 +4,13 @@ namespace LaboratoryBackEnd.Service.Interface
 {
     public interface IModuloService
     {
-        Task<IEnumerable<Modulos>> GetItems();
-        Task<Modulos> GetItem(int id);
-        Task Put(Modulos item);
-        Task<Modulos> Post(Modulos item);
+        Task<IEnumerable<Modulo>> GetItems();
+        Task<Modulo> GetItem(int id);
+        Task Put(Modulo item);
+        Task<Modulo> Post(Modulo item);
         Task Delete(int id);
         bool Exists(int id);
-        Task RemoveContex(Modulos item);
+        Task RemoveContex(Modulo item);
         Task<int> GetLasdOrOne();
     }
 }

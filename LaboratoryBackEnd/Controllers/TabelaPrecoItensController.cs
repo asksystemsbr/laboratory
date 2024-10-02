@@ -36,10 +36,14 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<TabelaPrecoItens>> GetItem(int id)
         {
             var item = await _service.GetItem(id);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            return item;
+        }
+
+        [HttpGet("getByPriceTable/{id}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<List<TabelaPrecoItens>>> GetItemByPriceTable(int id)
+        {
+            var item = await _service.GetItemsByTable(id);
             return item;
         }
 
@@ -80,19 +84,33 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<TabelaPrecoItens>> PostItem(TabelaPrecoItens item)
+        public async Task<ActionResult<TabelaPrecoItens>> PostItem(List<TabelaPrecoItens> items)
         {
-            try
+            TabelaPrecoItens created = new TabelaPrecoItens();
+
+            foreach (var item in items)
             {
-                var created = await _service.Post(item);
-                return CreatedAtAction("GetTabelaPrecoItens", new { id = created.ID }, created);
+                try
+                {
+                    if (item.TabelaPrecoId != null)
+                    {
+                        var itemDelete = await _service.GetItem(item.ID);
+                        if (itemDelete != null)
+                        {
+                            await _service.Delete(itemDelete.ID);
+                        }
+                    }
+                    item.ID = 0;
+                    created = await _service.Post(item);
+                }
+                catch (Exception ex)
+                {
+                    await _service.RemoveContex(item);
+                    await _loggerService.LogError<TabelaPrecoItens>(HttpContext.Request.Method, item, User, ex);
+                    return StatusCode(500, $"Internal server error: {ex.Message}");
+                }
             }
-            catch (Exception ex)
-            {
-                await _service.RemoveContex(item);
-                await _loggerService.LogError<TabelaPrecoItens>(HttpContext.Request.Method, item, User, ex);
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+            return CreatedAtAction("GetTabelaPrecoItens", new { id = created.ID }, created);
         }
 
         [HttpDelete("{id}")]
