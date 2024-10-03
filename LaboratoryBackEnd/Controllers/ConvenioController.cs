@@ -107,7 +107,7 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id);
+                await _service.Delete(id,item.EnderecoId);
                 return NoContent();
             }
             catch (Exception ex)

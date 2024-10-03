@@ -1,6 +1,7 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaboratoryBackEnd.Service
 {
@@ -23,6 +24,11 @@ namespace LaboratoryBackEnd.Service
         public async Task<Plano> GetItem(int id)
         {
             return await _repository.GetItem(id);
+        }
+
+        public async Task<Plano?> GetItemByConvenio(int id)
+        {
+            return await _repository.Query().Where(x=>x.ConvenioId==id).FirstOrDefaultAsync();
         }
 
         public async Task Put(Plano item)

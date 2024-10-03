@@ -43,6 +43,19 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("getByConvenio/{id}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Plano>> GetItemByConvenio(int id)
+        {
+            var item = await _service.GetItemByConvenio(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem(int id, Plano item)
