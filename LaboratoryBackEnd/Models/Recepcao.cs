@@ -18,6 +18,13 @@ namespace LaboratoryBackEnd.Models
         [Column("nome_recepcao")]
         public string NomeRecepcao { get; set; }
 
+        [Column("endereco_id")]
+        public int EnderecoId { get; set; }
+
+        // Propriedade de navegação opcional
+        [ForeignKey("EnderecoId")]
+        public virtual Endereco Endereco { get; set; }
+
         public ICollection<UsuarioRecepcao> UsuariosRecepcoes { get; set; } = new List<UsuarioRecepcao>();
     }
 }
