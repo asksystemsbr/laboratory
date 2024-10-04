@@ -1,6 +1,8 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace LaboratoryBackEnd.Service
 {
@@ -23,6 +25,13 @@ namespace LaboratoryBackEnd.Service
         public async Task<Solicitante> GetItem(int id)
         {
             return await _repository.GetItem(id);
+        }
+
+        public async Task<Solicitante> GetItemByCPF(string cpf)
+        {
+            return await _repository.Query()
+                .Where(x => x.Cpf != null && x.Cpf == cpf)
+                .FirstOrDefaultAsync();
         }
 
         public async Task Put(Solicitante item)

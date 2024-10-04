@@ -41,48 +41,46 @@ public class Cliente : IIdentifiable
     [Column("data_cadastro")]
     public DateTime DataCadastro { get; set; }
 
-    [StringLength(1)]
+    [StringLength(10)]
     [Column("sexo")]
     public string Sexo { get; set; }
 
     [Column("nascimento")]
     public DateTime? Nascimento { get; set; }
 
-    [Required]
     [Column("convenio_id")]
-    public int ConvenioId { get; set; }
+    public int? ConvenioId { get; set; }
 
-    [Required]
     [Column("plano_id")]
-    public int PlanoId { get; set; }
+    public int? PlanoId { get; set; }
 
     [StringLength(20)]
     [Column("rg")]
-    public string RG { get; set; }
+    public string? RG { get; set; }
 
     [StringLength(255)]
     [Column("razao_social")]
-    public string RazaoSocial { get; set; }
+    public string? RazaoSocial { get; set; }
 
     [StringLength(20)]
     [Column("ie")]
-    public string IE { get; set; }
+    public string? IE { get; set; }
 
     [StringLength(20)]
     [Column("im")]
-    public string IM { get; set; }
+    public string? IM { get; set; }
 
     [StringLength(255)]
     [Column("nome_responsavel")]
-    public string NomeResponsavel { get; set; }
+    public string? NomeResponsavel { get; set; }
 
     [StringLength(20)]
     [Column("cpf_responsavel")]
-    public string CpfResponsavel { get; set; }
+    public string? CpfResponsavel { get; set; }
 
     [StringLength(20)]
     [Column("telefone_responsavel")]
-    public string TelefoneResponsavel { get; set; }
+    public string? TelefoneResponsavel { get; set; }
 
     // Propriedade de navegação opcional
     [ForeignKey("EnderecoId")]

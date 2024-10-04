@@ -28,10 +28,11 @@ namespace LaboratoryBackEnd.Models
         [Column("status_os_id")]
         public int StatusOsId { get; set; }
 
+        [Required]
         [Column("descricao_problema", TypeName = "text")]
         public string DescricaoProblema { get; set; }
 
         [Column("observacoes", TypeName = "text")]
-        public string Observacoes { get; set; }
+        public string? Observacoes { get; set; }
     }
 }

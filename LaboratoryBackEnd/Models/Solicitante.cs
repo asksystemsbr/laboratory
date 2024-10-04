@@ -14,6 +14,24 @@ namespace LaboratoryBackEnd.Models
 
         [StringLength(255)]
         [Column("descricao")]
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }  // Permite nulo
+
+        [Column("crm")]
+        public string? Crm { get; set; }
+
+        [Column("uf_crm")]
+        public int? UfCrm { get; set; }
+
+        [Column("cpf")]
+        public string? Cpf { get; set; }
+
+        [Column("email")]
+        public string? Email { get; set; }
+
+        [Column("telefone")]
+        public string? Telefone { get; set; }
+
+        [Column("tipo_solicitante_id")]
+        public int? TipoSolicitanteId { get; set; }
     }
 }

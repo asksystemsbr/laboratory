@@ -47,6 +47,18 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("existsByCPF/{cpf}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<bool>> ExistsByCPF(string cpf)
+        {
+            var item = await _service.GetItemByCPF(cpf);
+            if (item == null)
+            {
+                return Ok(false);
+            }
+            return Ok(true);
+        }
+
         // PUT: api/Cliente/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -98,6 +110,7 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
+                cliente.DataCadastro = DateTime.Now;
                 var createdImovel = await _service.Post(cliente);
                 return CreatedAtAction("GetCliente", new { id = createdImovel.ID }, createdImovel);
 
@@ -126,7 +139,7 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id);
+                await _service.Delete(id,item.EnderecoId);
                 return NoContent();
             }
             catch (Exception ex)

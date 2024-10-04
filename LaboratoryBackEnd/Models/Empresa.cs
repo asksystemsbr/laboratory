@@ -16,8 +16,9 @@ namespace LaboratoryBackEnd.Models
         public int ID { get; set; }
 
         [Required]
+        [StringLength(14)]  // Sugestão opcional para garantir o tamanho do CNPJ
         [Column("cnpj")]
-        public string Cnpj {get => _cnpj; set => _cnpj = Regex.Replace(value, @"[^\d]", ""); }
+        public string Cnpj { get => _cnpj; set => _cnpj = Regex.Replace(value, @"[^\d]", ""); }
         private string _cnpj;
 
         [Required, StringLength(255)]
@@ -39,7 +40,6 @@ namespace LaboratoryBackEnd.Models
         [StringLength(100)]
         [Column("email")]
         public string Email { get; set; }
-
 
         [Column("data_abertura")]
         public DateTime? DataAbertura { get; set; }

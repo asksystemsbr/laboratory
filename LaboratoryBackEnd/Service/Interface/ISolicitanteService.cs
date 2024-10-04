@@ -6,6 +6,7 @@ namespace LaboratoryBackEnd.Service.Interface
     {
         Task<IEnumerable<Solicitante>> GetItems();
         Task<Solicitante> GetItem(int id);
+        Task<Solicitante> GetItemByCPF(string cpf); 
         Task Put(Solicitante item);
         Task<Solicitante> Post(Solicitante item);
         Task Delete(int id);

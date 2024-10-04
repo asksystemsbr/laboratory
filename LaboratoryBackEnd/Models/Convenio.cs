@@ -14,6 +14,13 @@ namespace LaboratoryBackEnd.Models
 
         [StringLength(255)]
         [Column("descricao")]
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; } // Campo opcional
+
+        [Column("endereco_id")]
+        public int EnderecoId { get; set; } // Campo opcional
+
+        // Propriedade de navegação opcional
+        [ForeignKey("EnderecoId")]
+        public virtual Endereco Endereco { get; set; }
     }
 }

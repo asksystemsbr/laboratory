@@ -19,7 +19,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Modulos>>> GetModulos()
+        public async Task<ActionResult<IEnumerable<Modulo>>> GetModulos()
         {
             var items = await _service.GetItems();
             if (items == null || !items.Any())
@@ -30,7 +30,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Modulos>> GetModulo(int id)
+        public async Task<ActionResult<Modulo>> GetModulo(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -41,16 +41,16 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutModulo(int id, Modulos modulo)
+        public async Task<IActionResult> PutModulo(int id, Modulo item)
         {
-            if (id != modulo.ID)
+            if (id != item.ID)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _service.Put(modulo);
+                await _service.Put(item);
                 return NoContent();
             }
             catch (DbUpdateConcurrencyException)
@@ -64,9 +64,9 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Modulos>> PostModulo(Modulos modulo)
+        public async Task<ActionResult<Modulo>> PostModulo(Modulo item)
         {
-            var createdModulo = await _service.Post(modulo);
+            var createdModulo = await _service.Post(item);
             return CreatedAtAction(nameof(GetModulo), new { id = createdModulo.ID }, createdModulo);
         }
 

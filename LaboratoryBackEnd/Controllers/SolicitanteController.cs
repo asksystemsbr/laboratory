@@ -43,6 +43,18 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("existsByCPF/{cpf}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<bool>> ExistsByCPF(string cpf)
+        {
+            var item = await _service.GetItemByCPF(cpf);
+            if (item == null)
+            {
+                return Ok(false); 
+            }
+            return Ok(true); 
+        }
+
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem(int id, Solicitante item)

@@ -1,6 +1,7 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace LaboratoryBackEnd.Models
 {
@@ -9,23 +10,29 @@ namespace LaboratoryBackEnd.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("tecnico_id")]
         public int ID { get; set; }
 
         [Required]
         [MaxLength(255)]
+        [Column("nome")]
         public string Nome { get; set; }
 
         [MaxLength(20)]
-        public string Cpf { get; set; }
+        [Column("cpf")]
+        public string? Cpf { get; set; }
 
         [MaxLength(20)]
-        public string Telefone { get; set; }
+        [Column("telefone")]
+        public string? Telefone { get; set; }  
 
         [MaxLength(100)]
-        public string Email { get; set; }
+        [Column("email")]
+        public string? Email { get; set; }  
 
         [MaxLength(255)]
-        public string Especialidade { get; set; }
+        [Column("especialidade")]
+        public string? Especialidade { get; set; } 
 
         public ICollection<OrdemServicoTecnico> OrdemServicoTecnicos { get; set; } = new List<OrdemServicoTecnico>();
     }

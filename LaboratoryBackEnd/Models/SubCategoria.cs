@@ -12,6 +12,7 @@ namespace LaboratoryBackEnd.Models
         [Column("subcategoria_id")]
         public int ID { get; set; }
 
+        [Required]
         [StringLength(255)]
         [Column("nome")]
         public string Nome { get; set; }

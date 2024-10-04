@@ -14,6 +14,21 @@ namespace LaboratoryBackEnd.Models
 
         [StringLength(255)]
         [Column("descricao")]
-        public string Descricao { get; set; }
+        public string? Descricao { get; set; }  // Permite nulo
+
+        [Column("tabela_preco_id")]
+        public int? TabelaPrecoId { get; set; }
+
+        [Column("convenio_id")]
+        public int? ConvenioId { get; set; }
+
+        [Column("custo_horario")]
+        public decimal? CustoHorario { get; set; }
+
+        [Column("custo_filme")]
+        public decimal? Filme { get; set; }
+
+        [Column("codigo_arnb")]
+        public string? CodigoArnb { get; set; }
     }
 }

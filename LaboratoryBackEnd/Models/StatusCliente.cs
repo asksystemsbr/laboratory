@@ -12,6 +12,7 @@ namespace LaboratoryBackEnd.Models
         [Column("status_cliente_id")]
         public int ID { get; set; }
 
+        [Required]
         [Column("descricao")]
         [StringLength(50)]
         public string Descricao { get; set; }

@@ -16,41 +16,45 @@ public class Contas : IIdentifiable
     public string ContaNome { get; set; }
 
     [Column(TypeName = "decimal(10, 3)")]
-    public decimal Valor { get; set; }
+    public decimal? Valor { get; set; }
 
     [StringLength(255)]
     public string Tipo { get; set; }
 
-    [Column("dt_Vencimento")]
+    [Column("data_vencimento")]
     public DateTime? DtVencimento { get; set; }
 
-    [Column("dt_pgto")]
+    [Column("data_pagamento")]
     public DateTime? DtPgto { get; set; }
 
     [Column("Cliente_id")]
     public int? ClienteId { get; set; }
 
     [Column(TypeName = "decimal(19, 3)")]
-    public decimal ValorPagoRecebido { get; set; }
+    public decimal? ValorPagoRecebido { get; set; }
 
     [Column("Fornecedor_id")]
     public int? FornecedorId { get; set; }
 
-    [Column("Categoria_id")]
-    public int CategoriaId { get; set; }
+    [Column("categoria_id")]
+    public int? CategoriaId { get; set; }
 
-    [Column("SubCategoria_id")]
-    public int SubCategoriaId { get; set; }
+    [Column("subcategoria_id")]
+    public int? SubCategoriaId { get; set; }
 
-    [Column("formapagamento_id")]
-    public int FormaPagamentoId { get; set; }
+    [Column("metodo_pagamento_id")]
+    public int? FormaPagamentoId { get; set; }
 
-    [Column("numcheque")]
+    [Column("numero_cheque")]
     [StringLength(255)]
     public string NumCheque { get; set; }
 
     [Column("transferencia")]
     public int Transferencia { get; set; }
+
+    [Column("imovel_id")]
+    public int? ImovelId { get; set; }
+
 
     // Relacionamentos
     [ForeignKey("ClienteId")]

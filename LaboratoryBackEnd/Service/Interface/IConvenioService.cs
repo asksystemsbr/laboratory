@@ -8,7 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<Convenio> GetItem(int id);
         Task Put(Convenio item);
         Task<Convenio> Post(Convenio item);
-        Task Delete(int id);
+        Task Delete(int id,int idEndereco);
         bool Exists(int id);
         Task RemoveContex(Convenio item);
     }

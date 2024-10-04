@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LaboratoryBackEnd.Models
 {
-    [Table("Servicos")]
+    [Table("servicos")]
     public class Servico : IIdentifiable
     {
         [Key]
@@ -18,8 +18,8 @@ namespace LaboratoryBackEnd.Models
         [Column("nome_servico")]
         public string NomeServico { get; set; }
 
-        [Column("descricao_servico")]
-        public string DescricaoServico { get; set; }
+        [Column("descricao_servico", TypeName = "text")]
+        public string? DescricaoServico { get; set; }  // Permite nulo
 
         [Required]
         [Column("preco", TypeName = "decimal(10,2)")]
