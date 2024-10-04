@@ -8,7 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<Recepcao> GetItem(int id);
         Task Put(Recepcao item);
         Task<Recepcao> Post(Recepcao item);
-        Task Delete(int id);
+        Task Delete(int id,int idEndereco);
         bool Exists(int id);
         Task RemoveContex(Recepcao item);
         Task<int> GetLasdOrOne();

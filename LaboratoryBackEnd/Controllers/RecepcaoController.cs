@@ -75,7 +75,7 @@ namespace LaboratoryBackEnd.Controllers
                 return NotFound();
             }
 
-            await _service.Delete(id);
+            await _service.Delete(id, item.EnderecoId);
             return NoContent();
         }
     }

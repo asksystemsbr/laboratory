@@ -6,6 +6,7 @@ namespace LaboratoryBackEnd.Service.Interface
     {
         Task<IEnumerable<Plano>> GetItems();
         Task<Plano> GetItem(int id);
+        Task<Plano?> GetItemByConvenio(int id);
         Task Put(Plano item);
         Task<Plano> Post(Plano item);
         Task Delete(int id);
