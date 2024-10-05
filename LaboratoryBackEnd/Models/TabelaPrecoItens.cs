@@ -21,13 +21,13 @@ namespace LaboratoryBackEnd.Models
         [Column("valor")]
         public decimal? Valor { get; set; }
 
-        [Column("custo_operacional")]
+        [Column("custo_operacional", TypeName = "decimal(10,4)")]
         public decimal? CustoOperacional { get; set; }
 
-        [Column("custo_horario")]
+        [Column("custo_horario", TypeName = "decimal(10,4)")]
         public decimal? CustoHorario { get; set; }
 
-        [Column("filme")]
+        [Column("filme", TypeName = "decimal(10,4)")]
         public decimal? Filme { get; set; }
 
         [Column("codigo_arnb")]
