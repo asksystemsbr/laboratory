@@ -21,11 +21,11 @@ namespace LaboratoryBackEnd.Models
 
         [Column("convenio_id")]
         public int? ConvenioId { get; set; }
-
-        [Column("custo_horario")]
+        
+        [Column("custo_horario", TypeName = "decimal(10,4)")]
         public decimal? CustoHorario { get; set; }
 
-        [Column("custo_filme")]
+        [Column("custo_filme", TypeName = "decimal(10,4)")]
         public decimal? Filme { get; set; }
 
         [Column("codigo_arnb")]
