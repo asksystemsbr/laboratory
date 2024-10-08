@@ -169,6 +169,7 @@ builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 
 
 
+
 //registro de serviços
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
@@ -234,6 +235,7 @@ builder.Services.AddScoped<IRecipienteAmostraService, RecipienteAmostraService>(
 builder.Services.AddScoped<IRotinaExameService, RotinaExameService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IEmpresaService, EmpresaService>();
+builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoService>();
 
 
 // Configuração do serviço de logger
