@@ -1,10 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using LaboratoryBackEnd.Data.Interface;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LaboratoryBackEnd.Models
 {
     [Table("recepcao_convenio_planos")]
-    public class RecepcaoConvenioPlano
+    public class RecepcaoConvenioPlano : IIdentifiable
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
