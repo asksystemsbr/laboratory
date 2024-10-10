@@ -12,7 +12,5 @@ namespace LaboratoryBackEnd.Service.Interface
         bool Exists(int id);
         Task RemoveContex(Recepcao item);
         Task<int> GetLasdOrOne();
-        Task<IEnumerable<Convenio>> GetConvenios();
-        Task<IEnumerable<Plano>> GetPlanos();
     }
 }

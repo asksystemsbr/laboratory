@@ -1,4 +1,5 @@
 ﻿using LaboratoryBackEnd.Data.Interface;
+using LaboratoryBackEnd.DTOs;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -16,9 +17,20 @@ namespace LaboratoryBackEnd.Service
             _repository = repository;
         }
 
-        public Task<IEnumerable<RecepcaoConvenioPlano>> GetItems()
+        public async Task<IEnumerable<RecepcaoConvenioPlanoDto>> GetItems()
         {
-            return  _repository.GetItems();
+            return await _repository.Query()
+             .Select(x => new RecepcaoConvenioPlanoDto
+             {
+                 ID = x.ID,
+                 RecepcaoId = x.RecepcaoId,
+                 ConvenioId = x.ConvenioId,
+                 PlanoId = x.PlanoId,
+                 NomeRecepcao = x.Recepcao.NomeRecepcao,
+                 DescricaoConvenio = x.Convenio.Descricao,
+                 DescricaoPlano = x.Plano.Descricao
+             })
+             .ToListAsync();
         }
 
         public async Task<RecepcaoConvenioPlano> GetItem(int id)
