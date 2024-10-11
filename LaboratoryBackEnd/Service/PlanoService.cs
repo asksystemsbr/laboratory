@@ -31,6 +31,11 @@ namespace LaboratoryBackEnd.Service
             return await _repository.Query().Where(x=>x.ConvenioId==id).FirstOrDefaultAsync();
         }
 
+        public async Task<List<Plano>> GetListByConvenio(int id)
+        {
+            return await _repository.Query().Where(x => x.ConvenioId == id).ToListAsync();
+        }
+
         public async Task Put(Plano item)
         {
             await _repository.Put(item);

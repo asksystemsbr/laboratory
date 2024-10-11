@@ -50,6 +50,18 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("existsByCNPJ/{cnpj}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<bool>> ExistsByCPF(string cnpj)
+        {
+            var item = await _service.GetItemByCNPJ(cnpj);
+            if (item == null)
+            {
+                return Ok(false);
+            }
+            return Ok(true);
+        }
+
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutLaboratorioApoio(int id, LaboratorioApoio laboratorioApoio)
@@ -116,7 +128,7 @@ namespace LaboratoryBackEnd.Controllers
             {
                 await _serviceMaterialApoio.DeleteByLaboratorio(id);
                 await _serviceExame.DeleteByLaboratorio(id);
-                await _service.Delete(id);
+                await _service.Delete(id, item.EnderecoId);
                 return NoContent();
             }
             catch (Exception ex)
