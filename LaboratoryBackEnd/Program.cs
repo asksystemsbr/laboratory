@@ -42,13 +42,15 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
-builder.Services.AddControllers();
-    //.AddJsonOptions(options =>
-    //{
-    //    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    //    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
-    //});
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
+
+
 
 
 //configuração JWT
@@ -153,6 +155,23 @@ builder.Services.AddScoped<IRepository<UF>, Repository<UF>>();
 builder.Services.AddScoped<IRepository<Usuario>, Repository<Usuario>>();
 builder.Services.AddScoped<IRepository<UsuarioRecepcao>, Repository<UsuarioRecepcao>>();
 
+builder.Services.AddScoped<IRepository<LaboratorioApoioExameApoio>, Repository<LaboratorioApoioExameApoio>>();
+builder.Services.AddScoped<IRepository<LaboratorioApoioMateriais>, Repository<LaboratorioApoioMateriais>>();
+builder.Services.AddScoped<IRepository<OperationLog>, Repository<OperationLog>>();
+builder.Services.AddScoped<IRepository<GrupoUsuario>, Repository<GrupoUsuario>>();
+builder.Services.AddScoped<IRepository<OrdemServicoEquipamento>, Repository<OrdemServicoEquipamento>>();
+builder.Services.AddScoped<IRepository<OrdemServicoExame>, Repository<OrdemServicoExame>>();
+builder.Services.AddScoped<IRepository<OrdemServicoServico>, Repository<OrdemServicoServico>>();
+builder.Services.AddScoped<IRepository<OrdemServicoTecnico>, Repository<OrdemServicoTecnico>>();
+builder.Services.AddScoped<IRepository<RecipienteAmostra>, Repository<RecipienteAmostra>>();
+builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
+builder.Services.AddScoped<IRepository<Endereco>, Repository<Endereco>>();
+builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
+builder.Services.AddScoped<IRepository<RecepcaoConvenioPlano>, Repository<RecepcaoConvenioPlano>>();
+
+
+
+
 
 
 //registro de serviços
@@ -206,6 +225,22 @@ builder.Services.AddScoped<ITipoSolicitanteService, TipoSolicianteService>();
 builder.Services.AddScoped<IUFService, UFService>();
 builder.Services.AddScoped<IUsuarioRecepcaoService, UsuarioRecepcaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+
+builder.Services.AddScoped<ILaboratorioApoioExameApoioService, LaboratorioApoioExameApoioService>();
+builder.Services.AddScoped<ILaboratorioApoioMateriaisService, LaboratorioApoioMateriaisService>();
+builder.Services.AddScoped<IOperationLogService, OperationLogService>();
+builder.Services.AddScoped<IGrupoUsuarioService, GrupoUsuarioService>();
+builder.Services.AddScoped<IOrdemServicoEquipamentoService, OrdemServicoEquipamentoService>();
+builder.Services.AddScoped<IOrdemServicoExameService, OrdemServicoExameService>();
+builder.Services.AddScoped<IOrdemServicoServicoService, OrdemServicoServicoService>();
+builder.Services.AddScoped<IOrdemServicoTecnicoService, OrdemServicoTecnicoService>();
+builder.Services.AddScoped<IRecipienteAmostraService, RecipienteAmostraService>();
+builder.Services.AddScoped<IRotinaExameService, RotinaExameService>();
+builder.Services.AddScoped<IEnderecoService, EnderecoService>();
+builder.Services.AddScoped<IEmpresaService, EmpresaService>();
+builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoService>();
+
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();
