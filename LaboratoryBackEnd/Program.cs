@@ -42,13 +42,7 @@ builder.Services.AddCors(options =>
 });
 #endregion
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        options.JsonSerializerOptions.WriteIndented = true;
-        options.JsonSerializerOptions.PropertyNamingPolicy = null;
-    });
+builder.Services.AddControllers();
 
 
 
