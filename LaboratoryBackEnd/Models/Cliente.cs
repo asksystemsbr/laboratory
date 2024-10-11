@@ -18,7 +18,7 @@ public class Cliente : IIdentifiable
 
     [StringLength(20)]
     [Column("cpf_cnpj")]
-    public string CpfCnpj { get; set; }
+    public string? CpfCnpj { get; set; }
 
     [Required] 
     [Column("endereco_id")]
@@ -81,6 +81,27 @@ public class Cliente : IIdentifiable
     [StringLength(20)]
     [Column("telefone_responsavel")]
     public string? TelefoneResponsavel { get; set; }
+
+    [Column("nome_social", TypeName = "varchar(max)")]
+    public string? NomeSocial { get; set; }
+
+    [Column("nome_mae", TypeName = "varchar(max)")]
+    public string? NomeMae { get; set; }
+
+    [Column("foto", TypeName = "varbinary(max)")]
+    public byte[]? Foto { get; set; }
+
+    [Column("profissao", TypeName = "varchar(max)")]
+    public string? Profissao { get; set; }
+
+    [Column("matricula", TypeName = "varchar(max)")]
+    public string? Matricula { get; set; }
+
+    [Column("validade_matricula", TypeName = "date")]
+    public DateTime? ValidadeMatricula { get; set; }
+
+    [Column("titular_convenio", TypeName = "varchar(max)")]
+    public string? TitularConvenio { get; set; }
 
     // Propriedade de navegação opcional
     [ForeignKey("EnderecoId")]

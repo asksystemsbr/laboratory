@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using LaboratoryBackEnd.Utils;
+using LaboratoryBackEnd.Data.DTO;
+using LaboratoryBackEnd.Data.Mpas;
 
 namespace LaboratoryBackEnd.Controllers
 {
@@ -63,14 +66,14 @@ namespace LaboratoryBackEnd.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutCliente(int id, ClienteDto clienteDto)
         {
-            if (id != cliente.ID)
+            if (id != clienteDto.ID)
             {
                 return BadRequest();
             }
 
-
+            var cliente = new ClienteDtoToCliente().MapDtoToCliente(clienteDto);
             try
             {
                 await _service.Put(cliente);
@@ -105,12 +108,15 @@ namespace LaboratoryBackEnd.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Cliente>> PostCliente(ClienteDto clienteDto)
         {
 
+            var cliente = new ClienteDtoToCliente().MapDtoToCliente(clienteDto);
             try
             {
+                
                 cliente.DataCadastro = DateTime.Now;
+
                 var createdImovel = await _service.Post(cliente);
                 return CreatedAtAction("GetCliente", new { id = createdImovel.ID }, createdImovel);
 
