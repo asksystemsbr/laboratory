@@ -15,11 +15,15 @@ namespace LaboratoryBackEnd.Controllers
     {
         private readonly ILoggerService _loggerService;
         private readonly IEmpresaService _service;
+        private readonly IEmpresaCategoriaService _serviceEmpresaCategorias;
 
-        public EmpresaController(ILoggerService loggerService, IEmpresaService service)
+        public EmpresaController(ILoggerService loggerService
+            , IEmpresaService service,
+            IEmpresaCategoriaService serviceEmpresaCategorias)
         {
             _loggerService = loggerService;
             _service = service;
+            _serviceEmpresaCategorias = serviceEmpresaCategorias;
         }
 
         [HttpGet]
@@ -39,6 +43,26 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<Empresa>> GetEmpresa(int id)
         {
             var item = await _service.GetItem(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpGet("getEmpresaCategoria")]
+        [Authorize(Policy = "CanRead")] // Adicionando autorização de leitura
+        public async Task<ActionResult<IEnumerable<EmpresaCatagoria>>> GetEmpresasCategorias()
+        {
+            var items = await _serviceEmpresaCategorias.GetItems();
+            return Ok(items);
+        }
+
+        [HttpGet("getEmpresaCategoria/{id}")]
+        [Authorize(Policy = "CanRead")] // Adicionando autorização de leitura
+        public async Task<ActionResult<EmpresaCatagoria>> GetEmpresasCategorias(int id)
+        {
+            var item = await _serviceEmpresaCategorias.GetItem(id);
             if (item == null)
             {
                 return NotFound();
@@ -113,7 +137,7 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id);
+                await _service.Delete(id, item.EnderecoId);
                 return NoContent();
             }
             catch (Exception ex)
