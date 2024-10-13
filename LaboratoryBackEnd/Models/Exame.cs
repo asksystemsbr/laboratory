@@ -176,5 +176,11 @@ namespace LaboratoryBackEnd.Models
         [MaxLength(255)]
         [Column("DIAS_REALIZACAO_APOIO")]
         public string? DiasRealizacaoApoio { get; set; }
+
+        [Column("meio_coleta_similar")]
+        public string? MeioColetaSimilar { get; set; }
+
+        [Column("material_coleta_similar")]
+        public string? MaterialColetaSimilar { get; set; }
     }
 }
