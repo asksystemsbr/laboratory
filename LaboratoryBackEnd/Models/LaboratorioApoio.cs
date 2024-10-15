@@ -30,5 +30,8 @@ namespace LaboratoryBackEnd.Models
         [StringLength(20)]
         [Column("cpf_cnpj")]
         public string CpfCnpj { get; set; }
+
+        [Column("empresa_id")]
+        public int? EmpresaId { get; set; }
     }
 }

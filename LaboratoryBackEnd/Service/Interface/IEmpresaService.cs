@@ -10,7 +10,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<Empresa> GetItem(int id);
         Task Put(Empresa item);
         Task<Empresa> Post(Empresa item);
-        Task Delete(int id);
+        Task Delete(int id, int idEndereco);
         bool Exists(int id);
         Task RemoveContex(Empresa item);
         Task<int> GetLasdOrOne();
