@@ -2,10 +2,13 @@
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 
 namespace LaboratoryBackEnd.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class RecepcaoConvenioPlanoController : ControllerBase
     {
@@ -19,6 +22,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanos()
         {
             var items = await _service.GetItems();
@@ -26,6 +30,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> GetRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -37,6 +42,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("byRecepcao/{recepcaoId}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanosByRecepcao(int recepcaoId)
         {
             var items = await _service.GetItemsByRecepcao(recepcaoId);
@@ -44,6 +50,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutRecepcaoConvenioPlano(int id, RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             if (id != recepcaoConvenioPlano.ID)
@@ -67,6 +74,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> PostRecepcaoConvenioPlano(RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             var createdRecepcaoConvenioPlano = await _service.Post(recepcaoConvenioPlano);
@@ -74,6 +82,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -87,9 +96,15 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost("addOrUpdate/{recepcaoId}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> AddOrUpdateRecepcaoConvenioPlanos(int recepcaoId, [FromBody] List<RecepcaoConvenioPlano> conveniosPlanos)
         {
             await _service.AddOrUpdateAsync(recepcaoId, conveniosPlanos);
+
+            // Atualiza o campo 'restricao' baseado no valor dinâmico vindo do front
+            int restricaoValue = conveniosPlanos.FirstOrDefault()?.Retricao ?? 0;
+            //await _service.UpdateRestricao(recepcaoId, restricaoValue);
+
             return NoContent();
         }
     }
