@@ -25,10 +25,10 @@ namespace LaboratoryBackEnd.Service
                  ID = x.ID,
                  RecepcaoId = x.RecepcaoId,
                  ConvenioId = x.ConvenioId,
-                 PlanoId = x.PlanoId,
-                 NomeRecepcao = x.Recepcao.NomeRecepcao,
-                 DescricaoConvenio = x.Convenio.Descricao,
-                 DescricaoPlano = x.Plano.Descricao
+                 PlanoId = x.PlanoId
+                 //NomeRecepcao = x.Recepcao.NomeRecepcao,
+                 //DescricaoConvenio = x.Convenio.Descricao,
+                 //DescricaoPlano = x.Plano.Descricao
              })
              .ToListAsync();
         }
@@ -89,6 +89,19 @@ namespace LaboratoryBackEnd.Service
                 {
                     await Put(item);
                 }
+            }
+        }
+
+        public async Task UpdateRestricao(int recepcaoId, bool restricaoValue)
+        {
+            var itemsToUpdate = await _repository.Query()
+                .Where(x => x.RecepcaoId == recepcaoId)
+                .ToListAsync();
+
+            foreach (var item in itemsToUpdate)
+            {
+                item.Restricao = restricaoValue;
+                await _repository.Put(item);
             }
         }
     }

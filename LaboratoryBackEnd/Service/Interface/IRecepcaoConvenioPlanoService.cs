@@ -15,5 +15,6 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<IEnumerable<RecepcaoConvenioPlano>> GetItemsByRecepcao(int recepcaoId);
         Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos);
         //Task<int> GetLasdOrOne();
+        Task UpdateRestricao(int recepcaoId, bool restricaoValue);
     }
 }

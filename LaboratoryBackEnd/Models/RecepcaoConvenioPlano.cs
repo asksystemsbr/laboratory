@@ -21,25 +21,25 @@ namespace LaboratoryBackEnd.Models
         [Column("plano_id")]
         public int? PlanoId { get; set; }
 
-        [ForeignKey("RecepcaoId")]
-        public virtual Recepcao Recepcao { get; set; }
+        //[ForeignKey("RecepcaoId")]
+        //public virtual Recepcao Recepcao { get; set; }
 
-        [ForeignKey("ConvenioId")]
-        public virtual Convenio Convenio { get; set; }
+        //[ForeignKey("ConvenioId")]
+        //public virtual Convenio Convenio { get; set; }
 
-        [ForeignKey("PlanoId")]
-        public virtual Plano Plano { get; set; }
+        //[ForeignKey("PlanoId")]
+        //public virtual Plano Plano { get; set; }
 
         [Column("restricao")]
-        public int? Retricao { get; set; }
+        public bool Restricao { get; set; }
 
-        [NotMapped]
-        public string NomeRecepcao { get; set; }
+        //[NotMapped]
+        //public string NomeRecepcao { get; set; }
 
-        [NotMapped]
-        public string DescricaoConvenio { get; set; }
+        //[NotMapped]
+        //public string DescricaoConvenio { get; set; }
 
-        [NotMapped]
-        public string DescricaoPlano { get; set; }
+        //[NotMapped]
+        //public string DescricaoPlano { get; set; }
     }
 }

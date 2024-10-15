@@ -72,6 +72,11 @@ namespace LaboratoryBackEnd.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<RecepcaoConvenioPlano>()
+                .Property(r => r.Restricao)
+                .HasColumnType("bit");
         }
     }
 }
