@@ -118,11 +118,6 @@ namespace LaboratoryBackEnd.Controllers
             try
             {
                 await _service.AddOrUpdateAsync(recepcaoId, conveniosPlanos);
-
-                // Atualiza o campo 'restricao' baseado no valor dinâmico vindo do front
-                bool restricaoValue = conveniosPlanos.FirstOrDefault()?.Restricao ?? false;
-                await _service.UpdateRestricao(recepcaoId, restricaoValue);
-
                 return NoContent();
             }
             catch (Exception ex)

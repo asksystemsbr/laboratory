@@ -30,9 +30,6 @@ namespace LaboratoryBackEnd.Models
         //[ForeignKey("PlanoId")]
         //public virtual Plano Plano { get; set; }
 
-        [Column("restricao")]
-        public bool Restricao { get; set; }
-
         //[NotMapped]
         //public string NomeRecepcao { get; set; }
 

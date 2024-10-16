@@ -70,7 +70,21 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos)
         {
-            var existingItems = await GetItemsByRecepcao(recepcaoId);
+           
+                // Primeiro, deletamos todos os registros existentes para esta recepção
+                await DeleteAllForReception(recepcaoId);
+
+                foreach (var item in conveniosPlanos)
+                {
+                    item.RecepcaoId = recepcaoId;
+                    await Post(item);
+                }
+            
+
+            var existingItems = await _repository.Query()
+                                        .AsNoTracking()
+                                        .Where(x => x.RecepcaoId == recepcaoId)
+                                        .ToListAsync();
             var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
 
             foreach (var item in itemsToRemove)
@@ -92,17 +106,29 @@ namespace LaboratoryBackEnd.Service
             }
         }
 
-        public async Task UpdateRestricao(int recepcaoId, bool restricaoValue)
+        public async Task DeleteAllForReception(int recepcaoId)
         {
-            var itemsToUpdate = await _repository.Query()
+            var itemsToDelete = await _repository.Query()
                 .Where(x => x.RecepcaoId == recepcaoId)
                 .ToListAsync();
 
-            foreach (var item in itemsToUpdate)
+            foreach (var item in itemsToDelete)
             {
-                item.Restricao = restricaoValue;
-                await _repository.Put(item);
+                await Delete(item.ID);
             }
         }
+
+        //public async Task UpdateRestricao(int recepcaoId, bool restricaoValue)
+        //{
+        //    var itemsToUpdate = await _repository.Query()
+        //        .Where(x => x.RecepcaoId == recepcaoId)
+        //        .ToListAsync();
+
+        //    foreach (var item in itemsToUpdate)
+        //    {
+        //        item.Restricao = restricaoValue;
+        //        await _repository.Put(item);
+        //    }
+        //}
     }
 }

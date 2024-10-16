@@ -14,7 +14,8 @@ namespace LaboratoryBackEnd.Service.Interface
         Task RemoveContex(RecepcaoConvenioPlano item);
         Task<IEnumerable<RecepcaoConvenioPlano>> GetItemsByRecepcao(int recepcaoId);
         Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos);
+        Task DeleteAllForReception(int recepcaoId);
         //Task<int> GetLasdOrOne();
-        Task UpdateRestricao(int recepcaoId, bool restricaoValue);
+        //Task UpdateRestricao(int recepcaoId, bool restricaoValue);
     }
 }
