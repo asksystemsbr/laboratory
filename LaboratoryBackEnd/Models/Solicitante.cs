@@ -33,5 +33,8 @@ namespace LaboratoryBackEnd.Models
 
         [Column("tipo_solicitante_id")]
         public int? TipoSolicitanteId { get; set; }
+
+        [Column("especialidade_id")]
+        public int? EspecialidadeId { get; set; }
     }
 }

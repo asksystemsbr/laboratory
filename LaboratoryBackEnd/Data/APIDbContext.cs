@@ -63,6 +63,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<UsuarioRecepcao> UsuariosRecepcoes { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
+        public DbSet<EmpresaCatagoria> EmpresaCatagoria { get; set; }
         public DbSet<RecepcaoConvenioPlano> RecepcaoConvenioPlanos { get; set; }
 
         public APIDbContext(DbContextOptions<APIDbContext> options) : base(options)
@@ -71,6 +72,7 @@ namespace LaboratoryBackEnd.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
         }
     }
 }

@@ -2,10 +2,15 @@
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using System.Net;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace LaboratoryBackEnd.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class RecepcaoConvenioPlanoController : ControllerBase
     {
@@ -19,6 +24,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanos()
         {
             var items = await _service.GetItems();
@@ -26,6 +32,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> GetRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -37,6 +44,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("byRecepcao/{recepcaoId}")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanosByRecepcao(int recepcaoId)
         {
             var items = await _service.GetItemsByRecepcao(recepcaoId);
@@ -44,6 +52,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
+        //[Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutRecepcaoConvenioPlano(int id, RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             if (id != recepcaoConvenioPlano.ID)
@@ -67,6 +76,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> PostRecepcaoConvenioPlano(RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             var createdRecepcaoConvenioPlano = await _service.Post(recepcaoConvenioPlano);
@@ -74,6 +84,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
+        //[Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -86,11 +97,35 @@ namespace LaboratoryBackEnd.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Adiciona ou atualiza os convênios e planos para uma recepção específica
+        /// </summary>
+        /// <param name="recepcaoId">ID da recepção</param>
+        /// <param name="conveniosPlanos">Lista de convênios e planos a serem adicionados ou atualizados</param>
+        /// <returns>Nenhum conteúdo se a operação for bem-sucedida</returns>
         [HttpPost("addOrUpdate/{recepcaoId}")]
-        public async Task<IActionResult> AddOrUpdateRecepcaoConvenioPlanos(int recepcaoId, [FromBody] List<RecepcaoConvenioPlano> conveniosPlanos)
+        //[Authorize(Policy = "CanWrite")]
+        [SwaggerOperation(Summary = "Adiciona ou atualiza convênios e planos para uma recepção",
+                          Description = "Este endpoint adiciona novos convênios e planos ou atualiza os existentes para uma recepção específica. Também atualiza o campo de restrição.")]
+        [SwaggerResponse((int)HttpStatusCode.NoContent, "Operação realizada com sucesso")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, "Requisição inválida")]
+        [SwaggerResponse((int)HttpStatusCode.Unauthorized, "Não autorizado")]
+        [SwaggerResponse((int)HttpStatusCode.InternalServerError, "Erro interno do servidor")]
+        public async Task<IActionResult> AddOrUpdateRecepcaoConvenioPlanos(
+            [SwaggerParameter("ID da recepção", Required = true)] int recepcaoId,
+            [SwaggerParameter("Lista de convênios e planos", Required = true)][FromBody] List<RecepcaoConvenioPlano> conveniosPlanos)
         {
-            await _service.AddOrUpdateAsync(recepcaoId, conveniosPlanos);
-            return NoContent();
+            try
+            {
+                await _service.AddOrUpdateAsync(recepcaoId, conveniosPlanos);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                //_loggerService.LogError(ex, $"Erro ao adicionar/atualizar convênios e planos para recepção {recepcaoId}");
+                return StatusCode(500, "Ocorreu um erro interno ao processar sua solicitação.");
+            }
         }
     }
 }
