@@ -81,16 +81,16 @@ namespace LaboratoryBackEnd.Service
                 }
             
 
-            var existingItems = await _repository.Query()
-                                        .AsNoTracking()
-                                        .Where(x => x.RecepcaoId == recepcaoId)
-                                        .ToListAsync();
-            var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
+            //var existingItems = await _repository.Query()
+            //                            .AsNoTracking()
+            //                            .Where(x => x.RecepcaoId == recepcaoId)
+            //                            .ToListAsync();
+            //var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
 
-            foreach (var item in itemsToRemove)
-            {
-                await Delete(item.ID);
-            }
+            //foreach (var item in itemsToRemove)
+            //{
+            //    await Delete(item.ID);
+            //}
 
             foreach (var item in conveniosPlanos)
             {
