@@ -70,27 +70,21 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos)
         {
-           
-                // Primeiro, deletamos todos os registros existentes para esta recepção
-                await DeleteAllForReception(recepcaoId);
 
-                foreach (var item in conveniosPlanos)
-                {
-                    item.RecepcaoId = recepcaoId;
-                    await Post(item);
-                }
-            
+            // Primeiro, deletamos todos os registros existentes para esta recepção e convênio específico
+            foreach (var convenioPlano in conveniosPlanos)
+            {
+                // Passar o `convenioId` corretamente ao método de deleção
+                await DeleteAllForReception(recepcaoId, Convert.ToInt32(convenioPlano.ConvenioId));
+            }
 
-            //var existingItems = await _repository.Query()
-            //                            .AsNoTracking()
-            //                            .Where(x => x.RecepcaoId == recepcaoId)
-            //                            .ToListAsync();
-            //var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
+            // Inserir ou atualizar os novos registros
+            foreach (var item in conveniosPlanos)
+            {
+                item.RecepcaoId = recepcaoId;
+                await Post(item);
+            }
 
-            //foreach (var item in itemsToRemove)
-            //{
-            //    await Delete(item.ID);
-            //}
 
             foreach (var item in conveniosPlanos)
             {
@@ -106,10 +100,10 @@ namespace LaboratoryBackEnd.Service
             }
         }
 
-        public async Task DeleteAllForReception(int recepcaoId)
+        public async Task DeleteAllForReception(int recepcaoId, int convenioId)
         {
             var itemsToDelete = await _repository.Query()
-                .Where(x => x.RecepcaoId == recepcaoId)
+                .Where(x => x.RecepcaoId == recepcaoId && x.ConvenioId == convenioId)
                 .ToListAsync();
 
             foreach (var item in itemsToDelete)
@@ -117,18 +111,5 @@ namespace LaboratoryBackEnd.Service
                 await Delete(item.ID);
             }
         }
-
-        //public async Task UpdateRestricao(int recepcaoId, bool restricaoValue)
-        //{
-        //    var itemsToUpdate = await _repository.Query()
-        //        .Where(x => x.RecepcaoId == recepcaoId)
-        //        .ToListAsync();
-
-        //    foreach (var item in itemsToUpdate)
-        //    {
-        //        item.Restricao = restricaoValue;
-        //        await _repository.Put(item);
-        //    }
-        //}
     }
 }
