@@ -72,6 +72,7 @@ namespace LaboratoryBackEnd.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+           
         }
     }
 }

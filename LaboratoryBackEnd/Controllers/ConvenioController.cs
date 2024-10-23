@@ -23,7 +23,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<Convenio>>> GetItems()
         {
             var items = await _service.GetItems();

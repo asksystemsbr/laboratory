@@ -25,10 +25,10 @@ namespace LaboratoryBackEnd.Service
                  ID = x.ID,
                  RecepcaoId = x.RecepcaoId,
                  ConvenioId = x.ConvenioId,
-                 PlanoId = x.PlanoId,
-                 NomeRecepcao = x.Recepcao.NomeRecepcao,
-                 DescricaoConvenio = x.Convenio.Descricao,
-                 DescricaoPlano = x.Plano.Descricao
+                 PlanoId = x.PlanoId
+                 //NomeRecepcao = x.Recepcao.NomeRecepcao,
+                 //DescricaoConvenio = x.Convenio.Descricao,
+                 //DescricaoPlano = x.Plano.Descricao
              })
              .ToListAsync();
         }
@@ -70,13 +70,27 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos)
         {
-            var existingItems = await GetItemsByRecepcao(recepcaoId);
-            var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
+           
+                // Primeiro, deletamos todos os registros existentes para esta recepção
+                await DeleteAllForReception(recepcaoId);
 
-            foreach (var item in itemsToRemove)
-            {
-                await Delete(item.ID);
-            }
+                foreach (var item in conveniosPlanos)
+                {
+                    item.RecepcaoId = recepcaoId;
+                    await Post(item);
+                }
+            
+
+            //var existingItems = await _repository.Query()
+            //                            .AsNoTracking()
+            //                            .Where(x => x.RecepcaoId == recepcaoId)
+            //                            .ToListAsync();
+            //var itemsToRemove = existingItems.Where(e => !conveniosPlanos.Any(cp => cp.ID == e.ID)).ToList();
+
+            //foreach (var item in itemsToRemove)
+            //{
+            //    await Delete(item.ID);
+            //}
 
             foreach (var item in conveniosPlanos)
             {
@@ -91,5 +105,30 @@ namespace LaboratoryBackEnd.Service
                 }
             }
         }
+
+        public async Task DeleteAllForReception(int recepcaoId)
+        {
+            var itemsToDelete = await _repository.Query()
+                .Where(x => x.RecepcaoId == recepcaoId)
+                .ToListAsync();
+
+            foreach (var item in itemsToDelete)
+            {
+                await Delete(item.ID);
+            }
+        }
+
+        //public async Task UpdateRestricao(int recepcaoId, bool restricaoValue)
+        //{
+        //    var itemsToUpdate = await _repository.Query()
+        //        .Where(x => x.RecepcaoId == recepcaoId)
+        //        .ToListAsync();
+
+        //    foreach (var item in itemsToUpdate)
+        //    {
+        //        item.Restricao = restricaoValue;
+        //        await _repository.Put(item);
+        //    }
+        //}
     }
 }
