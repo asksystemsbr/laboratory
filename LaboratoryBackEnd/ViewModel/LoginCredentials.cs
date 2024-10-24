@@ -8,5 +8,7 @@
         public string token { get; set; }
 
         public List<string>? permissions { get; set; }
+        
+        public string unidadeId { get; set; }
     }
 }

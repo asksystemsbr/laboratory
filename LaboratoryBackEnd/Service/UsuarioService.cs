@@ -12,6 +12,7 @@ namespace LaboratoryBackEnd.Service
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<Usuario> _repository;
+        private readonly IRepository<UsuarioRecepcao> _repositoryUsuarioRecepcao;
         private readonly IRepository<GrupoUsuario> _repositoryGrupoUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
         private readonly IRepository<TipoPermissao> _repositoryTipoPermissao;
@@ -22,7 +23,8 @@ namespace LaboratoryBackEnd.Service
         IRepository<GrupoUsuario> repositoryGrupoUsuario,
         IRepository<Permissao> repositoryPermissao,
         IRepository<TipoPermissao> repositoryTipoPermissao,
-        IRepository<Modulo> repositoryModulos)
+        IRepository<Modulo> repositoryModulos,
+        IRepository<UsuarioRecepcao> repositoryUsuarioRecepcao)
         {
             _loggerService = loggerService;
             _repository = repository;
@@ -30,6 +32,7 @@ namespace LaboratoryBackEnd.Service
             _repositoryPermissao = repositoryPermissao;
             _repositoryTipoPermissao = repositoryTipoPermissao;
             _repositoryModulos = repositoryModulos;
+            _repositoryUsuarioRecepcao = repositoryUsuarioRecepcao;
         }
         public async Task<LoginCredentials> Authenticate(LoginCredentials credentials)
         {
@@ -44,6 +47,13 @@ namespace LaboratoryBackEnd.Service
             }
             else
             {
+                //verify if existis the place
+                var place = await _repositoryUsuarioRecepcao.Query().FirstOrDefaultAsync(p => p.UsuarioId == usuario.ID && p.RecepcaoId == Convert.ToInt32(credentials.unidadeId));
+                if (place == null)
+                {
+                    throw new InvalidOperationException("Usuário não registrado nessa unidade.");
+                }
+
                 //obter as permissões do usuário
                 var grupo = await _repositoryGrupoUsuario.Query().Where(x => x.ID == usuario.GrupoUsuarioId).FirstOrDefaultAsync();
                 if (grupo == null)
@@ -82,7 +92,8 @@ namespace LaboratoryBackEnd.Service
                 Senha = "",
                 Nome = (usuario == null ? "" : usuario.Login),
                 token = token,
-                permissions = lstPermissoes
+                permissions = lstPermissoes,
+                unidadeId = credentials.unidadeId,
             };
 
         }
