@@ -1,6 +1,5 @@
 ﻿using LaboratoryBackEnd.Service.Interface;
 using LaboratoryBackEnd.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,29 +10,30 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class ConvenioController : ControllerBase
+    public class FormaPagamentoController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly IConvenioService _service;
+        private readonly IFormaPagamentoService _service;
 
-        public ConvenioController(ILoggerService loggerService, IConvenioService service)
+        public FormaPagamentoController(ILoggerService loggerService, IFormaPagamentoService service)
         {
             _loggerService = loggerService;
             _service = service;
         }
 
         [HttpGet]
-        //[Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<Convenio>>> GetItems()
+        public async Task<ActionResult<IEnumerable<FormaPagamento>>> GetFornecedores()
         {
             var items = await _service.GetItems();
-
+            if (items == null || !items.Any())
+            {
+                return NotFound();
+            }
             return Ok(items);
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<Convenio>> GetItem(int id)
+        public async Task<ActionResult<FormaPagamento>> GetFornecedor(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -44,24 +44,23 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutItem(int id, Convenio item)
+        public async Task<IActionResult> PutFornecedor(int id, FormaPagamento fornecedor)
         {
-            if (id != item.ID)
+            if (id != fornecedor.ID)
             {
                 return BadRequest();
             }
 
             try
             {
-                await _service.Put(item);
+                await _service.Put(fornecedor);
                 return NoContent();
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
-                if (!ItemExists(id))
+                await _service.RemoveContex(fornecedor);
+                await _loggerService.LogError<FormaPagamento>(HttpContext.Request.Method, fornecedor, User, ex);
+                if (!FornecedorExists(id))
                 {
                     return NotFound();
                 }
@@ -72,32 +71,32 @@ namespace LaboratoryBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _service.RemoveContex(fornecedor);
+                await _loggerService.LogError<FormaPagamento>(HttpContext.Request.Method, fornecedor, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+
+            return NoContent();
         }
 
         [HttpPost]
-        [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<Convenio>> PostItem(Convenio item)
+        public async Task<ActionResult<FormaPagamento>> PostFornecedor(FormaPagamento fornecedor)
         {
             try
             {
-                var created = await _service.Post(item);
-                return CreatedAtAction("GetConvenio", new { id = created.ID }, created);
+                var created = await _service.Post(fornecedor);
+                return CreatedAtAction("GetFornecedor", new { id = created.ID }, created);
             }
             catch (Exception ex)
             {
-                await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _service.RemoveContex(fornecedor);
+                await _loggerService.LogError<FormaPagamento>(HttpContext.Request.Method, fornecedor, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> DeleteItem(int id)
+        public async Task<IActionResult> DeleteFornecedor(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -107,18 +106,20 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id,item.EnderecoId);
+                await _service.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<FormaPagamento>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
+
+            return NoContent();
         }
 
-        private bool ItemExists(int id)
+        private bool FornecedorExists(int id)
         {
             return _service.Exists(id);
         }

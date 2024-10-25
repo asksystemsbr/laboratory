@@ -11,20 +11,20 @@ namespace LaboratoryBackEnd.Controllers
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class ConvenioController : ControllerBase
+    public class OrcamentoController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly IConvenioService _service;
+        private readonly IOrcamentoService _service;
 
-        public ConvenioController(ILoggerService loggerService, IConvenioService service)
+        public OrcamentoController(ILoggerService loggerService, IOrcamentoService service)
         {
             _loggerService = loggerService;
             _service = service;
         }
 
         [HttpGet]
-        //[Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<Convenio>>> GetItems()
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItems()
         {
             var items = await _service.GetItems();
 
@@ -33,7 +33,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<Convenio>> GetItem(int id)
+        public async Task<ActionResult<OrcamentoCabecalho>> GetItem(int id)
         {
             var item = await _service.GetItem(id);
             if (item == null)
@@ -45,7 +45,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutItem(int id, Convenio item)
+        public async Task<IActionResult> PutItem(int id, OrcamentoCabecalho item)
         {
             if (id != item.ID)
             {
@@ -60,7 +60,7 @@ namespace LaboratoryBackEnd.Controllers
             catch (DbUpdateConcurrencyException ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<OrcamentoCabecalho>(HttpContext.Request.Method, item, User, ex);
                 if (!ItemExists(id))
                 {
                     return NotFound();
@@ -73,24 +73,24 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<OrcamentoCabecalho>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<Convenio>> PostItem(Convenio item)
+        public async Task<ActionResult<OrcamentoCabecalho>> PostItem(OrcamentoCabecalho item)
         {
             try
             {
                 var created = await _service.Post(item);
-                return CreatedAtAction("GetConvenio", new { id = created.ID }, created);
+                return CreatedAtAction("GetPlano", new { id = created.ID }, created);
             }
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<OrcamentoCabecalho>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -107,13 +107,13 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id,item.EnderecoId);
+                await _service.Delete(id);
                 return NoContent();
             }
             catch (Exception ex)
             {
                 await _service.RemoveContex(item);
-                await _loggerService.LogError<Convenio>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<OrcamentoCabecalho>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
