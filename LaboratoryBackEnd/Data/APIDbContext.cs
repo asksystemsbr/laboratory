@@ -23,6 +23,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Especialidade> Especialidade { get; set; }
         public DbSet<Exame> Exames { get; set; }
         public DbSet<ExameApoio> ExameApoio { get; set; }
+        public DbSet<FormaPagamento> FormaPagamento { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<GrupoUsuario> GruposUsuarios { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
@@ -34,7 +35,10 @@ namespace LaboratoryBackEnd.Data
         public DbSet<MetodosPagamento> MetodosPagamentos { get; set; }
         public DbSet<Modalidade> Modalidade { get; set; }
         public DbSet<Modulo> Modulo { get; set; }
-        public DbSet<OrdemDeServico> OrdensDeServicos { get; set; }
+        public DbSet<OrcamentoCabecalho> OrcamentoCabecalho { get; set; }
+        public DbSet<OrcamentoDetalhe> OrcamentoDetalhe { get; set; }
+        public DbSet<OrcamentoPagamento> OrcamentoPagamento { get; set; }
+        public DbSet<OrdemDeServico> OrdensDeServicos { get; set; }       
         public DbSet<OrdemServicoEquipamento> OrdensServicosEquipamentos { get; set; }
         public DbSet<OrdemServicoExame> OrdensServicosExames { get; set; }
         public DbSet<OrdemServicoServico> OrdensServicosServicos { get; set; }
