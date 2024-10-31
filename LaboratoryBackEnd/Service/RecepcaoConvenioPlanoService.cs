@@ -52,7 +52,6 @@ namespace LaboratoryBackEnd.Service
             {
                 if (item.PlanoId == null)
                 {
-                    // Se PlanoId é null, recupere todos os planos para o convênio
                     var planos = await _planoRepository.Query()
                         .Where(p => p.ConvenioId == item.ConvenioId)
                         .Select(p => new RecepcaoConvenioPlanoDto
@@ -61,32 +60,25 @@ namespace LaboratoryBackEnd.Service
                             RecepcaoId = item.RecepcaoId,
                             ConvenioId = item.ConvenioId,
                             PlanoId = p.ID
-                            //NomeRecepcao = item.NomeRecepcao, // Adapte para incluir nome da recepção se necessário
-                            //DescricaoConvenio = item.DescricaoConvenio,
-                            //DescricaoPlano = p.Descricao // Assumindo que Plano possui uma propriedade `Descricao`
                         })
                         .ToListAsync();
-
                     resultado.AddRange(planos);
                 }
                 else
                 {
-                    // Adiciona o item normalmente se PlanoId não for null
                     resultado.Add(new RecepcaoConvenioPlanoDto
                     {
                         ID = item.ID,
                         RecepcaoId = item.RecepcaoId,
                         ConvenioId = item.ConvenioId,
                         PlanoId = item.PlanoId
-                        //NomeRecepcao = item.NomeRecepcao,
-                        //DescricaoConvenio = item.DescricaoConvenio,
-                        //DescricaoPlano = item.DescricaoPlano
                     });
                 }
             }
 
             return resultado;
         }
+
 
 
 
@@ -117,34 +109,22 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos)
         {
-            // Remover registros existentes para esta recepção e convênio
             foreach (var convenioPlano in conveniosPlanos)
             {
                 await DeleteAllForReception(recepcaoId, Convert.ToInt32(convenioPlano.ConvenioId));
             }
 
-            // Agrupar por ConvenioId para aplicar a regra de todos os planos selecionados
-            var conveniosAgrupados = conveniosPlanos.GroupBy(x => x.ConvenioId);
-            foreach (var grupo in conveniosAgrupados)
+            foreach (var grupo in conveniosPlanos.GroupBy(x => x.ConvenioId))
             {
                 var convenioId = grupo.Key;
-                var planosSelecionados = grupo.ToList();
+                var planosSelecionados = grupo.Select(x => x.PlanoId).ToList();
 
-                int totalPlanosConvenio = 0;
+                int totalPlanosConvenio = await _planoRepository.CountPlanosByConvenioAsync(convenioId.Value);
 
-                if (convenioId.HasValue)
-                {
-                    totalPlanosConvenio = await _planoRepository.CountPlanosByConvenioAsync(convenioId.Value);
-                }
-
-                bool todosPlanosSelecionados = planosSelecionados.Count == totalPlanosConvenio;
-
-                // Caso todos os planos de um convênio estejam selecionados
-
+                bool todosPlanosSelecionados = planosSelecionados.Count == 0 || planosSelecionados.Count == totalPlanosConvenio;
 
                 if (todosPlanosSelecionados)
                 {
-                    // Inserir apenas um registro com PlanoId = null
                     await Post(new RecepcaoConvenioPlano
                     {
                         RecepcaoId = recepcaoId,
@@ -154,19 +134,19 @@ namespace LaboratoryBackEnd.Service
                 }
                 else
                 {
-                    // Inserir um registro para cada plano selecionado
-                    foreach (var plano in planosSelecionados)
+                    foreach (var planoId in planosSelecionados)
                     {
                         await Post(new RecepcaoConvenioPlano
                         {
                             RecepcaoId = recepcaoId,
                             ConvenioId = convenioId,
-                            PlanoId = plano.PlanoId
+                            PlanoId = planoId
                         });
                     }
                 }
             }
         }
+
 
 
         public async Task DeleteAllForReception(int recepcaoId, int convenioId)

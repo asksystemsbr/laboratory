@@ -45,10 +45,21 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet("byRecepcao/{recepcaoId}")]
         //[Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanosByRecepcao(int recepcaoId)
+        public async Task<ActionResult<IEnumerable<object>>> GetRecepcaoConvenioPlanosByRecepcao(int recepcaoId)
         {
-            var items = await _service.GetItemsByRecepcao(recepcaoId);
-            return Ok(items);
+            var conveniosPlanos = await _service.GetItemsByRecepcao(recepcaoId);
+
+            // Agrupa os convênios e seus respectivos planos
+            var result = conveniosPlanos
+                .GroupBy(cp => cp.ConvenioId)
+                .Select(group => new
+                {
+                    convenioId = group.Key,
+                    planos = group.Where(g => g.PlanoId.HasValue).Select(g => g.PlanoId).ToList()
+                })
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
