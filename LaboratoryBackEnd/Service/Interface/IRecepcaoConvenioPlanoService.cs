@@ -12,7 +12,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task Delete(int id);
         bool Exists(int id);
         Task RemoveContex(RecepcaoConvenioPlano item);
-        Task<IEnumerable<RecepcaoConvenioPlano>> GetItemsByRecepcao(int recepcaoId);
+        Task<IEnumerable<RecepcaoConvenioPlanoDto>> GetItemsByRecepcao(int recepcaoId);
         Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos);
         Task DeleteAllForReception(int recepcaoId, int convenioId);
         //Task<int> GetLasdOrOne();

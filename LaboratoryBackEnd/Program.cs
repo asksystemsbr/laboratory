@@ -168,6 +168,8 @@ builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
 builder.Services.AddScoped<IRepository<Endereco>, Repository<Endereco>>();
 builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 builder.Services.AddScoped<IRepository<RecepcaoConvenioPlano>, Repository<RecepcaoConvenioPlano>>();
+builder.Services.AddScoped<IPlanoRepository, PlanoRepository>();
+
 
 
 

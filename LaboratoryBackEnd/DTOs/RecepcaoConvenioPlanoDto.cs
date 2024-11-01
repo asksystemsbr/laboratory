@@ -8,8 +8,8 @@ namespace LaboratoryBackEnd.DTOs
         public int RecepcaoId { get; set; }
         public int? ConvenioId { get; set; }
         public int? PlanoId { get; set; }
-        public string NomeRecepcao { get; set; }
-        public string DescricaoConvenio { get; set; }
-        public string DescricaoPlano { get; set; }
+        public string? NomeRecepcao { get; set; }
+        public string? DescricaoConvenio { get; set; }
+        public string? DescricaoPlano { get; set; }
     }
 }
