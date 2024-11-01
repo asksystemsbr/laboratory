@@ -4,12 +4,29 @@ namespace LaboratoryBackEnd.Service.Interface
 {
     public interface IOrcamentoService
     {
-        Task<IEnumerable<OrcamentoCabecalho>> GetItems();
-        Task<OrcamentoCabecalho> GetItem(int id);
+        Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho();
+        Task<OrcamentoCabecalho> GetItemCabecalho(int id);
+        Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho);
+        Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho);
+
+        Task<List<Exame>> GetExamesList(int id);
+        Task<List<FormaPagamento>> GetPagamentosList(int id);
+
         Task Put(OrcamentoCabecalho item);
-        Task<OrcamentoCabecalho> Post(OrcamentoCabecalho item);
-        Task Delete(int id);
-        bool Exists(int id);
-        Task RemoveContex(OrcamentoCabecalho item);
+        Task PutDetalhe(OrcamentoDetalhe item);
+        Task PutPagamento(OrcamentoPagamento item);
+
+        Task<OrcamentoCabecalho> PostCabecalho(OrcamentoCabecalho item);
+        Task<OrcamentoDetalhe> PostDetalhe(OrcamentoDetalhe item);
+        Task<OrcamentoPagamento> PostPagamento(OrcamentoPagamento item);
+
+        Task DeleteCabecalho(int id);
+        Task DeleteDetalhe(int id);
+        Task DeletePagamento(int id);
+
+        bool ExistsCabecalho(int id);
+        Task RemoveContexCabecalho(OrcamentoCabecalho item);
+        Task RemoveContexDetalhe(OrcamentoDetalhe item);
+        Task RemoveContexPagamento(OrcamentoPagamento item);
     }
 }

@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using LaboratoryBackEnd.Data.Mpas;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -167,6 +168,8 @@ builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
 builder.Services.AddScoped<IRepository<Endereco>, Repository<Endereco>>();
 builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 builder.Services.AddScoped<IRepository<RecepcaoConvenioPlano>, Repository<RecepcaoConvenioPlano>>();
+builder.Services.AddScoped<IPlanoRepository, PlanoRepository>();
+
 
 
 
@@ -243,6 +246,8 @@ builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IEmpresaService, EmpresaService>();
 builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoService>();
 
+
+builder.Services.AddAutoMapper(typeof(ExameMappingProfile));
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

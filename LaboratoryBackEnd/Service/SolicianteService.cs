@@ -19,7 +19,8 @@ namespace LaboratoryBackEnd.Service
 
         public async Task<IEnumerable<Solicitante>> GetItems()
         {
-            return await _repository.GetItems();
+            var items= await _repository.GetItems();
+            return items.OrderBy(x => x.Descricao);
         }
 
         public async Task<Solicitante> GetItem(int id)
@@ -29,8 +30,18 @@ namespace LaboratoryBackEnd.Service
 
         public async Task<Solicitante> GetItemByCPF(string cpf)
         {
+            string noMaks = cpf.Replace(".", "").Replace("-", "");
             return await _repository.Query()
-                .Where(x => x.Cpf != null && x.Cpf == cpf)
+                .Where(x => x.Cpf != null && (x.Cpf == cpf || x.Cpf == noMaks))
+                .FirstOrDefaultAsync();
+
+        }
+
+        public async Task<Solicitante> GetItemByCRM(string crm)
+        {
+            string noMaks = crm.Replace(".", "").Replace("-", "");
+            return await _repository.Query()
+                .Where(x => x.Crm != null && (x.Crm == crm || x.Crm == noMaks))
                 .FirstOrDefaultAsync();
         }
 

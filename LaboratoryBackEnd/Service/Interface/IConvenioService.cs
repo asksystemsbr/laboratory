@@ -6,6 +6,7 @@ namespace LaboratoryBackEnd.Service.Interface
     {
         Task<IEnumerable<Convenio>> GetItems();
         Task<Convenio> GetItem(int id);
+        Task<Convenio> GetItemByCodigo(string codigo);
         Task Put(Convenio item);
         Task<Convenio> Post(Convenio item);
         Task Delete(int id,int idEndereco);
