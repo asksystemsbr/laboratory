@@ -131,16 +131,21 @@ namespace LaboratoryBackEnd.Controllers
             try
             {
                 await _service.Put(item.OrcamentoCabecalho);
+
+                await _service.DeleteDetalhe(item.OrcamentoCabecalho.ID);
+                await _service.DeletePagamento(item.OrcamentoCabecalho.ID);
                 foreach (var detalhe in item.OrcamentoDetalhe)
                 {
-                    await _service.PutDetalhe(detalhe);
-                    detalhesProcessados.Add(detalhe);
+                    detalhe.ID = 0;
+                    var createdDetalhe = await _service.PostDetalhe(detalhe);
+                    detalhesProcessados.Add(createdDetalhe);
                 }
 
                 foreach (var pagamento in item.OrcamentoPagamento)
                 {
-                    await _service.PutPagamento(pagamento);
-                    pagamentosProcessados.Add(pagamento);
+                    pagamento.ID = 0;
+                    var createdPagamento = await _service.PostPagamento(pagamento);
+                    pagamentosProcessados.Add(createdPagamento);
                 }
                 return NoContent();
             }
