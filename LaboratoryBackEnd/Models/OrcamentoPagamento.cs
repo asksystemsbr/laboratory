@@ -18,7 +18,8 @@ namespace LaboratoryBackEnd.Models
         [Column("valor")]
         public decimal? Valor { get; set; }
 
-        // Relacionamento com OrcamentoCabecalho
-        public OrcamentoCabecalho OrcamentoCabecalho { get; set; }
+        [Column("orcamento_id")]
+        public int? OrcamentoId { get; set; }
+
     }
 }

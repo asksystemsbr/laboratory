@@ -62,11 +62,5 @@ namespace LaboratoryBackEnd.Models
 
         [Column("usuario_id")]
         public int? UsuarioId { get; set; }
-
-        // Relacionamento com OrcamentoDetalhe (detalhes do orçamento)
-        public ICollection<OrcamentoDetalhe> OrcamentoDetalhes { get; set; }
-
-        // Relacionamento com OrcamentoPagamento (pagamentos do orçamento)
-        public ICollection<OrcamentoPagamento> OrcamentoPagamentos { get; set; }
     }
 }

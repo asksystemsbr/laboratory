@@ -50,6 +50,30 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("clienteByCPF/{cpf}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Cliente>> GetByCPF(string cpf)
+        {
+            var item = await _service.GetItemByCPF(cpf);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpGet("clienteByRG/{rg}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Cliente>> GetByRG(string rg)
+        {
+            var item = await _service.GetItemByRG(rg);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
         [HttpGet("existsByCPF/{cpf}")]
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<bool>> ExistsByCPF(string cpf)
