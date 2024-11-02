@@ -18,7 +18,8 @@ namespace LaboratoryBackEnd.Service
 
         public async Task<IEnumerable<Plano>> GetItems()
         {
-            return await _repository.GetItems();
+            var items = await _repository.GetItems();
+            return items.OrderBy(x => x.Descricao);
         }
 
         public async Task<Plano> GetItem(int id)

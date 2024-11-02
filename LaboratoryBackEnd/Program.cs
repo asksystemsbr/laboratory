@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using LaboratoryBackEnd.Data.Mpas;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -245,6 +246,8 @@ builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IEmpresaService, EmpresaService>();
 builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoService>();
 
+
+builder.Services.AddAutoMapper(typeof(ExameMappingProfile));
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

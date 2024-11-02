@@ -2,6 +2,7 @@
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
 namespace LaboratoryBackEnd.Service
@@ -10,46 +11,146 @@ namespace LaboratoryBackEnd.Service
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<OrcamentoCabecalho> _repository;
+        private readonly IRepository<OrcamentoDetalhe> _repositoryDetalhe;
+        private readonly IRepository<OrcamentoPagamento> _repositoryPagamento;
+        private readonly IRepository<Exame> _repositoryExames;
+        private readonly IRepository<FormaPagamento> _repositoryFormaPagamentos;
 
-        public OrcamentoService(ILoggerService loggerService, IRepository<OrcamentoCabecalho> repository)
+        public OrcamentoService(ILoggerService loggerService
+            , IRepository<OrcamentoCabecalho> repository
+            , IRepository<OrcamentoDetalhe> repositoryDetalhe
+            , IRepository<OrcamentoPagamento> repositoryPagamento
+            , IRepository<Exame> repositoryExames
+            , IRepository<FormaPagamento> repositoryFromaPagamentos
+            )
         {
             _loggerService = loggerService;
             _repository = repository;
+            _repositoryDetalhe = repositoryDetalhe;
+            _repositoryPagamento = repositoryPagamento;
+            _repositoryExames = repositoryExames;
+            _repositoryFormaPagamentos = repositoryFromaPagamentos;
         }
 
-        public async Task<IEnumerable<OrcamentoCabecalho>> GetItems()
+        public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho()
         {
             return await _repository.GetItems();
         }
 
-        public async Task<OrcamentoCabecalho> GetItem(int id)
+        public async Task<OrcamentoCabecalho> GetItemCabecalho(int id)
         {
             return await _repository.GetItem(id);
+        }
+
+        public async Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho)
+        {
+            return await _repositoryDetalhe.Query().Where(x=>x.OrcamentoId==idCabecacalho).ToListAsync();
+        }
+
+        public async Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho)
+        {
+            return await _repositoryPagamento.Query().Where(x => x.OrcamentoId == idCabecacalho).ToListAsync();
+        }
+
+        public async Task<List<Exame>> GetExamesList(int idCabecalho)
+        {
+            // Filtra OrcamentoDetalhe pelo OrcamentoId e inclui Exame
+            var exameIds = await _repositoryDetalhe.Query()
+                .Where(od => od.OrcamentoId == idCabecalho)
+                    .Select(od => od.ExameId)
+                        .ToListAsync();
+
+            // 2. Buscar os exames completos usando os IDs obtidos
+            var exames = await _repositoryExames.Query()
+                .Where(ex => exameIds.Contains(ex.ID))
+                .ToListAsync();
+
+            return exames;
+        }
+
+        public async Task<List<FormaPagamento>> GetPagamentosList(int idCabecalho)
+        {
+            var pagamentosIds = await _repositoryPagamento.Query()
+                .Where(od => od.OrcamentoId == idCabecalho)
+                    .Select(od => od.PagamentoId)
+                        .ToListAsync();
+
+            // 2. Buscar os exames completos usando os IDs obtidos
+            var pagamentos = await _repositoryFormaPagamentos.Query()
+                .Where(ex => pagamentosIds.Contains(ex.ID))
+                .ToListAsync();
+
+            return pagamentos;
         }
 
         public async Task Put(OrcamentoCabecalho item)
         {
             await _repository.Put(item);
         }
+        public async Task PutDetalhe(OrcamentoDetalhe item)
+        {
+            await _repositoryDetalhe.Put(item);
+        }
 
-        public async Task<OrcamentoCabecalho> Post(OrcamentoCabecalho item)
+        public async Task PutPagamento(OrcamentoPagamento item)
+        {
+            await _repositoryPagamento.Put(item);
+        }
+
+        public async Task<OrcamentoCabecalho> PostCabecalho(OrcamentoCabecalho item)
         {
             return await _repository.Post(item);
         }
 
-        public async Task Delete(int id)
+        public async Task<OrcamentoDetalhe> PostDetalhe(OrcamentoDetalhe item)
+        {
+            return await _repositoryDetalhe.Post(item);
+        }
+
+        public async Task<OrcamentoPagamento> PostPagamento(OrcamentoPagamento item)
+        {
+            return await _repositoryPagamento.Post(item);
+        }
+
+        public async Task DeleteCabecalho(int id)
         {
             await _repository.Delete(id);
         }
 
-        public bool Exists(int id)
+        public async Task DeleteDetalhe(int idCabecalho)
+        {
+            var detalhes = await GetItemsDetalhe(idCabecalho);
+            foreach (var item in detalhes)
+            {
+                await _repositoryDetalhe.Delete(item.ID);
+            }
+        }
+
+        public async Task DeletePagamento(int idCabecalho)
+        {
+            var pagamentos = await GetItemsPagamentos(idCabecalho);
+            foreach (var item in pagamentos)
+            {
+                await _repositoryPagamento.Delete(item.ID);
+            }
+        }
+
+        public bool ExistsCabecalho(int id)
         {
             return _repository.Exists(id);
         }
 
-        public async Task RemoveContex(OrcamentoCabecalho item)
+        public async Task RemoveContexCabecalho(OrcamentoCabecalho item)
         {
             _repository.RemoveContex(item);
+        }
+        public async Task RemoveContexDetalhe(OrcamentoDetalhe item)
+        {
+            _repositoryDetalhe.RemoveContex(item);
+        }
+        public async Task RemoveContexPagamento(OrcamentoPagamento item)
+        {
+            _repositoryPagamento.RemoveContex(item);
         }
     }
 }

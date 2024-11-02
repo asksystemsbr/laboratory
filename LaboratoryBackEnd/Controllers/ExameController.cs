@@ -1,4 +1,5 @@
-﻿using LaboratoryBackEnd.Models;
+﻿using LaboratoryBackEnd.Data.DTO;
+using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,28 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<Exame>> GetExame(int id)
         {
             var item = await _service.GetItem(id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpGet("getitemsByCodigo/{codigoExame}")]
+        public async Task<ActionResult<Exame>> GetItemsByCodigo(string codigoExame)
+        {
+            var item = await _service.GetItemsByCodigo(codigoExame);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
+        [HttpGet("getPrecoByPlanoExame/{planoId}/{codigoExame}")]
+        public async Task<ActionResult<ExameDTO>> GetPrecoByPlanoExame(string planoId, string codigoExame)
+        {
+            var item = await _service.GetPrecoByPlanoExame(codigoExame,planoId);
             if (item == null)
             {
                 return NotFound();

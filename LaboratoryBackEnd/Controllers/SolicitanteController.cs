@@ -55,6 +55,18 @@ namespace LaboratoryBackEnd.Controllers
             return Ok(true); 
         }
 
+        [HttpGet("solicitanteByCRM/{crm}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Solicitante>> GetItemByCRM(string crm)
+        {
+            var item = await _service.GetItemByCRM(crm);
+            if (item == null)
+            {
+                return NoContent();
+            }
+            return item;
+        }
+
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem(int id, Solicitante item)

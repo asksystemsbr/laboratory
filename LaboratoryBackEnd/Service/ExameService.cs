@@ -1,6 +1,9 @@
-﻿using LaboratoryBackEnd.Data.Interface;
+﻿using AutoMapper;
+using LaboratoryBackEnd.Data.DTO;
+using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace LaboratoryBackEnd.Service
 {
@@ -8,16 +11,73 @@ namespace LaboratoryBackEnd.Service
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<Exame> _repository;
+        private readonly IRepository<Plano> _repositoryPlano;
+        private readonly IRepository<TabelaPrecoItens> _repositoryTabelaPrecoItens;
+        private readonly IMapper _mapper;
 
-        public ExameService(ILoggerService loggerService, IRepository<Exame> repository)
+        public ExameService(ILoggerService loggerService
+            , IRepository<Exame> repository
+            , IRepository<Plano> repositoryPlano
+            , IRepository<TabelaPrecoItens> repositoryTabelaPrecoItens
+            , IMapper mapper)
         {
             _loggerService = loggerService;
             _repository = repository;
+            _repositoryPlano = repositoryPlano;
+            _repositoryTabelaPrecoItens = repositoryTabelaPrecoItens;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<Exame>> GetItems()
         {
-            return await _repository.GetItems();
+            var items= await _repository.GetItems();
+            return items.OrderBy(x => x.NomeExame);
+        }
+        public async Task<Exame> GetItemsByCodigo(string codigoExame)
+        {
+            return await _repository
+                .Query()
+                .Where(x=>x.CodigoExame.ToLower()==codigoExame.ToLower())
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ExameDTO> GetPrecoByPlanoExame(string codigoExame,string codigoPlano)
+        {
+            ExameDTO exameDTO = null;
+            // 1. Obter o Exame pelo código
+            var exame = await _repository
+                .Query()
+                .Where(x => x.CodigoExame.ToLower() == codigoExame.ToLower())
+                .FirstOrDefaultAsync();
+
+            if (exame == null)
+            {
+                return null;
+            }
+
+            // 2. Obter o Plano pelo código
+            var plano = await _repositoryPlano.Query()
+                .Where(p => p.ID == Convert.ToInt32(codigoPlano))
+                .FirstOrDefaultAsync();
+
+            if (plano == null)
+            {
+                return null;
+            }
+
+            // 3. Consultar TabelaPrecoItens com ExameId e TabelaPrecoId correspondentes
+            var precoItem = await _repositoryTabelaPrecoItens.Query()
+                .Where(tpi => tpi.ExameId == exame.ID && tpi.TabelaPrecoId == plano.TabelaPrecoId)
+                .FirstOrDefaultAsync();
+
+            exameDTO = _mapper.Map<ExameDTO>(exame);
+
+            if (precoItem == null)
+                exameDTO.Preco = 0;
+            else
+                exameDTO.Preco = precoItem.Valor;
+
+            return exameDTO;
         }
 
         public async Task<Exame> GetItem(int id)

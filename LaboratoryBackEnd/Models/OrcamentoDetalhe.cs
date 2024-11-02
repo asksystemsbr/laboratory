@@ -23,8 +23,5 @@ namespace LaboratoryBackEnd.Models
 
         [Column("data_coleta")]
         public DateTime? DataColeta { get; set; }
-
-        // Relacionamento com OrcamentoCabecalho
-        public OrcamentoCabecalho OrcamentoCabecalho { get; set; }
     }
 }
