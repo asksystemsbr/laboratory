@@ -11,6 +11,8 @@ namespace LaboratoryBackEnd.Service.Interface
 
         Task<List<Exame>> GetExamesList(int id);
         Task<List<FormaPagamento>> GetPagamentosList(int id);
+        Task<bool> CheckDescontoPermission(int idUsuario);
+
 
         Task Put(OrcamentoCabecalho item);
         Task PutDetalhe(OrcamentoDetalhe item);

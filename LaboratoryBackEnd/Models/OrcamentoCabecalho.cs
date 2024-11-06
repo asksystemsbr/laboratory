@@ -62,5 +62,11 @@ namespace LaboratoryBackEnd.Models
 
         [Column("usuario_id")]
         public int? UsuarioId { get; set; }
+
+        [Column("desconto")]
+        public decimal? Desconto { get; set; }
+
+        [Column("tipo_desconto")]
+        public string? TipoDesconto { get; set; }
     }
 }

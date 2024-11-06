@@ -94,6 +94,7 @@ namespace LaboratoryBackEnd.Service
                 token = token,
                 permissions = lstPermissoes,
                 unidadeId = credentials.unidadeId,
+                Id = (usuario == null ? "0" : usuario.ID.ToString()),
             };
 
         }
