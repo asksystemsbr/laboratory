@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 /LaboratoryBackEnd/Properties/launchSettings.json
 /LaboratoryBackEnd/Properties/launchSettings.json
+/Consultas.sql
