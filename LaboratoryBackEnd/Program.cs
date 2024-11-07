@@ -168,6 +168,7 @@ builder.Services.AddScoped<IRepository<RotinaExame>, Repository<RotinaExame>>();
 builder.Services.AddScoped<IRepository<Endereco>, Repository<Endereco>>();
 builder.Services.AddScoped<IRepository<Empresa>, Repository<Empresa>>();
 builder.Services.AddScoped<IRepository<RecepcaoConvenioPlano>, Repository<RecepcaoConvenioPlano>>();
+builder.Services.AddScoped<IRepository<RecepcaoEspecialidadeExame>, Repository<RecepcaoEspecialidadeExame>>();
 builder.Services.AddScoped<IPlanoRepository, PlanoRepository>();
 
 
@@ -245,6 +246,7 @@ builder.Services.AddScoped<IRotinaExameService, RotinaExameService>();
 builder.Services.AddScoped<IEnderecoService, EnderecoService>();
 builder.Services.AddScoped<IEmpresaService, EmpresaService>();
 builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoService>();
+builder.Services.AddScoped<IRecepcaoEspecialidadeExameService, RecepcaoEspecialidadeExameService>();
 
 
 builder.Services.AddAutoMapper(typeof(ExameMappingProfile));
