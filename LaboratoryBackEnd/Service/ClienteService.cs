@@ -53,10 +53,13 @@ namespace LaboratoryBackEnd.Service
         public async Task Put(Cliente item)
         {
             await _repository.Put(item);
-            if (item.EnderecoId > 0)
+            if (item.EnderecoId.HasValue)
             {
-                item.Endereco.ID = item.EnderecoId;
-                await _repositoryEndereco.Put(item.Endereco);
+                if (item.EnderecoId.Value > 0)
+                {
+                    item.Endereco.ID = item.EnderecoId.Value;
+                    await _repositoryEndereco.Put(item.Endereco);
+                }
             }
         }
 

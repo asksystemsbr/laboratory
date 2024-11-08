@@ -55,6 +55,30 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("getConvenioByCodigoAndRecepcao/{codigoConvenio}/{recepacaoId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Convenio>> GetConvenioByCodigoRecepcao(string codigoConvenio,int recepacaoId)
+        {
+            var item = await _service.GetConvenioByCodigoRecepcao(codigoConvenio, recepacaoId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpGet("getConvenioByRecepcao/{recepacaoId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<Convenio>>> GetConvenioByRecepcao(int recepacaoId)
+        {
+            var item = await _service.GetConveniosByRecepcao(recepacaoId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem(int id, Convenio item)

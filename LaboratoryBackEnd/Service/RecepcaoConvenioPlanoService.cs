@@ -109,50 +109,59 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoConvenioPlano> conveniosPlanos)
         {
+            await DeleteAllForReception(recepcaoId);
             foreach (var convenioPlano in conveniosPlanos)
             {
-                await DeleteAllForReception(recepcaoId, Convert.ToInt32(convenioPlano.ConvenioId));
-            }
+                // Verifica se ConvenioId tem valor antes de chamar DeleteAllForReception
+                //if (convenioPlano.ConvenioId.HasValue)
+                //{
+                //    await DeleteAllForReception(recepcaoId, convenioPlano.ConvenioId.Value);
+                //}
 
-            foreach (var grupo in conveniosPlanos.GroupBy(x => x.ConvenioId))
-            {
-                var convenioId = grupo.Key;
-                var planosSelecionados = grupo.Select(x => x.PlanoId).ToList();
-
-                int totalPlanosConvenio = await _planoRepository.CountPlanosByConvenioAsync(convenioId.Value);
-
-                bool todosPlanosSelecionados = planosSelecionados.Count == 0 || planosSelecionados.Count == totalPlanosConvenio;
-
-                if (todosPlanosSelecionados)
+                // Verifica se PlanosId está preenchido
+                if (convenioPlano.PlanosId != null && convenioPlano.PlanosId.Count > 0)
                 {
-                    await Post(new RecepcaoConvenioPlano
-                    {
-                        RecepcaoId = recepcaoId,
-                        ConvenioId = convenioId,
-                        PlanoId = null
-                    });
-                }
-                else
-                {
-                    foreach (var planoId in planosSelecionados)
+                    // Cria uma entrada para cada planoId na lista PlanosId
+                    foreach (var planoId in convenioPlano.PlanosId)
                     {
                         await Post(new RecepcaoConvenioPlano
                         {
                             RecepcaoId = recepcaoId,
-                            ConvenioId = convenioId,
+                            ConvenioId = convenioPlano.ConvenioId ?? null, // Usa .Value aqui pois já verificamos que não é nulo
                             PlanoId = planoId
                         });
                     }
                 }
+                else
+                {
+                    // Insere o convênio com um único PlanoId ou PlanoId nulo
+                    await Post(new RecepcaoConvenioPlano
+                    {
+                        RecepcaoId = recepcaoId,
+                        ConvenioId = convenioPlano.ConvenioId ?? null, // Usa .Value pois ConvenioId não é nulo nesse ponto
+                        PlanoId = convenioPlano.PlanoId ?? null
+                    });
+                }
             }
         }
-
 
 
         public async Task DeleteAllForReception(int recepcaoId, int convenioId)
         {
             var itemsToDelete = await _repository.Query()
                 .Where(x => x.RecepcaoId == recepcaoId && x.ConvenioId == convenioId)
+                .ToListAsync();
+
+            foreach (var item in itemsToDelete)
+            {
+                await Delete(item.ID);
+            }
+        }
+
+        public async Task DeleteAllForReception(int recepcaoId)
+        {
+            var itemsToDelete = await _repository.Query()
+                .Where(x => x.RecepcaoId == recepcaoId)
                 .ToListAsync();
 
             foreach (var item in itemsToDelete)

@@ -52,6 +52,18 @@ namespace LaboratoryBackEnd.Controllers
             return Ok(item);
         }
 
+        [HttpGet("getExameByRecepcao/{recepcaoId}")]
+        public async Task<ActionResult<IEnumerable<Exame>>> GetExameByRecepcao(int recepcaoId)
+        {
+            var item = await _service.GetExameByRecepcao(recepcaoId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return Ok(item);
+        }
+        
+
         [HttpGet("getPrecoByPlanoExame/{planoId}/{codigoExame}")]
         public async Task<ActionResult<ExameDTO>> GetPrecoByPlanoExame(string planoId, string codigoExame)
         {

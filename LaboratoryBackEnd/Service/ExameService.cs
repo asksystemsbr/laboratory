@@ -13,18 +13,21 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<Exame> _repository;
         private readonly IRepository<Plano> _repositoryPlano;
         private readonly IRepository<TabelaPrecoItens> _repositoryTabelaPrecoItens;
+        private readonly IRepository<RecepcaoEspecialidadeExame> _repositoryRecepcaoEspecialidadeExame;
         private readonly IMapper _mapper;
 
         public ExameService(ILoggerService loggerService
             , IRepository<Exame> repository
             , IRepository<Plano> repositoryPlano
             , IRepository<TabelaPrecoItens> repositoryTabelaPrecoItens
+            , IRepository<RecepcaoEspecialidadeExame> repositoryRecepcaoEspecialidadeExame
             , IMapper mapper)
         {
             _loggerService = loggerService;
             _repository = repository;
             _repositoryPlano = repositoryPlano;
             _repositoryTabelaPrecoItens = repositoryTabelaPrecoItens;
+            _repositoryRecepcaoEspecialidadeExame = repositoryRecepcaoEspecialidadeExame;
             _mapper = mapper;
         }
 
@@ -41,6 +44,30 @@ namespace LaboratoryBackEnd.Service
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<IEnumerable<Exame>> GetExameByRecepcao(int recepcaoId)
+        {
+            var deleteExamesIds = await _repositoryRecepcaoEspecialidadeExame
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.ExameId != null)
+                .Select(x => x.ExameId)  // Seleciona apenas os IDs
+                .ToListAsync();
+
+            var deleteEspecialidadeIds = await _repositoryRecepcaoEspecialidadeExame
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.ExameId == null)
+                .Select(x => x.EspecialidadeId)  // Seleciona apenas os IDs
+                .ToListAsync();
+
+            // Filtra os items excluindo os IDs de deleteIds
+            var items = await _repository.Query()
+                .Where(x => !deleteExamesIds.Contains(x.ID)
+                            && !deleteEspecialidadeIds.Contains(x.EspecialidadeId))  // Exclui os itens com IDs em deleteIds
+                .OrderBy(x => x.NomeExame)
+                .ToListAsync();
+
+            return items;
+        }
+        
         public async Task<ExameDTO> GetPrecoByPlanoExame(string codigoExame,string codigoPlano)
         {
             ExameDTO exameDTO = null;

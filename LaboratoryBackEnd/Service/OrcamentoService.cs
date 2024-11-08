@@ -15,6 +15,10 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<OrcamentoPagamento> _repositoryPagamento;
         private readonly IRepository<Exame> _repositoryExames;
         private readonly IRepository<FormaPagamento> _repositoryFormaPagamentos;
+        private readonly IRepository<Usuario> _repositoryUsuario;
+        private readonly IRepository<Permissao> _repositoryPermissao;
+        private readonly IRepository<Modulo> _repositoryModulo;
+
 
         public OrcamentoService(ILoggerService loggerService
             , IRepository<OrcamentoCabecalho> repository
@@ -22,6 +26,9 @@ namespace LaboratoryBackEnd.Service
             , IRepository<OrcamentoPagamento> repositoryPagamento
             , IRepository<Exame> repositoryExames
             , IRepository<FormaPagamento> repositoryFromaPagamentos
+            , IRepository<Usuario> repositoryUsuario
+            , IRepository<Permissao> repositoryPermissao
+            , IRepository<Modulo> repositoryModulo
             )
         {
             _loggerService = loggerService;
@@ -30,6 +37,9 @@ namespace LaboratoryBackEnd.Service
             _repositoryPagamento = repositoryPagamento;
             _repositoryExames = repositoryExames;
             _repositoryFormaPagamentos = repositoryFromaPagamentos;
+            _repositoryUsuario = repositoryUsuario;
+            _repositoryPermissao = repositoryPermissao;
+            _repositoryModulo = repositoryModulo;
         }
 
         public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho()
@@ -81,6 +91,27 @@ namespace LaboratoryBackEnd.Service
                 .ToListAsync();
 
             return pagamentos;
+        }
+
+        public async Task<bool> CheckDescontoPermission(int idUsuario)
+        {
+            bool isPerm = false;
+            var usuario = await _repositoryUsuario.GetItem(idUsuario);
+
+            if (usuario!=null)
+            {
+                var permissao = await _repositoryPermissao.Query()
+                        .Include(p => p.Modulo)  // Inclui o módulo associado para poder filtrar pela descrição
+                        .Where(p => p.Modulo.Descricao == "DescontoOrcamento" && p.GrupoUsuarioId == usuario.GrupoUsuarioId)
+                        .FirstOrDefaultAsync();
+
+
+                //write
+                if (permissao != null && permissao.TipoPermissaoId == 2)
+                    isPerm = true;
+            }
+
+            return isPerm;
         }
 
         public async Task Put(OrcamentoCabecalho item)

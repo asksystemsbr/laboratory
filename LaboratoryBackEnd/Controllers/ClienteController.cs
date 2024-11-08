@@ -169,8 +169,11 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
-                await _service.Delete(id,item.EnderecoId);
-                return NoContent();
+                if (item.EnderecoId.HasValue)
+                {
+                    await _service.Delete(id, item.EnderecoId.Value);
+                    return NoContent();
+                }
             }
             catch (Exception ex)
             {

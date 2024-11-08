@@ -8,6 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<Plano> GetItem(int id);
         Task<Plano?> GetItemByConvenio(int id);
         Task<List<Plano>> GetListByConvenio(int id);
+        Task<List<Plano>> GetListByConvenioAndRecepcao(int id, int recepcaoId);
         Task Put(Plano item);
         Task<Plano> Post(Plano item);
         Task Delete(int id);

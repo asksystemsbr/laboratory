@@ -120,7 +120,29 @@ namespace LaboratoryBackEnd.Controllers
                 await _loggerService.LogError<int>(HttpContext.Request.Method, idCabecalho, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-        }        
+        }
+
+        [HttpGet("checkDescontoPermission/{idUsuario}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<bool>> CheckDescontoPermission(int idUsuario)
+        {
+
+            try
+            {
+                var item = await _service.CheckDescontoPermission(idUsuario);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idUsuario, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpPut()]
         [Authorize(Policy = "CanWrite")]

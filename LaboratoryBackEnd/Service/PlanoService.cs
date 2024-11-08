@@ -9,11 +9,15 @@ namespace LaboratoryBackEnd.Service
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<Plano> _repository;
+        private readonly IRepository<RecepcaoConvenioPlano> _repositoryRecepcaoConvenioPlano;
 
-        public PlanoService(ILoggerService loggerService, IRepository<Plano> repository)
+        public PlanoService(ILoggerService loggerService
+            , IRepository<Plano> repository
+            , IRepository<RecepcaoConvenioPlano> repositoryRecepcaoConvenioPlano)
         {
             _loggerService = loggerService;
             _repository = repository;
+            _repositoryRecepcaoConvenioPlano = repositoryRecepcaoConvenioPlano;
         }
 
         public async Task<IEnumerable<Plano>> GetItems()
@@ -36,6 +40,23 @@ namespace LaboratoryBackEnd.Service
         {
             return await _repository.Query().Where(x => x.ConvenioId == id).ToListAsync();
         }
+
+        public async Task<List<Plano>> GetListByConvenioAndRecepcao(int id,int recepcaoId)
+        {
+            // Obtém os IDs que devem ser excluídos
+            var deleteIds = await _repositoryRecepcaoConvenioPlano
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.PlanoId != null)
+                .Select(x => x.PlanoId)  // Seleciona apenas os IDs
+                .ToListAsync();
+
+            var itens= await _repository.Query()
+                .Where(x => x.ConvenioId == id && !deleteIds.Contains(x.ID))
+                .ToListAsync();
+
+            return itens;
+        }        
+
 
         public async Task Put(Plano item)
         {

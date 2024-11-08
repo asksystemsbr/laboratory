@@ -21,6 +21,9 @@ namespace LaboratoryBackEnd.Models
         [Column("plano_id")]
         public int? PlanoId { get; set; }
 
+        [NotMapped]
+        public List<int>? PlanosId { get; set; } // Lista de IDs de planos, não mapeada para o banco de dados
+
         //[ForeignKey("RecepcaoId")]
         //public virtual Recepcao Recepcao { get; set; }
 

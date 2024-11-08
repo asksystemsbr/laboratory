@@ -10,5 +10,6 @@
         public List<string>? permissions { get; set; }
         
         public string unidadeId { get; set; }
+        public string Id { get; set; }
     }
 }
