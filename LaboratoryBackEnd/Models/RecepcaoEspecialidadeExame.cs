@@ -16,7 +16,7 @@ namespace LaboratoryBackEnd.Models
         public int RecepcaoId { get; set; }
 
         [Column("especialidade_id")]
-        public int EspecialidadeId { get; set; }
+        public int? EspecialidadeId { get; set; }
 
         [Column("exame_id")]
         public int? ExameId { get; set; }

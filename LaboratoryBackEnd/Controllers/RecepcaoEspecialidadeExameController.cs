@@ -1,4 +1,5 @@
 ﻿using LaboratoryBackEnd.DTOs;
+using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost("addOrUpdate/{recepcaoId}")]
-        public async Task<IActionResult> AddOrUpdateEspecialidadesExames(int recepcaoId, [FromBody] List<RecepcaoEspecialidadeExameDto> especialidadesExames)
+        public async Task<IActionResult> AddOrUpdateEspecialidadesExames(int recepcaoId, [FromBody] List<RecepcaoEspecialidadeExame> especialidadesExames)
         {
             try
             {

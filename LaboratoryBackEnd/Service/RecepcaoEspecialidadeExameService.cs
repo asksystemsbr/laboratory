@@ -15,6 +15,16 @@ namespace LaboratoryBackEnd.Service
             _repository = repository;
         }
 
+        public async Task Put(RecepcaoEspecialidadeExame item)
+        {
+            await _repository.Put(item);
+        }
+
+        public async Task<RecepcaoEspecialidadeExame> Post(RecepcaoEspecialidadeExame item)
+        {
+            return await _repository.Post(item);
+        }
+
         public async Task<IEnumerable<RecepcaoEspecialidadeExameDto>> GetItemsByRecepcao(int recepcaoId)
         {
             var items = await _repository.Query()
@@ -32,21 +42,35 @@ namespace LaboratoryBackEnd.Service
             return resultado;
         }
 
-        public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoEspecialidadeExameDto> especialidadesExames)
+        public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoEspecialidadeExame> especialidadesExames)
         {
-            foreach (var especialidadeExame in especialidadesExames)
+            foreach (var especialidadesExame in especialidadesExames)
             {
-                await DeleteAllForReception(recepcaoId, especialidadeExame.EspecialidadeId);
-
-                foreach (var exameId in especialidadeExame.ExamesId)
+                if (especialidadesExame.EspecialidadeId.HasValue)
                 {
-                    var newEntry = new RecepcaoEspecialidadeExame
+                    await DeleteAllForReception(recepcaoId, especialidadesExame.EspecialidadeId.Value);
+                }
+
+                if (especialidadesExame.ExamesId != null && especialidadesExame.ExamesId.Count > 0)
+                {
+                    foreach (var exameId in especialidadesExame.ExamesId)
+                    {
+                        await Post(new RecepcaoEspecialidadeExame
+                        {
+                            RecepcaoId = recepcaoId,
+                            EspecialidadeId = especialidadesExame.EspecialidadeId,
+                            ExameId = exameId
+                        });
+                    }
+                }
+                else
+                {
+                    await Post(new RecepcaoEspecialidadeExame
                     {
                         RecepcaoId = recepcaoId,
-                        EspecialidadeId = especialidadeExame.EspecialidadeId,
-                        ExameId = exameId
-                    };
-                    await _repository.Post(newEntry);
+                        EspecialidadeId = especialidadesExame.EspecialidadeId.Value,
+                        ExameId = especialidadesExame.ExameId
+                    });
                 }
             }
         }
