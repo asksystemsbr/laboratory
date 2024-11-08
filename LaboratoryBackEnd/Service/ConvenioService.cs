@@ -69,7 +69,7 @@ namespace LaboratoryBackEnd.Service
                 .Query()
                 .Where(x=> x.RecepcaoId==codigo
                             && x.PlanoId==null)
-                 .Select(x => x.ID)
+                 .Select(x => x.ConvenioId)
                 .ToListAsync();
 
             var items = await _repository.Query().Where(x=>!deleteIds.Contains(x.ID))

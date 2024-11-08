@@ -46,7 +46,7 @@ namespace LaboratoryBackEnd.Service
             // Obtém os IDs que devem ser excluídos
             var deleteIds = await _repositoryRecepcaoConvenioPlano
                 .Query()
-                .Where(x => x.RecepcaoId == id && x.PlanoId != null)
+                .Where(x => x.RecepcaoId == recepcaoId && x.PlanoId != null)
                 .Select(x => x.PlanoId)  // Seleciona apenas os IDs
                 .ToListAsync();
 

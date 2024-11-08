@@ -44,12 +44,13 @@ namespace LaboratoryBackEnd.Service
 
         public async Task AddOrUpdateAsync(int recepcaoId, List<RecepcaoEspecialidadeExame> especialidadesExames)
         {
+            await DeleteAllForReception(recepcaoId);
             foreach (var especialidadesExame in especialidadesExames)
             {
-                if (especialidadesExame.EspecialidadeId.HasValue)
-                {
-                    await DeleteAllForReception(recepcaoId, especialidadesExame.EspecialidadeId.Value);
-                }
+                //if (especialidadesExame.EspecialidadeId.HasValue)
+                //{
+                //    await DeleteAllForReception(recepcaoId, especialidadesExame.EspecialidadeId.Value);
+                //}
 
                 if (especialidadesExame.ExamesId != null && especialidadesExame.ExamesId.Count > 0)
                 {
@@ -79,6 +80,18 @@ namespace LaboratoryBackEnd.Service
         {
             var itemsToDelete = await _repository.Query()
                 .Where(x => x.RecepcaoId == recepcaoId && x.EspecialidadeId == especialidadeId)
+                .ToListAsync();
+
+            foreach (var item in itemsToDelete)
+            {
+                await _repository.Delete(item.ID);
+            }
+        }
+
+        public async Task DeleteAllForReception(int recepcaoId)
+        {
+            var itemsToDelete = await _repository.Query()
+                .Where(x => x.RecepcaoId == recepcaoId )
                 .ToListAsync();
 
             foreach (var item in itemsToDelete)

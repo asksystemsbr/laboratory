@@ -46,15 +46,22 @@ namespace LaboratoryBackEnd.Service
 
         public async Task<IEnumerable<Exame>> GetExameByRecepcao(int recepcaoId)
         {
-            var deleteIds = await _repositoryRecepcaoEspecialidadeExame
+            var deleteExamesIds = await _repositoryRecepcaoEspecialidadeExame
                 .Query()
                 .Where(x => x.RecepcaoId == recepcaoId && x.ExameId != null)
                 .Select(x => x.ExameId)  // Seleciona apenas os IDs
                 .ToListAsync();
 
+            var deleteEspecialidadeIds = await _repositoryRecepcaoEspecialidadeExame
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.ExameId == null)
+                .Select(x => x.EspecialidadeId)  // Seleciona apenas os IDs
+                .ToListAsync();
+
             // Filtra os items excluindo os IDs de deleteIds
             var items = await _repository.Query()
-                .Where(x => !deleteIds.Contains(x.ID))  // Exclui os itens com IDs em deleteIds
+                .Where(x => !deleteExamesIds.Contains(x.ID)
+                            && !deleteEspecialidadeIds.Contains(x.EspecialidadeId))  // Exclui os itens com IDs em deleteIds
                 .OrderBy(x => x.NomeExame)
                 .ToListAsync();
 
