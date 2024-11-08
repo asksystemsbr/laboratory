@@ -9,7 +9,7 @@ namespace LaboratoryBackEnd.Data.DTO
 
         public string? CpfCnpj { get; set; }
 
-        public int EnderecoId { get; set; }
+        public int? EnderecoId { get; set; }
 
         public string Telefone { get; set; }
 

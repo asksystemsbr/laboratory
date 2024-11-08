@@ -22,7 +22,7 @@ public class Cliente : IIdentifiable
 
     [Required] 
     [Column("endereco_id")]
-    public int EnderecoId { get; set; }
+    public int? EnderecoId { get; set; }
 
     [StringLength(20)]
     [Column("telefone")]
@@ -31,7 +31,7 @@ public class Cliente : IIdentifiable
     [Required]
     [StringLength(100)]
     [Column("email")]
-    public string Email { get; set; }
+    public string? Email { get; set; }
 
     [Required]
     [Column("situacao_id")]
@@ -105,5 +105,5 @@ public class Cliente : IIdentifiable
 
     // Propriedade de navegação opcional
     [ForeignKey("EnderecoId")]
-    public virtual Endereco Endereco { get; set; }
+    public virtual Endereco? Endereco { get; set; }
 }

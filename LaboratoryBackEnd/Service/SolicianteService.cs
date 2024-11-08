@@ -9,7 +9,7 @@ namespace LaboratoryBackEnd.Service
     public class SolicianteService : ISolicitanteService
     {
         private readonly ILoggerService _loggerService;
-        private readonly IRepository<Solicitante> _repository;
+        private readonly IRepository<Solicitante> _repository;        
 
         public SolicianteService(ILoggerService loggerService, IRepository<Solicitante> repository)
         {
@@ -45,6 +45,23 @@ namespace LaboratoryBackEnd.Service
                 .FirstOrDefaultAsync();
         }
 
+        //public async Task<IEnumerable<Solicitante>> GetIGetSolicitanteByRecepcaotemByCRM(int recepcaoId)
+        //{
+        //    var deleteIds = await _repositoryRecepcaoConvenioPlano
+        //        .Query()
+        //        .Where(x => x.RecepcaoId == recepcaoId && x.PlanoId == null)
+        //        .Select(x => x.ID)  // Seleciona apenas os IDs
+        //        .ToListAsync();
+
+        //    // Filtra os items excluindo os IDs de deleteIds
+        //    var items = await _repository.Query()
+        //        .Where(x => !deleteIds.Contains(x.ID))  // Exclui os itens com IDs em deleteIds
+        //        .OrderBy(x => x.Descricao)
+        //        .ToListAsync();
+
+        //    return items;
+        //}
+        
         public async Task Put(Solicitante item)
         {
             await _repository.Put(item);

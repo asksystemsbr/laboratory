@@ -67,6 +67,18 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
+        [HttpGet("getListByConvenioAndRecepcao/{id}/{recepcaoId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<List<Plano>>> GetListByConvenioAndRecepcao(int id, int recepcaoId)
+        {
+            var item = await _service.GetListByConvenioAndRecepcao(id, recepcaoId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
 
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
