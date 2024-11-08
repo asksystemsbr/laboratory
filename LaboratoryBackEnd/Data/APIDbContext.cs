@@ -69,6 +69,7 @@ namespace LaboratoryBackEnd.Data
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<EmpresaCatagoria> EmpresaCatagoria { get; set; }
         public DbSet<RecepcaoConvenioPlano> RecepcaoConvenioPlanos { get; set; }
+        public DbSet<RecepcaoEspecialidadeExame> RecepcaoEspecialidadeExame { get; set; }
 
         public APIDbContext(DbContextOptions<APIDbContext> options) : base(options)
         {
