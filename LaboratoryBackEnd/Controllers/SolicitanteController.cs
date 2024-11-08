@@ -68,15 +68,24 @@ namespace LaboratoryBackEnd.Controllers
         }
 
 
-        //[HttpGet("getSolicitanteByRecepcao/{recepcaoId}")]
-        //[Authorize(Policy = "CanRead")]
-        //public async Task<ActionResult<IEnumerable<Solicitante>>> GetSolicitanteByRecepcao(int recepcaoId)
-        //{
-        //    var items = await _service.GetSolicitanteByRecepcao(recepcaoId);
+        [HttpGet("getSolicitanteByRecepcao/{recepcaoId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<Solicitante>>> GetSolicitanteByRecepcao(int recepcaoId)
+        {
+            var items = await _service.GetSolicitanteByRecepcao(recepcaoId);
 
-        //    return Ok(items);
-        //}
+            return Ok(items);
+        }
 
+        [HttpGet("getSolicitanteByCRMAndRecepcao/{crm}/{recepcaoId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Solicitante>> GetSolicitanteByCRMAndRecepcao(string crm, int recepcaoId)
+        {
+            var items = await _service.GetSolicitanteByCRMAndRecepcao(crm,recepcaoId);
+
+            return Ok(items);
+        }
+        
         [HttpPut("{id}")]
         [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem(int id, Solicitante item)

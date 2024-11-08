@@ -9,12 +9,16 @@ namespace LaboratoryBackEnd.Service
     public class SolicianteService : ISolicitanteService
     {
         private readonly ILoggerService _loggerService;
-        private readonly IRepository<Solicitante> _repository;        
+        private readonly IRepository<Solicitante> _repository;
+        private readonly IRepository<RecepcaoEspecialidadeExame> _repositoryRecepcaoEspecialidadeExame;
 
-        public SolicianteService(ILoggerService loggerService, IRepository<Solicitante> repository)
+        public SolicianteService(ILoggerService loggerService
+            , IRepository<Solicitante> repository
+            , IRepository<RecepcaoEspecialidadeExame> repositoryRecepcaoEspecialidadeExame)
         {
             _loggerService = loggerService;
             _repository = repository;
+            _repositoryRecepcaoEspecialidadeExame = repositoryRecepcaoEspecialidadeExame;
         }
 
         public async Task<IEnumerable<Solicitante>> GetItems()
@@ -43,25 +47,44 @@ namespace LaboratoryBackEnd.Service
             return await _repository.Query()
                 .Where(x => x.Crm != null && (x.Crm == crm || x.Crm == noMaks))
                 .FirstOrDefaultAsync();
+        }        
+        public async Task<Solicitante> GetSolicitanteByCRMAndRecepcao(string crm,int recepcaoId)
+        {
+            string noMaks = crm.Replace(".", "").Replace("-", "");
+
+            var deleteIds = await _repositoryRecepcaoEspecialidadeExame
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.ExameId == null)
+                .Select(x => x.EspecialidadeId)  // Seleciona apenas os IDs
+                .ToListAsync();
+
+            // Filtra os items excluindo os IDs de deleteIds
+            var items = await _repository.Query()
+                .Where(x => !deleteIds.Contains(x.EspecialidadeId) // Exclui os itens com IDs em deleteIds
+                            && (x.Crm != null && (x.Crm == crm || x.Crm == noMaks)))  
+                .OrderBy(x => x.Descricao)
+                .FirstOrDefaultAsync();
+
+            return items;
         }
 
-        //public async Task<IEnumerable<Solicitante>> GetIGetSolicitanteByRecepcaotemByCRM(int recepcaoId)
-        //{
-        //    var deleteIds = await _repositoryRecepcaoConvenioPlano
-        //        .Query()
-        //        .Where(x => x.RecepcaoId == recepcaoId && x.PlanoId == null)
-        //        .Select(x => x.ID)  // Seleciona apenas os IDs
-        //        .ToListAsync();
+        public async Task<IEnumerable<Solicitante>> GetSolicitanteByRecepcao(int recepcaoId)
+        {
+            var deleteIds = await _repositoryRecepcaoEspecialidadeExame
+                .Query()
+                .Where(x => x.RecepcaoId == recepcaoId && x.ExameId == null)
+                .Select(x => x.EspecialidadeId)  // Seleciona apenas os IDs
+                .ToListAsync();
 
-        //    // Filtra os items excluindo os IDs de deleteIds
-        //    var items = await _repository.Query()
-        //        .Where(x => !deleteIds.Contains(x.ID))  // Exclui os itens com IDs em deleteIds
-        //        .OrderBy(x => x.Descricao)
-        //        .ToListAsync();
+            // Filtra os items excluindo os IDs de deleteIds
+            var items = await _repository.Query()
+                .Where(x => !deleteIds.Contains(x.EspecialidadeId))  // Exclui os itens com IDs em deleteIds
+                .OrderBy(x => x.Descricao)
+                .ToListAsync();
 
-        //    return items;
-        //}
-        
+            return items;
+        }
+
         public async Task Put(Solicitante item)
         {
             await _repository.Put(item);

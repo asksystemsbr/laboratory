@@ -8,6 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<IEnumerable<Exame>> GetItems();
         Task<Exame> GetItemsByCodigo(string codigoExame);
         Task<ExameDTO> GetPrecoByPlanoExame(string codigoExame, string codigoPlano);
+        Task<IEnumerable<Exame>> GetExameByRecepcao(int recepcaoId);
         Task<Exame> GetItem(int id);
         Task Put(Exame item);
         Task<Exame> Post(Exame item);
