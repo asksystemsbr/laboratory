@@ -24,7 +24,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoConvenioPlano>>> GetRecepcaoConvenioPlanos()
         {
             var items = await _service.GetItems();
@@ -32,7 +32,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> GetRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -44,7 +44,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("byRecepcao/{recepcaoId}")]
-        //[Authorize(Policy = "CanRead")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<object>>> GetRecepcaoConvenioPlanosByRecepcao(int recepcaoId)
         {
             var conveniosPlanos = await _service.GetItemsByRecepcao(recepcaoId);
@@ -63,7 +63,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutRecepcaoConvenioPlano(int id, RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             if (id != recepcaoConvenioPlano.ID)
@@ -87,7 +87,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<RecepcaoConvenioPlano>> PostRecepcaoConvenioPlano(RecepcaoConvenioPlano recepcaoConvenioPlano)
         {
             var createdRecepcaoConvenioPlano = await _service.Post(recepcaoConvenioPlano);
@@ -95,7 +95,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> DeleteRecepcaoConvenioPlano(int id)
         {
             var item = await _service.GetItem(id);
@@ -111,7 +111,7 @@ namespace LaboratoryBackEnd.Controllers
 
         /// <returns>Nenhum conteúdo se a operação for bem-sucedida</returns>
         [HttpPost("addOrUpdate/{recepcaoId}")]
-        //[Authorize(Policy = "CanWrite")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> AddOrUpdateRecepcaoConvenioPlanos(
             [SwaggerParameter("ID da recepção", Required = true)] int recepcaoId,
             [SwaggerParameter("Lista de convênios e planos", Required = true)][FromBody] List<RecepcaoConvenioPlano> conveniosPlanos)
