@@ -68,13 +68,17 @@ namespace LaboratoryBackEnd.Service
             return items;
         }
         
-        public async Task<ExameDTO> GetPrecoByPlanoExame(string codigoExame,string codigoPlano)
+        public async Task<ExameDTO> GetPrecoByPlanoExame(string codigoExame,string codigoPlano, bool isIdExame)
         {
             ExameDTO exameDTO = null;
+            
             // 1. Obter o Exame pelo código
+            int? exameId = isIdExame ? Convert.ToInt32(codigoExame) : (int?)null;
+            string codigoExameLower = isIdExame ? null : codigoExame.ToLower();
+
             var exame = await _repository
                 .Query()
-                .Where(x => x.CodigoExame.ToLower() == codigoExame.ToLower())
+                .Where(x => isIdExame ? x.ID == exameId : x.CodigoExame.ToLower() == codigoExameLower)
                 .FirstOrDefaultAsync();
 
             if (exame == null)
@@ -106,6 +110,7 @@ namespace LaboratoryBackEnd.Service
 
             return exameDTO;
         }
+
 
         public async Task<Exame> GetItem(int id)
         {
