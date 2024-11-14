@@ -17,7 +17,7 @@ namespace LaboratoryBackEnd.Extensions
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddHours(3), // Tempo de expiração do token (por exemplo, 1 hora)
+                Expires = DateTime.UtcNow.AddHours(18), // Tempo de expiração do token (por exemplo, 1 hora)
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

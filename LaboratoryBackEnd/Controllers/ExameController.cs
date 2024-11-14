@@ -67,11 +67,22 @@ namespace LaboratoryBackEnd.Controllers
         [HttpGet("getPrecoByPlanoExame/{planoId}/{codigoExame}")]
         public async Task<ActionResult<ExameDTO>> GetPrecoByPlanoExame(string planoId, string codigoExame)
         {
-            var item = await _service.GetPrecoByPlanoExame(codigoExame,planoId);
-            if (item == null)
-            {
-                return NotFound();
-            }
+            var item = await _service.GetPrecoByPlanoExame(codigoExame,planoId,false);
+            //if (item == null)
+            //{
+            //    return NotFound();
+            //}
+            return Ok(item);
+        }
+
+        [HttpGet("getPrecoByPlanoExameId/{planoId}/{codigoExame}")]
+        public async Task<ActionResult<ExameDTO>> getPrecoByPlanoExameId(string planoId, string codigoExame)
+        {
+            var item = await _service.GetPrecoByPlanoExame(codigoExame, planoId,true);
+            //if (item == null)
+            //{
+            //    return NotFound();
+            //}
             return Ok(item);
         }
 
