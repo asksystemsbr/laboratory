@@ -34,6 +34,15 @@ namespace LaboratoryBackEnd.Controllers
             return Ok(items);
         }
 
+        [HttpGet("getItemsPedido")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItemsPedido()
+        {
+            var items = await _service.GetItemsCabecalhoPedido();
+
+            return Ok(items);
+        }
+
         [HttpGet("{id}")]
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<OrcamentoCabecalho>> GetItem(int id)
@@ -143,6 +152,28 @@ namespace LaboratoryBackEnd.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpGet("validateCreatePedido/{idOrcamento}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<string>> ValidateCreatePedido(int idOrcamento)
+        {
+
+            try
+            {
+                var item = await _service.ValidateCreatePedido(idOrcamento);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idOrcamento, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }      
 
         [HttpPut()]
         [Authorize(Policy = "CanWrite")]

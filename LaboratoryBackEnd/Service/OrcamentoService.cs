@@ -18,6 +18,7 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<Usuario> _repositoryUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
         private readonly IRepository<Modulo> _repositoryModulo;
+        private readonly IRepository<Cliente> _repositoryCliente;
 
 
         public OrcamentoService(ILoggerService loggerService
@@ -29,6 +30,7 @@ namespace LaboratoryBackEnd.Service
             , IRepository<Usuario> repositoryUsuario
             , IRepository<Permissao> repositoryPermissao
             , IRepository<Modulo> repositoryModulo
+            , IRepository<Cliente> repositoryCliente
             )
         {
             _loggerService = loggerService;
@@ -40,11 +42,25 @@ namespace LaboratoryBackEnd.Service
             _repositoryUsuario = repositoryUsuario;
             _repositoryPermissao = repositoryPermissao;
             _repositoryModulo = repositoryModulo;
+            _repositoryCliente = repositoryCliente;
         }
 
         public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho()
         {
-            return await _repository.GetItems();
+            return await _repository
+                .Query()
+                .Where(x=>x.Status=="1")
+                .OrderBy(x=>x.DataHora)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoPedido()
+        {
+            return await _repository
+                .Query()
+                .Where(x => x.Status == "2")
+                .OrderBy(x => x.DataHora)
+                .ToListAsync();
         }
 
         public async Task<OrcamentoCabecalho> GetItemCabecalho(int id)
@@ -113,6 +129,41 @@ namespace LaboratoryBackEnd.Service
 
             return isPerm;
         }
+
+        public async Task<string> ValidateCreatePedido(int idOrcamento)
+        {
+            string ret = string.Empty;
+            var orcamento = await _repository.GetItem(idOrcamento);
+            if (orcamento != null)
+            {
+                if(orcamento.Status=="1")
+                {
+                    #region ValidateCliente
+                    var cliente = await _repositoryCliente.GetItem(orcamento.PacienteId??0);
+                    if(cliente != null)
+                    {
+                        if(cliente.EnderecoId>0)
+                        {
+                            if (string.IsNullOrEmpty( cliente.CpfCnpj))
+                                { ret = "Não foi possível localizar o CPF do paciente!"; }
+                        }
+                        else
+                        { ret = "Não foi possível localizar o endereço do paciente!"; }
+                    }
+                    else
+                    { ret = "Não foi possível localizar o paciente!"; }
+                    #endregion                   
+                }
+                else
+                { ret = "Orçamento não está com status ativo"; }
+            }
+            else
+                { ret = "Não foi possível localizar o orçamento!"; }
+
+
+            return ret;
+        }
+        
 
         public async Task Put(OrcamentoCabecalho item)
         {
