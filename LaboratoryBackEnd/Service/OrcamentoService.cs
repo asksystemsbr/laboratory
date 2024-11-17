@@ -50,7 +50,7 @@ namespace LaboratoryBackEnd.Service
             return await _repository
                 .Query()
                 .Where(x=>x.Status=="1")
-                .OrderBy(x=>x.DataHora)
+                .OrderBy(x=>x.ID)
                 .ToListAsync();
         }
 
@@ -59,7 +59,7 @@ namespace LaboratoryBackEnd.Service
             return await _repository
                 .Query()
                 .Where(x => x.Status == "2")
-                .OrderBy(x => x.DataHora)
+                .OrderBy(x => x.ID)
                 .ToListAsync();
         }
 

@@ -18,6 +18,12 @@ namespace LaboratoryBackEnd.Models
         [Column("nome_recepcao")]
         public string NomeRecepcao { get; set; }
 
+        [Column("txt_cabecalho_orcamento")]
+        public string CabecalhoOrcamento { get; set; }
+
+        [Column("txt_rodape_orcamento")]
+        public string RodapeOrcamento { get; set; }        
+
         [Column("endereco_id")]
         public int EnderecoId { get; set; }
 
