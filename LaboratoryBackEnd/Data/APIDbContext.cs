@@ -11,6 +11,9 @@ namespace LaboratoryBackEnd.Data
         public DbSet<OperationLog> OperationLogs { get; set; }
         #endregion
 
+        public DbSet<AgendamentoCabecalho> AgendamentoCabecalho { get; set; }
+        public DbSet<AgendamentoDetalhe> AgendamentoDetalhe { get; set; }
+        public DbSet<AgendamentoPagamento> AgendamentoPagamento { get; set; }
         public DbSet<Boleto> Boleto { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Cliente> Client { get; set; }

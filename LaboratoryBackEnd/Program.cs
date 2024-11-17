@@ -94,6 +94,9 @@ builder.Services.AddSingleton<IAuthorizationHandler, DynamicPermissionHandler>()
 
 //Registro de repositórios em ordem afabética
 builder.Services.AddScoped<IRepository<AuditLog>, Repository<AuditLog>>();
+builder.Services.AddScoped<IRepository<AgendamentoCabecalho>, Repository<AgendamentoCabecalho>>();
+builder.Services.AddScoped<IRepository<AgendamentoDetalhe>, Repository<AgendamentoDetalhe>>();
+builder.Services.AddScoped<IRepository<AgendamentoPagamento>, Repository<AgendamentoPagamento>>();
 builder.Services.AddScoped<IRepository<Boleto>, Repository<Boleto>>();
 builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
 builder.Services.AddScoped<IRepository<Contas>, Repository<Contas>>();
@@ -178,6 +181,7 @@ builder.Services.AddScoped<IPlanoRepository, PlanoRepository>();
 
 
 //registro de serviços
+builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
