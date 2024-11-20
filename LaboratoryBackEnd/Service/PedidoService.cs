@@ -7,12 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace LaboratoryBackEnd.Service
 {
-    public class OrcamentoService : IOrcamentoService
+    public class PedidoService : IPedidoService
     {
-        private readonly ILoggerService _loggerService;
-        private readonly IRepository<OrcamentoCabecalho> _repository;
-        private readonly IRepository<OrcamentoDetalhe> _repositoryDetalhe;
-        private readonly IRepository<OrcamentoPagamento> _repositoryPagamento;
+        private readonly ILoggerService _loggerService;        
+        private readonly IRepository<PedidoCabecalho> _repository;
+        private readonly IRepository<PedidoDetalhe> _repositoryDetalhe;
+        private readonly IRepository<PedidoPagamento> _repositoryPagamento;
+        private readonly IRepository<OrcamentoCabecalho> _repositoryOrcamentoCabecalho;
         private readonly IRepository<Exame> _repositoryExames;
         private readonly IRepository<FormaPagamento> _repositoryFormaPagamentos;
         private readonly IRepository<Usuario> _repositoryUsuario;
@@ -21,10 +22,11 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<Cliente> _repositoryCliente;
 
 
-        public OrcamentoService(ILoggerService loggerService
-            , IRepository<OrcamentoCabecalho> repository
-            , IRepository<OrcamentoDetalhe> repositoryDetalhe
-            , IRepository<OrcamentoPagamento> repositoryPagamento
+        public PedidoService(ILoggerService loggerService
+            , IRepository<PedidoCabecalho> repository
+            , IRepository<PedidoDetalhe> repositoryDetalhe
+            , IRepository<PedidoPagamento> repositoryPagamento
+            , IRepository<OrcamentoCabecalho> repositoryOrcamentoCabecalho
             , IRepository<Exame> repositoryExames
             , IRepository<FormaPagamento> repositoryFromaPagamentos
             , IRepository<Usuario> repositoryUsuario
@@ -37,6 +39,7 @@ namespace LaboratoryBackEnd.Service
             _repository = repository;
             _repositoryDetalhe = repositoryDetalhe;
             _repositoryPagamento = repositoryPagamento;
+            _repositoryOrcamentoCabecalho = repositoryOrcamentoCabecalho;
             _repositoryExames = repositoryExames;
             _repositoryFormaPagamentos = repositoryFromaPagamentos;
             _repositoryUsuario = repositoryUsuario;
@@ -45,16 +48,16 @@ namespace LaboratoryBackEnd.Service
             _repositoryCliente = repositoryCliente;
         }
 
-        public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho()
+        public async Task<IEnumerable<PedidoCabecalho>> GetItemsCabecalho()
         {
             return await _repository
                 .Query()
-                //.Where(x=>x.Status=="1")
+                .Where(x=>x.Status=="1")
                 .OrderBy(x=>x.ID)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoPedido()
+        public async Task<IEnumerable<PedidoCabecalho>> GetItemsCabecalhoPedido()
         {
             return await _repository
                 .Query()
@@ -63,26 +66,26 @@ namespace LaboratoryBackEnd.Service
                 .ToListAsync();
         }
 
-        public async Task<OrcamentoCabecalho> GetItemCabecalho(int id)
+        public async Task<PedidoCabecalho> GetItemCabecalho(int id)
         {
             return await _repository.GetItem(id);
         }
 
-        public async Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho)
+        public async Task<List<PedidoDetalhe>> GetItemsDetalhe(int idCabecacalho)
         {
-            return await _repositoryDetalhe.Query().Where(x=>x.OrcamentoId==idCabecacalho).ToListAsync();
+            return await _repositoryDetalhe.Query().Where(x=>x.PedidoId==idCabecacalho).ToListAsync();
         }
 
-        public async Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho)
+        public async Task<List<PedidoPagamento>> GetItemsPagamentos(int idCabecacalho)
         {
-            return await _repositoryPagamento.Query().Where(x => x.OrcamentoId == idCabecacalho).ToListAsync();
+            return await _repositoryPagamento.Query().Where(x => x.PedidoId == idCabecacalho).ToListAsync();
         }
 
         public async Task<List<Exame>> GetExamesList(int idCabecalho)
         {
             // Filtra OrcamentoDetalhe pelo OrcamentoId e inclui Exame
             var exameIds = await _repositoryDetalhe.Query()
-                .Where(od => od.OrcamentoId == idCabecalho)
+                .Where(od => od.PedidoId == idCabecalho)
                     .Select(od => od.ExameId)
                         .ToListAsync();
 
@@ -97,7 +100,7 @@ namespace LaboratoryBackEnd.Service
         public async Task<List<FormaPagamento>> GetPagamentosList(int idCabecalho)
         {
             var pagamentosIds = await _repositoryPagamento.Query()
-                .Where(od => od.OrcamentoId == idCabecalho)
+                .Where(od => od.PedidoId == idCabecalho)
                     .Select(od => od.PagamentoId)
                         .ToListAsync();
 
@@ -133,7 +136,7 @@ namespace LaboratoryBackEnd.Service
         public async Task<string> ValidateCreatePedido(int idOrcamento)
         {
             string ret = string.Empty;
-            var orcamento = await _repository.GetItem(idOrcamento);
+            var orcamento = await _repositoryOrcamentoCabecalho.GetItem(idOrcamento);
             if (orcamento != null)
             {
                 if(orcamento.Status=="1")
@@ -142,13 +145,13 @@ namespace LaboratoryBackEnd.Service
                     var cliente = await _repositoryCliente.GetItem(orcamento.PacienteId??0);
                     if(cliente != null)
                     {
-                        //if(cliente.EnderecoId>0)
-                        //{
-                        //    if (string.IsNullOrEmpty( cliente.CpfCnpj))
-                        //        { ret = "Não foi possível localizar o CPF do paciente!"; }
-                        //}
-                        //else
-                        //{ ret = "Não foi possível localizar o endereço do paciente!"; }
+                        if(cliente.EnderecoId>0)
+                        {
+                            if (string.IsNullOrEmpty( cliente.CpfCnpj))
+                                { ret = "Não foi possível localizar o CPF do paciente!"; }
+                        }
+                        else
+                        { ret = "Não foi possível localizar o endereço do paciente!"; }
                     }
                     else
                     { ret = "Não foi possível localizar o paciente!"; }
@@ -165,31 +168,31 @@ namespace LaboratoryBackEnd.Service
         }
         
 
-        public async Task Put(OrcamentoCabecalho item)
+        public async Task Put(PedidoCabecalho item)
         {
             await _repository.Put(item);
         }
-        public async Task PutDetalhe(OrcamentoDetalhe item)
+        public async Task PutDetalhe(PedidoDetalhe item)
         {
             await _repositoryDetalhe.Put(item);
         }
 
-        public async Task PutPagamento(OrcamentoPagamento item)
+        public async Task PutPagamento(PedidoPagamento item)
         {
             await _repositoryPagamento.Put(item);
         }
 
-        public async Task<OrcamentoCabecalho> PostCabecalho(OrcamentoCabecalho item)
+        public async Task<PedidoCabecalho> PostCabecalho(PedidoCabecalho item)
         {
             return await _repository.Post(item);
         }
 
-        public async Task<OrcamentoDetalhe> PostDetalhe(OrcamentoDetalhe item)
+        public async Task<PedidoDetalhe> PostDetalhe(PedidoDetalhe item)
         {
             return await _repositoryDetalhe.Post(item);
         }
 
-        public async Task<OrcamentoPagamento> PostPagamento(OrcamentoPagamento item)
+        public async Task<PedidoPagamento> PostPagamento(PedidoPagamento item)
         {
             return await _repositoryPagamento.Post(item);
         }
@@ -222,15 +225,15 @@ namespace LaboratoryBackEnd.Service
             return _repository.Exists(id);
         }
 
-        public async Task RemoveContexCabecalho(OrcamentoCabecalho item)
+        public async Task RemoveContexCabecalho(PedidoCabecalho item)
         {
             _repository.RemoveContex(item);
         }
-        public async Task RemoveContexDetalhe(OrcamentoDetalhe item)
+        public async Task RemoveContexDetalhe(PedidoDetalhe item)
         {
             _repositoryDetalhe.RemoveContex(item);
         }
-        public async Task RemoveContexPagamento(OrcamentoPagamento item)
+        public async Task RemoveContexPagamento(PedidoPagamento item)
         {
             _repositoryPagamento.RemoveContex(item);
         }
