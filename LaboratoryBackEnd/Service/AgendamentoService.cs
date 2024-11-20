@@ -73,7 +73,7 @@ namespace LaboratoryBackEnd.Service
         {
             return await _repository
                 .Query()
-                .Where(x=>x.Status=="1")
+                //.Where(x=>x.Status=="1")
                 .OrderBy(x=>x.ID)
                 .ToListAsync();
         }
@@ -187,7 +187,38 @@ namespace LaboratoryBackEnd.Service
 
             return ret;
         }
-        
+
+        public async Task<string> ValidateCreateBudget(int idAgendamento)
+        {
+            string ret = string.Empty;
+            var agendamento = await _repository.GetItem(idAgendamento);
+            if (agendamento != null)
+            {
+                if (agendamento.Status != "1")              
+                { ret = "Agendamento não está com status ativo"; }
+            }
+            else
+            { ret = "Não foi possível localizar o agendamento!"; }
+
+
+            return ret;
+        }
+
+        public async Task<string> ValidateDeleteAgendamento(int idAgendamento)
+        {
+            string ret = string.Empty;
+            var agendamento = await _repository.GetItem(idAgendamento);
+            if (agendamento != null)
+            {
+                if (agendamento.Status != "1")
+                { ret = "Agendamento não está com status ativo"; }
+            }
+            else
+            { ret = "Não foi possível localizar o agendamento!"; }
+
+
+            return ret;
+        }
 
         public async Task Put(AgendamentoCabecalho item)
         {
@@ -201,6 +232,11 @@ namespace LaboratoryBackEnd.Service
         public async Task PutPagamento(AgendamentoPagamento item)
         {
             await _repositoryPagamento.Put(item);
+        }
+
+        public async Task PutAgendamentoHorarioGerado(AgendamentoHorarioGerado item)
+        {
+            await _repositoryAgendamentoHorarioGerados.Put(item);
         }
 
         public async Task<AgendamentoCabecalho> PostCabecalho(AgendamentoCabecalho item)
@@ -311,6 +347,11 @@ namespace LaboratoryBackEnd.Service
             
 
             return lstRet;
+        }
+
+        public async Task<AgendamentoHorarioGerado> GetHorarioGerado(int id)
+        {
+            return await _repositoryAgendamentoHorarioGerados.GetItem(id);
         }
 
         public async Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGerado(int idAgendamento)

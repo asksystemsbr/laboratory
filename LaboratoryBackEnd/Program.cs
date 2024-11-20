@@ -262,6 +262,7 @@ builder.Services.AddScoped<IRecepcaoEspecialidadeExameService, RecepcaoEspeciali
 builder.Services.AddAutoMapper(typeof(AgendamentoHorarioMapperProfile));
 builder.Services.AddAutoMapper(typeof(ExameMappingProfile));
 builder.Services.AddAutoMapper(typeof(OrcamentoCompletoMappingProfile));
+builder.Services.AddAutoMapper(typeof(AgendamentoToOrcamentoMappingProfile));
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

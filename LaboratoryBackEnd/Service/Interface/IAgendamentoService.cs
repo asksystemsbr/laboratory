@@ -16,13 +16,15 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<bool> CheckDescontoPermission(int idUsuario);
 
         Task<string> ValidateCreatePedido(int idOrcamento);
-        
 
+        Task<string> ValidateCreateBudget(int idAgendamento);
+        Task<string> ValidateDeleteAgendamento(int idAgendamento);
 
         Task Put(AgendamentoCabecalho item);
         Task PutDetalhe(AgendamentoDetalhe item);
         Task PutPagamento(AgendamentoPagamento item);
 
+        Task PutAgendamentoHorarioGerado(AgendamentoHorarioGerado item);
         Task<AgendamentoCabecalho> PostCabecalho(AgendamentoCabecalho item);
         Task<AgendamentoDetalhe> PostDetalhe(AgendamentoDetalhe item);
         Task<AgendamentoPagamento> PostPagamento(AgendamentoPagamento item);
@@ -33,6 +35,7 @@ namespace LaboratoryBackEnd.Service.Interface
 
         Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGerado(int idAgendamento);
 
+        Task<AgendamentoHorarioGerado> GetHorarioGerado(int id);
         Task<List<AgendamentoHorarioDto>> GetItemsHorarios();
 
         Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoPreenchidos(int idAgendamento);

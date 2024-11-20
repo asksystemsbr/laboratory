@@ -8,6 +8,7 @@ using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Data.DTO;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http.HttpResults;
+using AutoMapper;
 
 namespace LaboratoryBackEnd.Controllers
 {
@@ -18,11 +19,19 @@ namespace LaboratoryBackEnd.Controllers
     {
         private readonly ILoggerService _loggerService;
         private readonly IAgendamentoService _service;
+        private readonly IOrcamentoService _serviceOrcamento;
+        private readonly IMapper _mapper;
 
-        public AgendamentoController(ILoggerService loggerService, IAgendamentoService service)
+        public AgendamentoController(ILoggerService loggerService
+            , IAgendamentoService service
+            , IOrcamentoService serviceOrcamento
+            , IMapper mapper
+            )
         {
             _loggerService = loggerService;
             _service = service;
+            _serviceOrcamento = serviceOrcamento;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -69,12 +78,14 @@ namespace LaboratoryBackEnd.Controllers
                 }
 
                 var itemDetalhe = await _service.GetItemsDetalhe(item.ID);
+                var itemDetalheDto = _mapper.Map<List<AgendamentoDetalheDto>>(itemDetalhe);
+
                 var itemPagamento = await _service.GetItemsPagamentos(item.ID);
 
                 var result = new AgendamentoCompletoDto()
                 {
                     AgendamentoCabecalho = item,
-                    AgendamentoDetalhe = itemDetalhe,
+                    AgendamentoDetalhe = itemDetalheDto,
                     AgendamentoPagamento = itemPagamento
                 };
 
@@ -173,7 +184,50 @@ namespace LaboratoryBackEnd.Controllers
                 await _loggerService.LogError<int>(HttpContext.Request.Method, idOrcamento, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-        }      
+        }
+
+        [HttpGet("validateCreateBudget/{idAgendamento}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<string>> ValidateCreateBudget(int idAgendamento)
+        {
+
+            try
+            {
+                var item = await _service.ValidateCreateBudget(idAgendamento);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idAgendamento, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("validateDeleteAgendamento/{idOrcamento}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<string>> ValidateDeleteAgendamento(int idOrcamento)
+        {
+
+            try
+            {
+                var item = await _service.ValidateDeleteAgendamento(idOrcamento);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idOrcamento, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
 
         [HttpPut()]
         [Authorize(Policy = "CanWrite")]
@@ -181,17 +235,50 @@ namespace LaboratoryBackEnd.Controllers
         {
             List<AgendamentoDetalhe> detalhesProcessados = new List<AgendamentoDetalhe>();
             List<AgendamentoPagamento> pagamentosProcessados = new List<AgendamentoPagamento>();
+            bool isSchedulerOK = true;
             try
             {
                 await _service.Put(item.AgendamentoCabecalho);
 
+                //disponibilizar e validar as datas
+                foreach (var detalheDto in item.AgendamentoDetalhe)
+                {
+                    var agendamentoHorarioGerado = await _service.GetHorarioGerado(detalheDto.HorarioId ?? 0);
+                    //novo agendamento e tem que ter o horário disponível
+                    if (detalheDto.ID==0)
+                    {
+                        if(agendamentoHorarioGerado.Status.ToLower()!="disponível")
+                        {
+                            isSchedulerOK = false;
+                            break;
+                        }
+                    }                    
+                    if (agendamentoHorarioGerado != null)
+                    {
+                        agendamentoHorarioGerado.Status = "Disponível";
+                        await _service.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                    }
+                }
+                if(!isSchedulerOK)
+                {
+                    return StatusCode(500, $"Agendamento indisponível. Recarregue a agenda!");
+                }
                 await _service.DeleteDetalhe(item.AgendamentoCabecalho.ID);
                 await _service.DeletePagamento(item.AgendamentoCabecalho.ID);
-                foreach (var detalhe in item.AgendamentoDetalhe)
+                foreach (var detalheDto in item.AgendamentoDetalhe)
                 {
+                    var detalhe = _mapper.Map<AgendamentoDetalhe>(detalheDto);
                     detalhe.ID = 0;
                     var createdDetalhe = await _service.PostDetalhe(detalhe);
                     detalhesProcessados.Add(createdDetalhe);
+
+                    //setar o horario como agendado
+                    var agendamentoHorarioGerado = await _service.GetHorarioGerado(detalheDto.HorarioId??0);
+                    if(agendamentoHorarioGerado != null)
+                    {
+                        agendamentoHorarioGerado.Status = "Utilizado";
+                        await _service.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                    }
                 }
 
                 foreach (var pagamento in item.AgendamentoPagamento)
@@ -237,17 +324,42 @@ namespace LaboratoryBackEnd.Controllers
         {
             List<AgendamentoDetalhe> detalhesProcessados = new List<AgendamentoDetalhe>();
             List<AgendamentoPagamento> pagamentosProcessados = new List<AgendamentoPagamento>();
+            bool isSchedulerOK = true;
 
             try
             {
+                //validar as datas
+                foreach (var detalheDto in item.AgendamentoDetalhe)
+                {
+                    var agendamentoHorarioGerado = await _service.GetHorarioGerado(detalheDto.HorarioId ?? 0);
+                    //novo agendamento e tem que ter o horário disponível
+                    if (agendamentoHorarioGerado.Status.ToLower() != "disponível")
+                    {
+                        isSchedulerOK = false;
+                        break;
+                    }
+                }
+                if (!isSchedulerOK)
+                {
+                    return StatusCode(500, $"Agendamento indisponível. Recarregue a agenda!");
+                }
+
                 var created = await _service.PostCabecalho(item.AgendamentoCabecalho);
                 if (created != null){
 
-                    foreach (var detalhe in item.AgendamentoDetalhe)
+                    foreach (var detalheDto in item.AgendamentoDetalhe)
                     {
+                        var detalhe = _mapper.Map<AgendamentoDetalhe>(detalheDto);
                         detalhe.AgendamentoId = created.ID;
                         var createdDetalhe = await _service.PostDetalhe(detalhe);
                         detalhesProcessados.Add(detalhe);
+
+                        var agendamentoHorarioGerado = await _service.GetHorarioGerado(detalheDto.HorarioId ?? 0);
+                        if (agendamentoHorarioGerado != null)
+                        {
+                            agendamentoHorarioGerado.Status = "Utilizado";
+                            await _service.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                        }
                     }
 
                     foreach (var pagamento in item.AgendamentoPagamento)
@@ -266,6 +378,57 @@ namespace LaboratoryBackEnd.Controllers
                     await _service.RemoveContexDetalhe(detalhe);
                 foreach (var pagamento in pagamentosProcessados)
                     await _service.RemoveContexPagamento(pagamento);
+                await _loggerService.LogError<AgendamentoCompletoDto>(HttpContext.Request.Method, item, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("exportToBudget")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<AgendamentoCabecalho>> ExportToBudget(AgendamentoCompletoDto item)
+        {
+            List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
+            List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
+
+            var orcamentoCabecalho = _mapper.Map<OrcamentoCabecalho>(item.AgendamentoCabecalho);
+
+            try
+            {
+                
+                orcamentoCabecalho.Status = "1";
+                orcamentoCabecalho.ID = 0;
+
+                var created = await _serviceOrcamento.PostCabecalho(orcamentoCabecalho);
+                if (created != null)
+                {
+
+                    foreach (var detalhe in item.AgendamentoDetalhe)
+                    {
+                        var orcamentoDetalhe = _mapper.Map<OrcamentoDetalhe>(detalhe);
+                        orcamentoDetalhe.OrcamentoId = created.ID; // Associa o ID do orçamento criado
+                        orcamentoDetalhe.ID = 0;
+                        var createdDetalhe = await _serviceOrcamento.PostDetalhe(orcamentoDetalhe);
+                        detalhesProcessados.Add(orcamentoDetalhe);
+                    }
+
+                    foreach (var pagamento in item.AgendamentoPagamento)
+                    {
+                        var orcamentoPagamento = _mapper.Map<OrcamentoPagamento>(pagamento);
+                        orcamentoPagamento.OrcamentoId = created.ID; // Associa o ID do orçamento criado
+                        orcamentoPagamento.ID = 0;
+                        var createdPagamento = await _serviceOrcamento.PostPagamento(orcamentoPagamento);
+                        pagamentosProcessados.Add(orcamentoPagamento);
+                    }
+                }
+                return CreatedAtAction("GetPlano", new { id = created.ID }, created);
+            }
+            catch (Exception ex)
+            {
+                await _serviceOrcamento.RemoveContexCabecalho(orcamentoCabecalho);
+                foreach (var detalhe in detalhesProcessados)
+                    await _serviceOrcamento.RemoveContexDetalhe(detalhe);
+                foreach (var pagamento in pagamentosProcessados)
+                    await _serviceOrcamento.RemoveContexPagamento(pagamento);
                 await _loggerService.LogError<AgendamentoCompletoDto>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
