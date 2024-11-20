@@ -1,4 +1,5 @@
-﻿using LaboratoryBackEnd.Models;
+﻿using LaboratoryBackEnd.Data.DTO;
+using LaboratoryBackEnd.Models;
 
 namespace LaboratoryBackEnd.Service.Interface
 {
@@ -26,11 +27,34 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<AgendamentoDetalhe> PostDetalhe(AgendamentoDetalhe item);
         Task<AgendamentoPagamento> PostPagamento(AgendamentoPagamento item);
 
+        Task<AgendamentoHorario> PostHorarios(AgendamentoHorarioDto item);
+
+        Task<AgendamentoHorario> GetItemHorario(int id);
+
+        Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGerado(int idAgendamento);
+
+        Task<List<AgendamentoHorarioDto>> GetItemsHorarios();
+
+        Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoPreenchidos(int idAgendamento);
+
+        Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoDisponible(int convenioId
+            , int planoId
+            , int unidadeId
+            , int exameId
+            , DateTime dataSolicitada);
+
+        Task DeleteAgendamentoHorario(int id);
+
+        Task DeleteAgendamentoHorarioGerado(int idCabecalho);
+        Task DeleteAgendamentoHorarioGeradoByDetalhe(int idDetalhe);
+
         Task DeleteCabecalho(int id);
         Task DeleteDetalhe(int id);
         Task DeletePagamento(int id);
 
         bool ExistsCabecalho(int id);
+
+        Task RemoveContexAgendamentoHorario(AgendamentoHorario item);
         Task RemoveContexCabecalho(AgendamentoCabecalho item);
         Task RemoveContexDetalhe(AgendamentoDetalhe item);
         Task RemoveContexPagamento(AgendamentoPagamento item);

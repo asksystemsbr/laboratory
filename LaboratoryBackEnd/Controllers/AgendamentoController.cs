@@ -296,6 +296,207 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+        [HttpPost("getAgendamentosHorariosDisponiveis")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<List<AgendamentoHorarioGerado>>> GetAgendamentosHorariosDisponiveis([FromBody] AgendamentoHorarioDto dto)
+        {
+
+            if (dto == null) return BadRequest("Dados inválidos.");
+
+
+            // Validação dos campos (opcional)
+            if (dto.DataInicio == DateTime.MinValue)
+                return BadRequest(new { Error = "Data de início é obrigatória." });
+
+            if (dto.UnidadeId <= 0)
+                return BadRequest(new { Error = "Unidade deve ser maior que zero." });
+
+            if (dto.ConvenioId <= 0)
+                return BadRequest(new { Error = "Convenio deve ser maior que zero." });
+
+            if (dto.PlanoId <= 0)
+                return BadRequest(new { Error = "Plano deve ser maior que zero." });
+
+            if (dto.ExameId <= 0)
+                return BadRequest(new { Error = "Exame deve ser maior que zero." });
+
+
+            try
+            {
+                var times = await _service.GetItemsHorarioGeradoDisponible(
+                    dto.ConvenioId
+                    ,dto.PlanoId
+                    ,dto.UnidadeId
+                    ,dto.ExameId
+                    ,dto.DataInicio
+                    );
+                return Ok(times);
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<AgendamentoHorarioDto>(HttpContext.Request.Method, dto, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("criarAgendamento")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<AgendamentoHorario>> CriarAgendamento([FromBody] AgendamentoHorarioDto dto)
+        {
+
+            if (dto == null) return BadRequest("Dados inválidos.");
+
+
+            // Validação dos campos (opcional)
+            if (dto.DataInicio == default || dto.DataFim == default || dto.HoraInicio == default || dto.HoraFim == default)
+            {
+                return BadRequest(new { Error = "Campos obrigatórios ausentes." });
+            }
+
+            try
+            {
+                var created = await _service.PostHorarios(dto);
+                return CreatedAtAction("CriarAgendamento", new { id = created.ID }, created);
+            }
+            catch (Exception ex)
+            {                         
+                await _loggerService.LogError<AgendamentoHorarioDto>(HttpContext.Request.Method, dto, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPut("editarAgendamento/{id}")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult> EditarAgendamento(int id,AgendamentoHorarioDto dto)
+        {
+            if (dto == null) return BadRequest("Dados inválidos.");
+
+            if (id != dto.ID)
+            {
+                return BadRequest();
+            }    
+
+
+            // Validação dos campos (opcional)
+            if (dto.DataInicio == default || dto.HoraInicio == default || dto.HoraFim == default)
+            {
+                return BadRequest(new { Error = "Campos obrigatórios ausentes." });
+            }
+
+            try
+            {
+                var lstFromDB = await _service.GetItemsHorarioGerado(id);
+
+                foreach (var item in lstFromDB)
+                {
+                    if (item.Status.ToLower()=="disponível")
+                    {
+                        return BadRequest("Não é possível excluir o agendamento porque há horários vinculados com status diferente de 'disponível'.");
+                    }
+                    if (!dto.lstGerados.Any(x=>x.ID==item.ID))
+                    {
+                        await _service.DeleteAgendamentoHorarioGeradoByDetalhe(item.ID);
+                    }
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<AgendamentoHorarioDto>(HttpContext.Request.Method, dto, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpGet("getAgendamentoHorario/{idAgendamentoHoario}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<AgendamentoHorarioCompletoDto>> GetAgendamentoHoario(int idAgendamentoHoario)
+        {
+
+            try
+            {
+                var item = await _service.GetItemHorario(idAgendamentoHoario);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                var itemDetalhe = await _service.GetItemsHorarioGerado(item.ID);
+
+                var result = new AgendamentoHorarioCompletoDto()
+                {
+                    AgendamentoHorario = item,
+                    AgendamentoHorarioGerado = itemDetalhe
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idAgendamentoHoario, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet("getAgendamentosHorarios")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<List<AgendamentoHorarioDto>>> GetAgendamentosHoarios()
+        {
+
+            try
+            {
+                var item = await _service.GetItemsHorarios();
+
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<string>(HttpContext.Request.Method, "GetAgendamentosHoarios", User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("deleteAgendamentoHorario/{idAgendamentoHorario}")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<IActionResult> DeleteAgendamentoHorario(int idAgendamentoHorario)
+        {
+            var agendamento = await _service.GetItemHorario(idAgendamentoHorario);
+            try
+            {
+                var itensRelacionados = await _service.GetItemsHorarioGeradoPreenchidos(idAgendamentoHorario);
+
+                if (itensRelacionados.Any())
+                {
+                    return BadRequest("Não é possível excluir o agendamento porque há horários vinculados com status diferente de 'disponível'.");
+                }
+
+                // Caso contrário, excluir o agendamento
+                
+                if (agendamento == null)
+                {
+                    return NotFound();
+                }
+
+                try
+                {
+                    await _service.DeleteAgendamentoHorarioGerado(agendamento.ID);
+                    await _service.DeleteAgendamentoHorario(idAgendamentoHorario);
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    await _service.RemoveContexAgendamentoHorario(agendamento);
+                    await _loggerService.LogError<AgendamentoHorario>(HttpContext.Request.Method, agendamento, User, ex);
+                    return StatusCode(500, $"Internal server error: {ex.Message}");
+                }               
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idAgendamentoHorario, User, ex);
+                return StatusCode(500, $"Erro interno: {ex.Message}");
+            }
+        }
         private bool ItemExists(int id)
         {
             return _service.ExistsCabecalho(id);

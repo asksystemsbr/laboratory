@@ -1,4 +1,7 @@
-﻿using LaboratoryBackEnd.Data.Interface;
+﻿using AutoMapper;
+using Humanizer;
+using LaboratoryBackEnd.Data.DTO;
+using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +16,19 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<AgendamentoCabecalho> _repository;
         private readonly IRepository<AgendamentoDetalhe> _repositoryDetalhe;
         private readonly IRepository<AgendamentoPagamento> _repositoryPagamento;
+        private readonly IRepository<AgendamentoHorario> _repositoryAgendamentoHorario;
+        private readonly IRepository<AgendamentoHorarioGerado> _repositoryAgendamentoHorarioGerados;
         private readonly IRepository<Exame> _repositoryExames;
+        private readonly IRepository<Convenio> _repositoryConvenio;
+        private readonly IRepository<Plano> _repositoryPlano;
+        private readonly IRepository<Solicitante> _repositorySolicitante;
+        private readonly IRepository<Recepcao> _repositoryRecepcao;
         private readonly IRepository<FormaPagamento> _repositoryFormaPagamentos;
         private readonly IRepository<Usuario> _repositoryUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
         private readonly IRepository<Modulo> _repositoryModulo;
         private readonly IRepository<Cliente> _repositoryCliente;
+        private readonly IMapper _mapper;
 
 
         public AgendamentoService(ILoggerService loggerService
@@ -26,11 +36,18 @@ namespace LaboratoryBackEnd.Service
             , IRepository<AgendamentoDetalhe> repositoryDetalhe
             , IRepository<AgendamentoPagamento> repositoryPagamento
             , IRepository<Exame> repositoryExames
+            , IRepository<Convenio> repositoryConvenio
+            , IRepository<Plano> repositoryPlano
+            , IRepository<Solicitante> repositorySolicitante
+            , IRepository<Recepcao> repositoryRecepcao
             , IRepository<FormaPagamento> repositoryFromaPagamentos
             , IRepository<Usuario> repositoryUsuario
             , IRepository<Permissao> repositoryPermissao
             , IRepository<Modulo> repositoryModulo
             , IRepository<Cliente> repositoryCliente
+            , IRepository<AgendamentoHorario> repositoryAgendamentoHorario
+            , IRepository<AgendamentoHorarioGerado> repositoryAgendamentoHorarioGerados
+            , IMapper mapper
             )
         {
             _loggerService = loggerService;
@@ -38,11 +55,18 @@ namespace LaboratoryBackEnd.Service
             _repositoryDetalhe = repositoryDetalhe;
             _repositoryPagamento = repositoryPagamento;
             _repositoryExames = repositoryExames;
+            _repositoryConvenio = repositoryConvenio;
+            _repositoryPlano = repositoryPlano;
+            _repositorySolicitante = repositorySolicitante;
+            _repositoryRecepcao = repositoryRecepcao;
             _repositoryFormaPagamentos = repositoryFromaPagamentos;
             _repositoryUsuario = repositoryUsuario;
             _repositoryPermissao = repositoryPermissao;
             _repositoryModulo = repositoryModulo;
             _repositoryCliente = repositoryCliente;
+            _repositoryAgendamentoHorario = repositoryAgendamentoHorario;
+            _repositoryAgendamentoHorarioGerados = repositoryAgendamentoHorarioGerados;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<AgendamentoCabecalho>> GetItemsCabecalho()
@@ -194,6 +218,166 @@ namespace LaboratoryBackEnd.Service
             return await _repositoryPagamento.Post(item);
         }
 
+        public async Task<AgendamentoHorario> PostHorarios(AgendamentoHorarioDto item)
+        {
+            // Criação do agendamento
+            var agendamento = new AgendamentoHorario
+            {
+                RecepcaoId = item.UnidadeId,
+                ConvenioId = item.ConvenioId,
+                PlanoId = item.PlanoId,
+                SolicitanteId = item.SolicitanteId,
+                ExameId = item.ExameId,
+                DataInicio = item.DataInicio,
+                HoraInicio = TimeSpan.Parse(item.HoraInicio),
+                HoraFim = TimeSpan.Parse(item.HoraFim),
+                DuracaoMinutos = item.DuracaoMinutos,
+                IntervaloMinutos = item.IntervaloMinutos
+            };
+
+            try
+            {
+                AgendamentoHorario retorno =null;
+
+                // Geração de horários automáticos
+                var dataAtual = item.DataInicio;
+
+                while (dataAtual <= item.DataFim)
+                {
+                    agendamento.DataInicio = dataAtual;
+                    agendamento.ID = 0;
+                    retorno = await _repositoryAgendamentoHorario.Post(agendamento);
+
+                    var horarioAtual = dataAtual.Date + agendamento.HoraInicio;
+
+                    while (horarioAtual.TimeOfDay + TimeSpan.FromMinutes(item.DuracaoMinutos) <= agendamento.HoraFim)
+                    {
+                        var horarioGerado = new AgendamentoHorarioGerado
+                        {
+                            AgendamentoHorarioId = retorno.ID,
+                            Horario = horarioAtual,
+                            Status = "Disponível"
+                        };
+
+                        horarioAtual = horarioAtual.AddMinutes(item.DuracaoMinutos + item.IntervaloMinutos);
+                        await _repositoryAgendamentoHorarioGerados.Post(horarioGerado);
+                    }
+
+                    dataAtual = dataAtual.AddDays(1); // Avançar para o próximo dia
+                }
+
+
+                return retorno;
+            }
+            catch (Exception ex)
+            {
+                await RemoveContexHorario(agendamento);
+                throw ex;
+            }
+
+            
+        }
+        public async Task<AgendamentoHorario> GetItemHorario(int id)
+        {
+            return await _repositoryAgendamentoHorario.GetItem(id);
+        }
+
+        public async Task<List<AgendamentoHorarioDto>> GetItemsHorarios()
+        {
+
+            var agendamentos = await _repositoryAgendamentoHorario.GetItems();
+
+            if (agendamentos == null) return null;
+
+            List<AgendamentoHorarioDto> lstRet = new List<AgendamentoHorarioDto>();
+
+            foreach (var item in agendamentos)
+            {
+                var unidade = await _repositoryRecepcao.GetItem(item.RecepcaoId??0);
+                var convenio = await _repositoryConvenio.GetItem(item.ConvenioId ?? 0);
+                var plano = await _repositoryPlano.GetItem(item.PlanoId ?? 0);
+                var solicitante = await _repositorySolicitante.GetItem(item.SolicitanteId ?? 0);
+                var exame = await _repositoryExames.GetItem(item.ExameId ?? 0);
+
+                var agendamentoDto = _mapper.Map<AgendamentoHorarioDto>(item);
+                agendamentoDto.Unidade = unidade?.NomeRecepcao;
+                agendamentoDto.Convenio = convenio?.Descricao;
+                agendamentoDto.Plano = plano?.Descricao;
+                agendamentoDto.Solicitante = solicitante?.Descricao;
+                agendamentoDto.Exame = exame?.NomeExame;
+
+                lstRet.Add(agendamentoDto);
+            }
+            
+
+            return lstRet;
+        }
+
+        public async Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGerado(int idAgendamento)
+        {
+            return await _repositoryAgendamentoHorarioGerados
+                .Query()
+                .Where(x => 
+                x.AgendamentoHorarioId == idAgendamento
+                ).ToListAsync();
+        }
+        public async Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoPreenchidos(int idAgendamento)
+        {
+            return await _repositoryAgendamentoHorarioGerados
+                .Query()
+                .Where(x =>
+                x.AgendamentoHorarioId == idAgendamento
+                && x.Status.ToLower() != "disponível"
+                ).ToListAsync();
+        }
+
+        public async Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoDisponible(
+            int convenioId
+            ,int planoId
+            ,int unidadeId
+            ,int exameId
+            ,DateTime dataSolicitada
+            )
+        {
+            var agenda = await _repositoryAgendamentoHorario
+                .Query()
+                .Where(x =>
+                            x.RecepcaoId == unidadeId
+                            && x.ConvenioId == convenioId
+                            && x.PlanoId == planoId
+                            && x.ExameId == exameId
+                            && x.DataInicio == dataSolicitada
+                ).FirstOrDefaultAsync();
+
+            if (agenda == null) return null;
+
+            return await _repositoryAgendamentoHorarioGerados
+                .Query()
+                .Where(x =>
+                x.AgendamentoHorarioId == agenda.ID
+                && x.Status.ToLower() == "disponível"
+                ).ToListAsync();
+        }
+
+        public async Task DeleteAgendamentoHorario(int id)
+        {
+            await _repositoryAgendamentoHorario.Delete(id);
+        }
+
+        public async Task DeleteAgendamentoHorarioGerado(int idCabecalho)
+        {
+            var detalhes = await GetItemsHorarioGerado(idCabecalho);
+            foreach (var item in detalhes)
+            {
+                await _repositoryAgendamentoHorarioGerados.Delete(item.ID);
+            }
+        }
+
+        public async Task DeleteAgendamentoHorarioGeradoByDetalhe(int idDetalhe)
+        {
+            await _repositoryAgendamentoHorarioGerados.Delete(idDetalhe);
+        }
+
         public async Task DeleteCabecalho(int id)
         {
             await _repository.Delete(id);
@@ -221,7 +405,10 @@ namespace LaboratoryBackEnd.Service
         {
             return _repository.Exists(id);
         }
-
+        public async Task RemoveContexAgendamentoHorario(AgendamentoHorario item)
+        {
+            _repositoryAgendamentoHorario.RemoveContex(item);
+        }
         public async Task RemoveContexCabecalho(AgendamentoCabecalho item)
         {
             _repository.RemoveContex(item);
@@ -233,6 +420,11 @@ namespace LaboratoryBackEnd.Service
         public async Task RemoveContexPagamento(AgendamentoPagamento item)
         {
             _repositoryPagamento.RemoveContex(item);
+        }
+
+        public async Task RemoveContexHorario(AgendamentoHorario item)
+        {
+            _repositoryAgendamentoHorario.RemoveContex(item);
         }
     }
 }
