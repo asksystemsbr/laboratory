@@ -5,6 +5,7 @@ namespace LaboratoryBackEnd.Service.Interface
     public interface IOrcamentoService
     {
         Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalho();
+        Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoPedido(); 
         Task<OrcamentoCabecalho> GetItemCabecalho(int id);
         Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho);
         Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho);
@@ -12,6 +13,9 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<List<Exame>> GetExamesList(int id);
         Task<List<FormaPagamento>> GetPagamentosList(int id);
         Task<bool> CheckDescontoPermission(int idUsuario);
+
+        Task<string> ValidateCreatePedido(int idOrcamento);
+        
 
 
         Task Put(OrcamentoCabecalho item);

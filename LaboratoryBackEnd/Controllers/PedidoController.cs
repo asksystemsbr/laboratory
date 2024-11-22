@@ -8,26 +8,29 @@ using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Data.DTO;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http.HttpResults;
+using AutoMapper;
 
 namespace LaboratoryBackEnd.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("AllowSpecificOrigin")]
     [ApiController]
-    public class OrcamentoController : ControllerBase
+    public class PedidoController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly IOrcamentoService _service;
+        private readonly IPedidoService _service; 
+        private readonly IMapper _mapper;
 
-        public OrcamentoController(ILoggerService loggerService, IOrcamentoService service)
+        public PedidoController(ILoggerService loggerService, IPedidoService service, IMapper mapper)
         {
             _loggerService = loggerService;
             _service = service;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItems()
+        public async Task<ActionResult<IEnumerable<PedidoCabecalho>>> GetItems()
         {
             var items = await _service.GetItemsCabecalho();
 
@@ -36,7 +39,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet("getItemsPedido")]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItemsPedido()
+        public async Task<ActionResult<IEnumerable<PedidoCabecalho>>> GetItemsPedido()
         {
             var items = await _service.GetItemsCabecalhoPedido();
 
@@ -45,7 +48,7 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<OrcamentoCabecalho>> GetItem(int id)
+        public async Task<ActionResult<PedidoCabecalho>> GetItem(int id)
         {
             var item = await _service.GetItemCabecalho(id);
             if (item == null)
@@ -55,9 +58,9 @@ namespace LaboratoryBackEnd.Controllers
             return item;
         }
 
-        [HttpGet("getOrcamentoCompleto/{idCabecalho}")]
+        [HttpGet("getPedidoCompleto/{idCabecalho}")]
         [Authorize(Policy = "CanRead")]
-        public async Task<ActionResult<OrcamentoCompletoDto>> GetItemCompleto(int idCabecalho)
+        public async Task<ActionResult<PedidoCompletoDto>> GetItemCompleto(int idCabecalho)
         {
 
             try
@@ -71,11 +74,11 @@ namespace LaboratoryBackEnd.Controllers
                 var itemDetalhe = await _service.GetItemsDetalhe(item.ID);
                 var itemPagamento = await _service.GetItemsPagamentos(item.ID);
 
-                var result = new OrcamentoCompletoDto()
+                var result = new PedidoCompletoDto()
                 {
-                    OrcamentoCabecalho = item,
-                    OrcamentoDetalhe = itemDetalhe,
-                    OrcamentoPagamento = itemPagamento
+                    PedidoCabecalho = item,
+                    PedidoDetalhe = itemDetalhe,
+                    PedidoPagamento = itemPagamento
                 };
 
                 return result;
@@ -177,24 +180,24 @@ namespace LaboratoryBackEnd.Controllers
 
         [HttpPut()]
         [Authorize(Policy = "CanWrite")]
-        public async Task<IActionResult> PutItem( OrcamentoCompletoDto item)
+        public async Task<IActionResult> PutItem( PedidoCompletoDto item)
         {
-            List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
-            List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
+            List<PedidoDetalhe> detalhesProcessados = new List<PedidoDetalhe>();
+            List<PedidoPagamento> pagamentosProcessados = new List<PedidoPagamento>();
             try
             {
-                await _service.Put(item.OrcamentoCabecalho);
+                await _service.Put(item.PedidoCabecalho);
 
-                await _service.DeleteDetalhe(item.OrcamentoCabecalho.ID);
-                await _service.DeletePagamento(item.OrcamentoCabecalho.ID);
-                foreach (var detalhe in item.OrcamentoDetalhe)
+                await _service.DeleteDetalhe(item.PedidoCabecalho.ID);
+                await _service.DeletePagamento(item.PedidoCabecalho.ID);
+                foreach (var detalhe in item.PedidoDetalhe)
                 {
                     detalhe.ID = 0;
                     var createdDetalhe = await _service.PostDetalhe(detalhe);
                     detalhesProcessados.Add(createdDetalhe);
                 }
 
-                foreach (var pagamento in item.OrcamentoPagamento)
+                foreach (var pagamento in item.PedidoPagamento)
                 {
                     pagamento.ID = 0;
                     var createdPagamento = await _service.PostPagamento(pagamento);
@@ -204,13 +207,13 @@ namespace LaboratoryBackEnd.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                await _service.RemoveContexCabecalho(item.OrcamentoCabecalho);
+                await _service.RemoveContexCabecalho(item.PedidoCabecalho);
                 foreach (var detalhe in detalhesProcessados)
                     await _service.RemoveContexDetalhe(detalhe);
                 foreach (var pagamento in pagamentosProcessados)
                     await _service.RemoveContexPagamento(pagamento);
-                await _loggerService.LogError<OrcamentoCompletoDto>(HttpContext.Request.Method, item, User, ex);
-                if (!ItemExists(item.OrcamentoCabecalho.ID))
+                await _loggerService.LogError<PedidoCompletoDto>(HttpContext.Request.Method, item, User, ex);
+                if (!ItemExists(item.PedidoCabecalho.ID))
                 {
                     return NotFound();
                 }
@@ -221,38 +224,43 @@ namespace LaboratoryBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                await _service.RemoveContexCabecalho(item.OrcamentoCabecalho);
+                await _service.RemoveContexCabecalho(item.PedidoCabecalho);
                 foreach (var detalhe in detalhesProcessados)
                     await _service.RemoveContexDetalhe(detalhe);
                 foreach (var pagamento in pagamentosProcessados)
                     await _service.RemoveContexPagamento(pagamento);
-                await _loggerService.LogError<OrcamentoCompletoDto>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<PedidoCompletoDto>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
 
         [HttpPost]
         [Authorize(Policy = "CanWrite")]
-        public async Task<ActionResult<OrcamentoCabecalho>> PostItem(OrcamentoCompletoDto item)
+        public async Task<ActionResult<PedidoCabecalho>> PostItem(OrcamentoCompletoDto item)
         {
-            List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
-            List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
+            // Converter usando AutoMapper
+            var pedidoCompletoDto = _mapper.Map<PedidoCompletoDto>(item);
+            pedidoCompletoDto.PedidoCabecalho.ID = 0;
+            List<PedidoDetalhe> detalhesProcessados = new List<PedidoDetalhe>();
+            List<PedidoPagamento> pagamentosProcessados = new List<PedidoPagamento>();
 
             try
             {
-                var created = await _service.PostCabecalho(item.OrcamentoCabecalho);
+                var created = await _service.PostCabecalho(pedidoCompletoDto.PedidoCabecalho);
                 if (created != null){
 
-                    foreach (var detalhe in item.OrcamentoDetalhe)
+                    foreach (var detalhe in pedidoCompletoDto.PedidoDetalhe)
                     {
-                        detalhe.OrcamentoId = created.ID;
+                        detalhe.ID = 0;
+                        detalhe.PedidoId = created.ID;
                         var createdDetalhe = await _service.PostDetalhe(detalhe);
                         detalhesProcessados.Add(detalhe);
                     }
 
-                    foreach (var pagamento in item.OrcamentoPagamento)
+                    foreach (var pagamento in pedidoCompletoDto.PedidoPagamento)
                     {
-                        pagamento.OrcamentoId = created.ID;
+                        pagamento.ID = 0;
+                        pagamento.PedidoId = created.ID;
                         var createdPagamento = await _service.PostPagamento(pagamento);
                         pagamentosProcessados.Add(pagamento);
                     }
@@ -261,12 +269,12 @@ namespace LaboratoryBackEnd.Controllers
             }
             catch (Exception ex)
             {
-                await _service.RemoveContexCabecalho(item.OrcamentoCabecalho);
+                await _service.RemoveContexCabecalho(pedidoCompletoDto.PedidoCabecalho);
                 foreach (var detalhe in detalhesProcessados)
                     await _service.RemoveContexDetalhe(detalhe);
                 foreach (var pagamento in pagamentosProcessados)
                     await _service.RemoveContexPagamento(pagamento);
-                await _loggerService.LogError<OrcamentoCompletoDto>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<PedidoCompletoDto>(HttpContext.Request.Method, pedidoCompletoDto, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
@@ -291,7 +299,7 @@ namespace LaboratoryBackEnd.Controllers
             catch (Exception ex)
             {
                 await _service.RemoveContexCabecalho(item);
-                await _loggerService.LogError<OrcamentoCabecalho>(HttpContext.Request.Method, item, User, ex);
+                await _loggerService.LogError<PedidoCabecalho>(HttpContext.Request.Method, item, User, ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }

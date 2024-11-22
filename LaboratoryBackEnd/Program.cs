@@ -94,6 +94,11 @@ builder.Services.AddSingleton<IAuthorizationHandler, DynamicPermissionHandler>()
 
 //Registro de repositórios em ordem afabética
 builder.Services.AddScoped<IRepository<AuditLog>, Repository<AuditLog>>();
+builder.Services.AddScoped<IRepository<AgendamentoCabecalho>, Repository<AgendamentoCabecalho>>();
+builder.Services.AddScoped<IRepository<AgendamentoDetalhe>, Repository<AgendamentoDetalhe>>();
+builder.Services.AddScoped<IRepository<AgendamentoPagamento>, Repository<AgendamentoPagamento>>();
+builder.Services.AddScoped<IRepository<AgendamentoHorario>, Repository<AgendamentoHorario>>();
+builder.Services.AddScoped<IRepository<AgendamentoHorarioGerado>, Repository<AgendamentoHorarioGerado>>();
 builder.Services.AddScoped<IRepository<Boleto>, Repository<Boleto>>();
 builder.Services.AddScoped<IRepository<Cliente>, Repository<Cliente>>();
 builder.Services.AddScoped<IRepository<Contas>, Repository<Contas>>();
@@ -132,6 +137,9 @@ builder.Services.AddScoped<IRepository<OrdemServicoExame>, Repository<OrdemServi
 builder.Services.AddScoped<IRepository<OrdemServicoServico>, Repository<OrdemServicoServico>>();
 builder.Services.AddScoped<IRepository<OrdemServicoTecnico>, Repository<OrdemServicoTecnico>>();
 builder.Services.AddScoped<IRepository<Pagamento>, Repository<Pagamento>>();
+builder.Services.AddScoped<IRepository<PedidoCabecalho>, Repository<PedidoCabecalho>>();
+builder.Services.AddScoped<IRepository<PedidoDetalhe>, Repository<PedidoDetalhe>>();
+builder.Services.AddScoped<IRepository<PedidoPagamento>, Repository<PedidoPagamento>>();
 builder.Services.AddScoped<IRepository<Permissao>, Repository<Permissao>>();
 builder.Services.AddScoped<IRepository<Plano>, Repository<Plano>>();
 builder.Services.AddScoped<IRepository<Recepcao>, Repository<Recepcao>>();
@@ -178,6 +186,7 @@ builder.Services.AddScoped<IPlanoRepository, PlanoRepository>();
 
 
 //registro de serviços
+builder.Services.AddScoped<IAgendamentoService, AgendamentoService>();
 builder.Services.AddScoped<IAuditLogService, AuditLogService>();
 builder.Services.AddScoped<IBoletoService, BoletoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
@@ -214,6 +223,7 @@ builder.Services.AddScoped<IOrdemServicoExameService, OrdemServicoExameService>(
 builder.Services.AddScoped<IOrdemServicoServicoService, OrdemServicoServicoService>();
 builder.Services.AddScoped<IOrdemServicoTecnicoService, OrdemServicoTecnicoService>();
 builder.Services.AddScoped<IPagamentoService, PagamentoService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IPermissaoService, PermissaoService>();
 builder.Services.AddScoped<IPlanoService, PlanoService>();
 builder.Services.AddScoped<IRecepcaoService, RecepcaoService>();
@@ -249,7 +259,10 @@ builder.Services.AddScoped<IRecepcaoConvenioPlanoService, RecepcaoConvenioPlanoS
 builder.Services.AddScoped<IRecepcaoEspecialidadeExameService, RecepcaoEspecialidadeExameService>();
 
 
+builder.Services.AddAutoMapper(typeof(AgendamentoHorarioMapperProfile));
 builder.Services.AddAutoMapper(typeof(ExameMappingProfile));
+builder.Services.AddAutoMapper(typeof(OrcamentoCompletoMappingProfile));
+builder.Services.AddAutoMapper(typeof(AgendamentoToOrcamentoMappingProfile));
 
 // Configuração do serviço de logger
 builder.Services.AddScoped<ILoggerService, LoggerService>();

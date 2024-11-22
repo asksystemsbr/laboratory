@@ -11,6 +11,11 @@ namespace LaboratoryBackEnd.Data
         public DbSet<OperationLog> OperationLogs { get; set; }
         #endregion
 
+        public DbSet<AgendamentoCabecalho> AgendamentoCabecalho { get; set; }
+        public DbSet<AgendamentoDetalhe> AgendamentoDetalhe { get; set; }
+        public DbSet<AgendamentoPagamento> AgendamentoPagamento { get; set; }
+        public DbSet<AgendamentoHorario> AgendamentoHorario { get; set; }
+        public DbSet<AgendamentoHorarioGerado> AgendamentoHorarioGerado { get; set; }
         public DbSet<Boleto> Boleto { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Cliente> Client { get; set; }
@@ -44,6 +49,9 @@ namespace LaboratoryBackEnd.Data
         public DbSet<OrdemServicoServico> OrdensServicosServicos { get; set; }
         public DbSet<OrdemServicoTecnico> OrdensServicosTecnicos { get; set; }
         public DbSet<Pagamento> Pagamentos { get; set; }
+        public DbSet<PedidoCabecalho> PedidoCabecalho { get; set; }
+        public DbSet<PedidoDetalhe> PedidoDetalhe { get; set; }
+        public DbSet<PedidoPagamento> PedidoPagamento { get; set; }
         public DbSet<Permissao> Permissoes { get; set; }
         public DbSet<Plano> Plano { get; set; }
         public DbSet<Recepcao> Recepcoes { get; set; }
