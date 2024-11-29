@@ -38,6 +38,8 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<AgendamentoHorarioGerado> GetHorarioGerado(int id);
         Task<List<AgendamentoHorarioDto>> GetItemsHorarios();
 
+        Task<bool> ReplicarAgendamentos(Exame exame);
+
         Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoPreenchidos(int idAgendamento);
 
         Task<List<AgendamentoHorarioGerado>> GetItemsHorarioGeradoDisponible(int convenioId
@@ -45,6 +47,11 @@ namespace LaboratoryBackEnd.Service.Interface
             , int unidadeId
             , int exameId
             , DateTime dataSolicitada);
+
+        Task<List<AgendamentoHorarioGerado>> GetNextItemsHorarioGeradoDisponible(int convenioId
+            , int planoId
+            , int unidadeId
+            , int exameId);
 
         Task DeleteAgendamentoHorario(int id);
 

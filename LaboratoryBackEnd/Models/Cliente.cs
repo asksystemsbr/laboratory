@@ -26,7 +26,13 @@ public class Cliente : IIdentifiable
 
     [StringLength(20)]
     [Column("telefone")]
-    public string Telefone { get; set; }
+    public string? Telefone { get; set; }
+
+
+    [StringLength(20)]
+    [Column("telefone_celular")]
+    public string? TelefoneCelular { get; set; }
+    
 
     [Required]
     [StringLength(100)]
@@ -61,6 +67,10 @@ public class Cliente : IIdentifiable
     [StringLength(255)]
     [Column("razao_social")]
     public string? RazaoSocial { get; set; }
+
+    [StringLength(255)]
+    [Column("senha")]
+    public string? Senha { get; set; }
 
     [StringLength(20)]
     [Column("ie")]

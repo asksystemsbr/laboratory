@@ -182,5 +182,8 @@ namespace LaboratoryBackEnd.Models
 
         [Column("material_coleta_similar")]
         public string? MaterialColetaSimilar { get; set; }
+
+        [Column("agendamento")]
+        public string? Agendamento { get; set; }
     }
 }

@@ -21,5 +21,6 @@ namespace LaboratoryBackEnd.Models
         [Column("Status")]
         public string Status { get; set; } 
 
+
     }
 }

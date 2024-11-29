@@ -53,6 +53,28 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+        // POST: api/Usuarios/authenticate
+        [HttpPost("authenticatePortal")]
+        public async Task<ActionResult<LoginCredentials>> AuthenticatePortal([FromBody] LoginCredentials credentials)
+        {
+            try
+            {
+                var items = await _service.AuthenticatePortal(credentials);
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                if (ex.GetType() == typeof(InvalidOperationException))
+                {
+                    return NotFound(ex.Message);
+                }
+                else
+                {
+                    return StatusCode(500, $"Internal server error: {ex.Message}");
+                }
+            }
+        }
+
         // GET: api/Usuarios/5
         [HttpGet("{id}")]
         //[Authorize(Policy = "CanRead")]

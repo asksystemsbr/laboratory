@@ -11,7 +11,9 @@ namespace LaboratoryBackEnd.Data.DTO
 
         public int? EnderecoId { get; set; }
 
-        public string Telefone { get; set; }
+        public string? Telefone { get; set; }
+
+        public string? TelefoneCelular { get; set; }
 
         public string Email { get; set; }
 
@@ -56,5 +58,7 @@ namespace LaboratoryBackEnd.Data.DTO
         public string? TitularConvenio { get; set; }
 
         public virtual Endereco Endereco { get; set; }
+        public string? Senha { get; set; }
     }
 }
+

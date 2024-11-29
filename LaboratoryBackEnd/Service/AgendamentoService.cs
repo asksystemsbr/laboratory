@@ -5,6 +5,7 @@ using LaboratoryBackEnd.Data.Interface;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.RegularExpressions;
 
@@ -22,12 +23,14 @@ namespace LaboratoryBackEnd.Service
         private readonly IRepository<Convenio> _repositoryConvenio;
         private readonly IRepository<Plano> _repositoryPlano;
         private readonly IRepository<Solicitante> _repositorySolicitante;
+        private readonly IRepository<Especialidade> _repositoryEspecialidade;
         private readonly IRepository<Recepcao> _repositoryRecepcao;
         private readonly IRepository<FormaPagamento> _repositoryFormaPagamentos;
         private readonly IRepository<Usuario> _repositoryUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
         private readonly IRepository<Modulo> _repositoryModulo;
         private readonly IRepository<Cliente> _repositoryCliente;
+        private readonly IRepository<Exame> _repositoryExame;
         private readonly IMapper _mapper;
 
 
@@ -39,6 +42,7 @@ namespace LaboratoryBackEnd.Service
             , IRepository<Convenio> repositoryConvenio
             , IRepository<Plano> repositoryPlano
             , IRepository<Solicitante> repositorySolicitante
+            , IRepository<Especialidade> repositoryEspecialidade
             , IRepository<Recepcao> repositoryRecepcao
             , IRepository<FormaPagamento> repositoryFromaPagamentos
             , IRepository<Usuario> repositoryUsuario
@@ -47,6 +51,7 @@ namespace LaboratoryBackEnd.Service
             , IRepository<Cliente> repositoryCliente
             , IRepository<AgendamentoHorario> repositoryAgendamentoHorario
             , IRepository<AgendamentoHorarioGerado> repositoryAgendamentoHorarioGerados
+            , IRepository<Exame> repositoryExame
             , IMapper mapper
             )
         {
@@ -58,6 +63,7 @@ namespace LaboratoryBackEnd.Service
             _repositoryConvenio = repositoryConvenio;
             _repositoryPlano = repositoryPlano;
             _repositorySolicitante = repositorySolicitante;
+            _repositoryEspecialidade = repositoryEspecialidade;
             _repositoryRecepcao = repositoryRecepcao;
             _repositoryFormaPagamentos = repositoryFromaPagamentos;
             _repositoryUsuario = repositoryUsuario;
@@ -66,6 +72,7 @@ namespace LaboratoryBackEnd.Service
             _repositoryCliente = repositoryCliente;
             _repositoryAgendamentoHorario = repositoryAgendamentoHorario;
             _repositoryAgendamentoHorarioGerados = repositoryAgendamentoHorarioGerados;
+            _repositoryExame = repositoryExame;
             _mapper = mapper;
         }
 
@@ -263,6 +270,7 @@ namespace LaboratoryBackEnd.Service
                 ConvenioId = item.ConvenioId,
                 PlanoId = item.PlanoId,
                 SolicitanteId = item.SolicitanteId,
+                EspecialidadeId = item.EspecialidadeId,
                 ExameId = item.ExameId,
                 DataInicio = item.DataInicio,
                 HoraInicio = TimeSpan.Parse(item.HoraInicio),
@@ -333,6 +341,7 @@ namespace LaboratoryBackEnd.Service
                 var convenio = await _repositoryConvenio.GetItem(item.ConvenioId ?? 0);
                 var plano = await _repositoryPlano.GetItem(item.PlanoId ?? 0);
                 var solicitante = await _repositorySolicitante.GetItem(item.SolicitanteId ?? 0);
+                var especialidade = await _repositoryEspecialidade.GetItem(item.SolicitanteId ?? 0);
                 var exame = await _repositoryExames.GetItem(item.ExameId ?? 0);
 
                 var agendamentoDto = _mapper.Map<AgendamentoHorarioDto>(item);
@@ -340,6 +349,7 @@ namespace LaboratoryBackEnd.Service
                 agendamentoDto.Convenio = convenio?.Descricao;
                 agendamentoDto.Plano = plano?.Descricao;
                 agendamentoDto.Solicitante = solicitante?.Descricao;
+                agendamentoDto.Especialidade = especialidade?.Descricao;
                 agendamentoDto.Exame = exame?.NomeExame;
 
                 lstRet.Add(agendamentoDto);
@@ -347,6 +357,25 @@ namespace LaboratoryBackEnd.Service
             
 
             return lstRet;
+        }
+
+        public async Task<bool> ReplicarAgendamentos(Exame exame)
+        {
+            //obter a lista de exames por especialidade e setor
+            var exames = await _repositoryExame.Query()
+                .Where(x=>x.EspecialidadeId ==exame.EspecialidadeId
+                && x.SetorId == exame.SetorId)
+                .ToListAsync();
+
+            if(exames!=null)
+            {
+                foreach (var item in exames)
+                {
+                    item.Agendamento = exame.Agendamento;
+                    await _repositoryExames.Put(item);
+                }
+            }
+            return true;
         }
 
         public async Task<AgendamentoHorarioGerado> GetHorarioGerado(int id)
@@ -380,6 +409,8 @@ namespace LaboratoryBackEnd.Service
             ,DateTime dataSolicitada
             )
         {
+            var dataInicio = dataSolicitada.Date;
+
             var agenda = await _repositoryAgendamentoHorario
                 .Query()
                 .Where(x =>
@@ -387,8 +418,39 @@ namespace LaboratoryBackEnd.Service
                             && x.ConvenioId == convenioId
                             && x.PlanoId == planoId
                             && x.ExameId == exameId
-                            && x.DataInicio == dataSolicitada
+                            && x.DataInicio == dataInicio
                 ).FirstOrDefaultAsync();
+
+            if (agenda == null) return null;
+
+            return await _repositoryAgendamentoHorarioGerados
+                .Query()
+                .Where(x =>
+                x.AgendamentoHorarioId == agenda.ID
+                && x.Status.ToLower() == "disponível"
+                ).ToListAsync();
+        }
+
+        public async Task<List<AgendamentoHorarioGerado>> GetNextItemsHorarioGeradoDisponible(
+            int convenioId
+            , int planoId
+            , int unidadeId
+            , int exameId
+            )
+        {
+
+            var dataAtual = DateTime.Now.Date;
+            var agendaList = await _repositoryAgendamentoHorario
+                .Query()
+                .Where(x =>
+                            x.RecepcaoId == unidadeId
+                            && x.ConvenioId == convenioId
+                            && x.PlanoId == planoId
+                            && x.ExameId == exameId
+                            && x.DataInicio >= dataAtual
+                ).OrderBy(x=>x.DataInicio).ToListAsync();
+
+            var agenda = agendaList.FirstOrDefault();
 
             if (agenda == null) return null;
 

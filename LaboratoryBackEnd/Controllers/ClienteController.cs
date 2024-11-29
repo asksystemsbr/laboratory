@@ -29,12 +29,22 @@ namespace LaboratoryBackEnd.Controllers
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
         {
-            var items = await _service.GetItems();
-            if (items == null || !items.Any())
+            try
             {
-                return NotFound();
+                var items = await _service.GetItems();
+                if (items == null || !items.Any())
+                {
+                    return NotFound();
+                }
+                return Ok(items);
             }
-            return Ok(items);
+            catch (Exception ex)
+            {
+
+                await _loggerService.LogError<string>(HttpContext.Request.Method, "", User, ex);
+                // Retorna uma resposta de erro com o código 500 e a mensagem de exceção
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         // GET: api/Cliente/5
@@ -42,12 +52,22 @@ namespace LaboratoryBackEnd.Controllers
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<Cliente>> GetCliente(int id)
         {
-            var item = await _service.GetItem(id);
-            if (item == null)
+            try
             {
-                return NotFound();
+                var item = await _service.GetItem(id);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+                return item;
             }
-            return item;
+            catch (Exception ex)
+            {
+
+                await _loggerService.LogError<string>(HttpContext.Request.Method, "", User, ex);
+                // Retorna uma resposta de erro com o código 500 e a mensagem de exceção
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpGet("clienteByCPF/{cpf}")]
@@ -67,6 +87,30 @@ namespace LaboratoryBackEnd.Controllers
         public async Task<ActionResult<Cliente>> GetByRG(string rg)
         {
             var item = await _service.GetItemByRG(rg);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpGet("clienteByNome/{nome}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Cliente>> GetByNome(string nome)
+        {
+            var item = await _service.GetItemByNome(nome);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            return item;
+        }
+
+        [HttpGet("clienteByTelefone/{telefone}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<Cliente>> GetByTelefone(string telefone)
+        {
+            var item = await _service.GetItemByTelefone(telefone);
             if (item == null)
             {
                 return NotFound();
@@ -139,6 +183,33 @@ namespace LaboratoryBackEnd.Controllers
             try
             {
                 
+                cliente.DataCadastro = DateTime.Now;
+                cliente.Senha = "#saolucas";//senha padrão para usar no portal
+
+                var createdImovel = await _service.Post(cliente);
+                return CreatedAtAction("GetCliente", new { id = createdImovel.ID }, createdImovel);
+
+
+            }
+            catch (Exception ex)
+            {
+                await _service.RemoveContex(cliente);
+
+                await _loggerService.LogError<Cliente>(HttpContext.Request.Method, cliente, User, ex);
+                // Retorna uma resposta de erro com o código 500 e a mensagem de exceção
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("createPortal")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<Cliente>> PostClientePortal(ClienteDto clienteDto)
+        {
+
+            var cliente = new ClienteDtoToCliente().MapDtoToCliente(clienteDto);
+            try
+            {
+
                 cliente.DataCadastro = DateTime.Now;
 
                 var createdImovel = await _service.Post(cliente);
