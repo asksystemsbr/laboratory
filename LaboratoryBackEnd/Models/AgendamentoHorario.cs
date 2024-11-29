@@ -42,5 +42,10 @@ namespace LaboratoryBackEnd.Models
         [Column("intervaloMinutos ")]
         public int IntervaloMinutos { get; set; }
 
+
+        [Column("especialidade_id")]
+        public int? EspecialidadeId { get; set; }
+        
+
     }
 }

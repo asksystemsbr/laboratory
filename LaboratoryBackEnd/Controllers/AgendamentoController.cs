@@ -383,6 +383,22 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+        [HttpPost("ReplicarAgendamento")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<bool>> PostReplicarAgendamento(Exame item)
+        {
+            try
+            {
+                await _service.ReplicarAgendamentos(item);
+                return CreatedAtAction("ReplicarAgendamento", new { id = item.ID }, item);
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<Exame>(HttpContext.Request.Method, item, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpPost("exportToBudget")]
         [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<AgendamentoCabecalho>> ExportToBudget(AgendamentoCompletoDto item)
@@ -502,6 +518,45 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+        [HttpPost("getNextAgendamentosHorariosDisponiveis")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<List<AgendamentoHorarioGerado>>> GetNextAgendamentosHorariosDisponiveis([FromBody] AgendamentoHorarioDto dto)
+        {
+
+            if (dto == null) return BadRequest("Dados inválidos.");
+
+
+            // Validação dos campos 
+            if (dto.UnidadeId <= 0)
+                return BadRequest(new { Error = "Unidade deve ser maior que zero." });
+
+            if (dto.ConvenioId <= 0)
+                return BadRequest(new { Error = "Convenio deve ser maior que zero." });
+
+            if (dto.PlanoId <= 0)
+                return BadRequest(new { Error = "Plano deve ser maior que zero." });
+
+            if (dto.ExameId <= 0)
+                return BadRequest(new { Error = "Exame deve ser maior que zero." });
+
+
+            try
+            {
+                var times = await _service.GetNextItemsHorarioGeradoDisponible(
+                    dto.ConvenioId
+                    , dto.PlanoId
+                    , dto.UnidadeId
+                    , dto.ExameId
+                    );
+                return Ok(times);
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<AgendamentoHorarioDto>(HttpContext.Request.Method, dto, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpPost("criarAgendamento")]
         [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<AgendamentoHorario>> CriarAgendamento([FromBody] AgendamentoHorarioDto dto)
@@ -552,7 +607,7 @@ namespace LaboratoryBackEnd.Controllers
 
                 foreach (var item in lstFromDB)
                 {
-                    if (item.Status.ToLower()=="disponível")
+                    if (item.Status.ToLower()!="disponível")
                     {
                         return BadRequest("Não é possível excluir o agendamento porque há horários vinculados com status diferente de 'disponível'.");
                     }
