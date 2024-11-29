@@ -12,6 +12,7 @@ namespace LaboratoryBackEnd.Service
     {
         private readonly ILoggerService _loggerService;
         private readonly IRepository<Usuario> _repository;
+        private readonly IRepository<Cliente> _repositoryCliente;
         private readonly IRepository<UsuarioRecepcao> _repositoryUsuarioRecepcao;
         private readonly IRepository<GrupoUsuario> _repositoryGrupoUsuario;
         private readonly IRepository<Permissao> _repositoryPermissao;
@@ -20,6 +21,7 @@ namespace LaboratoryBackEnd.Service
 
         public UsuarioService(ILoggerService loggerService,
         IRepository<Usuario> repository,
+        IRepository<Cliente> repositoryCliente,
         IRepository<GrupoUsuario> repositoryGrupoUsuario,
         IRepository<Permissao> repositoryPermissao,
         IRepository<TipoPermissao> repositoryTipoPermissao,
@@ -28,6 +30,7 @@ namespace LaboratoryBackEnd.Service
         {
             _loggerService = loggerService;
             _repository = repository;
+            _repositoryCliente = repositoryCliente;
             _repositoryGrupoUsuario = repositoryGrupoUsuario;
             _repositoryPermissao = repositoryPermissao;
             _repositoryTipoPermissao = repositoryTipoPermissao;
@@ -91,6 +94,40 @@ namespace LaboratoryBackEnd.Service
             {
                 Senha = "",
                 Nome = (usuario == null ? "" : usuario.Login),
+                token = token,
+                permissions = lstPermissoes,
+                unidadeId = credentials.unidadeId,
+                Id = (usuario == null ? "0" : usuario.ID.ToString()),
+            };
+
+        }
+
+        public async Task<LoginCredentials> AuthenticatePortal(LoginCredentials credentials)
+        {
+            string token = string.Empty;
+
+            var usuario = await _repositoryCliente.Query().FirstOrDefaultAsync(u => u.Email == credentials.Nome && u.Senha == credentials.Senha);
+
+            var lstPermissoes = new List<string>();
+            if (usuario == null)
+            {
+                throw new InvalidOperationException("Usuário ou senha inválidos.");
+            }
+            else
+            {              
+
+                var claims = new List<Claim>();
+
+                
+                token = JWTExtensions.GenerateJwtToken(claims);
+            }
+
+            // Idealmente, você não deve retornar a senha. Considere usar um DTO para esconder a senha.
+            usuario.Senha = null;
+            return new LoginCredentials()
+            {
+                Senha = "",
+                Nome = (usuario == null ? "" : usuario.Nome),
                 token = token,
                 permissions = lstPermissoes,
                 unidadeId = credentials.unidadeId,

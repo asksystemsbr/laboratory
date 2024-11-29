@@ -50,6 +50,43 @@ namespace LaboratoryBackEnd.Service
                 .Where(x => x.RG != null && (x.RG == rg || x.RG==noMaks))
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<Cliente> GetItemByNome(string nome)
+        {
+            string noMaks = nome.Replace(".", "").Replace("-", "");
+            return await _repository.Query()
+                .Where(x => x.Nome != null && (x.Nome == nome || x.Nome == noMaks))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Cliente> GetItemByTelefone(string telefone)
+        {
+            string noMaks = telefone.Replace(".", "")
+                            .Replace("-", "")
+                            .Replace("(","")
+                            .Replace(")", "")
+                            .Replace(" ", "");
+            return await _repository.Query()
+                .Where(
+                x => x.Telefone != null 
+                        && (x.Telefone == telefone 
+                                || x.Telefone
+                                .Replace(".", "")
+                                .Replace("-", "")
+                                .Replace("(", "")
+                                .Replace(")", "")
+                                .Replace(" ", "") == noMaks)
+                || (x.TelefoneCelular != null 
+                        && (x.TelefoneCelular == telefone 
+                            || x.TelefoneCelular
+                                .Replace(".", "")
+                                .Replace("-", "")
+                                .Replace("(", "")
+                                .Replace(")", "")
+                                .Replace(" ", "") == noMaks)) 
+                )
+                .FirstOrDefaultAsync();
+        }
         public async Task Put(Cliente item)
         {
             await _repository.Put(item);

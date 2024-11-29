@@ -6,6 +6,8 @@
         Task<Cliente> GetItem(int id);
         Task<Cliente> GetItemByCPF(string cpf);
         Task<Cliente> GetItemByRG(string rg);
+        Task<Cliente> GetItemByNome(string rg);
+        Task<Cliente> GetItemByTelefone(string rg);
         Task Put(Cliente item);
         Task<Cliente> Post(Cliente item);
         Task Delete(int id, int idEndereco);

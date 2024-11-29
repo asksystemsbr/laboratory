@@ -35,7 +35,9 @@ namespace LaboratoryBackEnd.Data.Mpas
                 Matricula = clienteDto.Matricula,
                 ValidadeMatricula = clienteDto.ValidadeMatricula,
                 TitularConvenio = clienteDto.TitularConvenio,
-                Endereco = clienteDto.Endereco  // Atribui o objeto de Endereço, se ele for o mesmo
+                Endereco = clienteDto.Endereco,  // Atribui o objeto de Endereço, se ele for o mesmo
+                Senha = clienteDto.Senha,
+                TelefoneCelular = clienteDto.TelefoneCelular
             };
         }
     }

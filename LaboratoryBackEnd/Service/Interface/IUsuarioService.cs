@@ -8,6 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
     public interface IUsuarioService
     {
         Task<LoginCredentials> Authenticate(LoginCredentials credentials);
+        Task<LoginCredentials> AuthenticatePortal(LoginCredentials credentials);
 
         Task<IEnumerable<Usuario>> GetUsuarioByrGrupo(int grupoId);
 

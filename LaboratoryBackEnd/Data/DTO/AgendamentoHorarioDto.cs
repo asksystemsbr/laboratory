@@ -8,6 +8,7 @@ namespace LaboratoryBackEnd.Data.DTO
         public int UnidadeId { get; set; }
         public int ConvenioId { get; set; }
         public int PlanoId { get; set; }
+        public int EspecialidadeId { get; set; }
         public int SolicitanteId { get; set; }
         public int ExameId { get; set; }
         public DateTime DataInicio { get; set; }
@@ -48,6 +49,7 @@ namespace LaboratoryBackEnd.Data.DTO
         public string? Convenio { get; set; }
         public string? Plano { get; set; }
         public string? Solicitante { get; set; }
+        public string? Especialidade { get; set; }
         public string? Exame { get; set; }
 
         public List<AgendamentoHorarioGerado>? lstGerados { get; set; }
