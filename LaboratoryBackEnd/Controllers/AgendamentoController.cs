@@ -518,6 +518,45 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+
+        [HttpPost("getNextAgendamentoDisponiveis")]
+        [Authorize(Policy = "CanWrite")]
+        public async Task<ActionResult<List<AgendamentoHorario>>> GetNextAgendamentosDisponiveis([FromBody] AgendamentoHorarioDto dto)
+        {
+
+            if (dto == null) return BadRequest("Dados inválidos.");
+
+
+            // Validação dos campos 
+            if (dto.UnidadeId <= 0)
+                return BadRequest(new { Error = "Unidade deve ser maior que zero." });
+
+            if (dto.ConvenioId <= 0)
+                return BadRequest(new { Error = "Convenio deve ser maior que zero." });
+
+            if (dto.PlanoId <= 0)
+                return BadRequest(new { Error = "Plano deve ser maior que zero." });
+
+            if (dto.ExameId <= 0)
+                return BadRequest(new { Error = "Exame deve ser maior que zero." });
+
+
+            try
+            {
+                var times = await _service.GetNextItemsDatasGeradasDisponible(
+                    dto.ConvenioId
+                    , dto.PlanoId
+                    , dto.UnidadeId
+                    , dto.ExameId
+                    );
+                return Ok(times);
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<AgendamentoHorarioDto>(HttpContext.Request.Method, dto, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
         [HttpPost("getNextAgendamentosHorariosDisponiveis")]
         [Authorize(Policy = "CanWrite")]
         public async Task<ActionResult<List<AgendamentoHorarioGerado>>> GetNextAgendamentosHorariosDisponiveis([FromBody] AgendamentoHorarioDto dto)

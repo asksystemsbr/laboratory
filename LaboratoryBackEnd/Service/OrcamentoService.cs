@@ -130,6 +130,20 @@ namespace LaboratoryBackEnd.Service
             return isPerm;
         }
 
+        public async Task<bool> CheckExameAgendamento(int idExame)
+        {
+            bool isAgendamento = false;
+            var exame = await _repositoryExames.GetItem(idExame);
+
+            if (exame != null)
+            {               
+                if (!string.IsNullOrEmpty(exame.Agendamento) && exame.Agendamento=="1")
+                    isAgendamento = true;
+            }
+
+            return isAgendamento;
+        }
+
         public async Task<string> ValidateCreatePedido(int idOrcamento)
         {
             string ret = string.Empty;
