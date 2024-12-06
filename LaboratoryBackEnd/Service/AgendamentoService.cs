@@ -462,6 +462,28 @@ namespace LaboratoryBackEnd.Service
                 ).ToListAsync();
         }
 
+        public async Task<List<AgendamentoHorario>> GetNextItemsDatasGeradasDisponible(
+           int convenioId
+           , int planoId
+           , int unidadeId
+           , int exameId
+           )
+        {
+
+            var dataAtual = DateTime.Now.Date;
+            return await _repositoryAgendamentoHorario
+                .Query()
+                .Where(x =>
+                            x.RecepcaoId == unidadeId
+                            && x.ConvenioId == convenioId
+                            && x.PlanoId == planoId
+                            && x.ExameId == exameId
+                            && x.DataInicio >= dataAtual
+                ).OrderBy(x => x.DataInicio).ToListAsync();
+
+            
+        }
+
         public async Task DeleteAgendamentoHorario(int id)
         {
             await _repositoryAgendamentoHorario.Delete(id);

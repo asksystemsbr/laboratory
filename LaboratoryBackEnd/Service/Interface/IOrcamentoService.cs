@@ -14,6 +14,8 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<List<FormaPagamento>> GetPagamentosList(int id);
         Task<bool> CheckDescontoPermission(int idUsuario);
 
+        Task<bool> CheckExameAgendamento(int idExame);
+
         Task<string> ValidateCreatePedido(int idOrcamento);
         
 
