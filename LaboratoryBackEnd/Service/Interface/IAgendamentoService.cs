@@ -53,6 +53,11 @@ namespace LaboratoryBackEnd.Service.Interface
             , int unidadeId
             , int exameId);
 
+
+        Task<List<AgendamentoHorario>> GetNextItemsDatasGeradasDisponible(int convenioId
+            , int planoId
+            , int unidadeId
+            , int exameId);
         Task DeleteAgendamentoHorario(int id);
 
         Task DeleteAgendamentoHorarioGerado(int idCabecalho);

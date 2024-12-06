@@ -21,5 +21,8 @@ namespace LaboratoryBackEnd.Models
         [Column("orcamento_id")]
         public int? OrcamentoId { get; set; }
 
+        
+        [Column("data_pagamento")]
+        public DateTime? DataPagamento { get; set; }
     }
 }

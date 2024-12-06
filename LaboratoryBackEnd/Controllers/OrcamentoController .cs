@@ -18,11 +18,16 @@ namespace LaboratoryBackEnd.Controllers
     {
         private readonly ILoggerService _loggerService;
         private readonly IOrcamentoService _service;
+        private readonly IAgendamentoService _serviceAgendamento;
 
-        public OrcamentoController(ILoggerService loggerService, IOrcamentoService service)
+        public OrcamentoController(ILoggerService loggerService
+            , IOrcamentoService service
+            , IAgendamentoService serviceAgendamento
+            )
         {
             _loggerService = loggerService;
             _service = service;
+            _serviceAgendamento = serviceAgendamento;
         }
 
         [HttpGet]
@@ -153,6 +158,28 @@ namespace LaboratoryBackEnd.Controllers
             }
         }
 
+        [HttpGet("checkExamAgendamento/{idExame}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<bool>> CheckExamAgendamento(int idExame)
+        {
+
+            try
+            {
+                var item = await _service.CheckExameAgendamento(idExame);
+                if (item == null)
+                {
+                    return NotFound();
+                }
+
+                return item;
+            }
+            catch (Exception ex)
+            {
+                await _loggerService.LogError<int>(HttpContext.Request.Method, idExame, User, ex);
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         [HttpGet("validateCreatePedido/{idOrcamento}")]
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<string>> ValidateCreatePedido(int idOrcamento)
@@ -181,9 +208,38 @@ namespace LaboratoryBackEnd.Controllers
         {
             List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
             List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
+            bool isSchedulerOK = true;
+
             try
             {
                 await _service.Put(item.OrcamentoCabecalho);
+
+                //disponibilizar e validar as datas
+                foreach (var detalheDto in item.OrcamentoDetalhe)
+                {
+                    var agendamentoHorarioGerado = await _serviceAgendamento.GetHorarioGerado(detalheDto.HorarioId ?? 0);
+                    if (agendamentoHorarioGerado != null)
+                    {
+                        //novo agendamento e tem que ter o horário disponível
+                        if (detalheDto.ID == 0)
+                        {
+                            if (agendamentoHorarioGerado.Status.ToLower() != "disponível")
+                            {
+                                isSchedulerOK = false;
+                                break;
+                            }
+                        }
+                        if (agendamentoHorarioGerado != null)
+                        {
+                            agendamentoHorarioGerado.Status = "Disponível";
+                            await _serviceAgendamento.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                        }
+                    }
+                }
+                if (!isSchedulerOK)
+                {
+                    return StatusCode(500, $"Agendamento indisponível. Recarregue a agenda!");
+                }
 
                 await _service.DeleteDetalhe(item.OrcamentoCabecalho.ID);
                 await _service.DeletePagamento(item.OrcamentoCabecalho.ID);
@@ -192,6 +248,15 @@ namespace LaboratoryBackEnd.Controllers
                     detalhe.ID = 0;
                     var createdDetalhe = await _service.PostDetalhe(detalhe);
                     detalhesProcessados.Add(createdDetalhe);
+
+
+                    //setar o horario como agendado
+                    var agendamentoHorarioGerado = await _serviceAgendamento.GetHorarioGerado(detalhe.HorarioId ?? 0);
+                    if (agendamentoHorarioGerado != null)
+                    {
+                        agendamentoHorarioGerado.Status = "Utilizado";
+                        await _serviceAgendamento.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                    }
                 }
 
                 foreach (var pagamento in item.OrcamentoPagamento)
@@ -199,6 +264,7 @@ namespace LaboratoryBackEnd.Controllers
                     pagamento.ID = 0;
                     var createdPagamento = await _service.PostPagamento(pagamento);
                     pagamentosProcessados.Add(createdPagamento);
+
                 }
                 return NoContent();
             }
@@ -237,9 +303,29 @@ namespace LaboratoryBackEnd.Controllers
         {
             List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
             List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
+            bool isSchedulerOK = true;
 
             try
             {
+                //validar as datas
+                foreach (var detalheDto in item.OrcamentoDetalhe)
+                {
+                    var agendamentoHorarioGerado = await _serviceAgendamento.GetHorarioGerado(detalheDto.HorarioId ?? 0);
+                    if (agendamentoHorarioGerado != null)
+                    {
+                        //novo agendamento e tem que ter o horário disponível
+                        if (agendamentoHorarioGerado.Status.ToLower() != "disponível")
+                        {
+                            isSchedulerOK = false;
+                            break;
+                        }
+                    }
+                }
+                if (!isSchedulerOK)
+                {
+                    return StatusCode(500, $"Agendamento indisponível. Recarregue a agenda!");
+                }
+
                 var created = await _service.PostCabecalho(item.OrcamentoCabecalho);
                 if (created != null){
 
@@ -248,6 +334,13 @@ namespace LaboratoryBackEnd.Controllers
                         detalhe.OrcamentoId = created.ID;
                         var createdDetalhe = await _service.PostDetalhe(detalhe);
                         detalhesProcessados.Add(detalhe);
+
+                        var agendamentoHorarioGerado = await _serviceAgendamento.GetHorarioGerado(detalhe.HorarioId ?? 0);
+                        if (agendamentoHorarioGerado != null)
+                        {
+                            agendamentoHorarioGerado.Status = "Utilizado";
+                            await _serviceAgendamento.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
+                        }
                     }
 
                     foreach (var pagamento in item.OrcamentoPagamento)
