@@ -8,6 +8,7 @@ namespace LaboratoryBackEnd.Service.Interface
         Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoPedido(); 
         Task<OrcamentoCabecalho> GetItemCabecalho(int id);
         Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho);
+        Task<OrcamentoDetalhe> GetItemDetalhe(int idDetalhe);
         Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho);
 
         Task<List<Exame>> GetExamesList(int id);

@@ -26,5 +26,8 @@ namespace LaboratoryBackEnd.Models
         
         [Column("horario_id")]
         public int? HorarioId { get; set; }
+
+        [Column("status")]
+        public string? Status { get; set; }
     }
 }

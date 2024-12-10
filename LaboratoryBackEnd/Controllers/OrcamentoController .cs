@@ -209,6 +209,7 @@ namespace LaboratoryBackEnd.Controllers
             List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();
             List<OrcamentoPagamento> pagamentosProcessados = new List<OrcamentoPagamento>();
             bool isSchedulerOK = true;
+            bool isPedido = true;
 
             try
             {
@@ -235,6 +236,22 @@ namespace LaboratoryBackEnd.Controllers
                             await _serviceAgendamento.PutAgendamentoHorarioGerado(agendamentoHorarioGerado);
                         }
                     }
+
+                    string status = "Agendado";
+                    if (detalheDto.ID != 0)
+                    {
+                        var detalheFromBD = await _service.GetItemDetalhe(detalheDto.ID);
+                        status = detalheFromBD.Status;
+                        if (status.ToLower() == "agendado")
+                            isPedido = false;
+                    }
+
+                    var detalheIndex = item.OrcamentoDetalhe.FindIndex(x => x.ExameId == detalheDto.ExameId);
+                    if (detalheIndex >= 0)
+                    {
+                        item.OrcamentoDetalhe[detalheIndex].Status = status;
+                    }
+
                 }
                 if (!isSchedulerOK)
                 {
@@ -265,6 +282,12 @@ namespace LaboratoryBackEnd.Controllers
                     var createdPagamento = await _service.PostPagamento(pagamento);
                     pagamentosProcessados.Add(createdPagamento);
 
+                }
+
+                if (isPedido)
+                {
+                    item.OrcamentoCabecalho.Status = "2";
+                    await _service.Put(item.OrcamentoCabecalho);
                 }
                 return NoContent();
             }
@@ -332,6 +355,7 @@ namespace LaboratoryBackEnd.Controllers
                     foreach (var detalhe in item.OrcamentoDetalhe)
                     {
                         detalhe.OrcamentoId = created.ID;
+                        detalhe.Status = "Agendado";
                         var createdDetalhe = await _service.PostDetalhe(detalhe);
                         detalhesProcessados.Add(detalhe);
 
