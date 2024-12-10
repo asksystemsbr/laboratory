@@ -9,6 +9,7 @@ using LaboratoryBackEnd.Data.DTO;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Http.HttpResults;
 using AutoMapper;
+using Microsoft.IdentityModel.Logging;
 
 namespace LaboratoryBackEnd.Controllers
 {
@@ -18,13 +19,19 @@ namespace LaboratoryBackEnd.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly ILoggerService _loggerService;
-        private readonly IPedidoService _service; 
+        private readonly IPedidoService _service;
+        private readonly IOrcamentoService _serviceOrcamento;
         private readonly IMapper _mapper;
 
-        public PedidoController(ILoggerService loggerService, IPedidoService service, IMapper mapper)
+        public PedidoController(
+            ILoggerService loggerService,
+            IPedidoService service,
+            IOrcamentoService serviceOrcamento,
+            IMapper mapper)
         {
             _loggerService = loggerService;
             _service = service;
+            _serviceOrcamento = serviceOrcamento;
             _mapper = mapper;
         }
 
@@ -246,15 +253,25 @@ namespace LaboratoryBackEnd.Controllers
 
             try
             {
+                pedidoCompletoDto.PedidoCabecalho.OrcamentoId = item.OrcamentoCabecalho.ID;
+                pedidoCompletoDto.PedidoCabecalho.Status = "2";
                 var created = await _service.PostCabecalho(pedidoCompletoDto.PedidoCabecalho);
                 if (created != null){
-
+                    
                     foreach (var detalhe in pedidoCompletoDto.PedidoDetalhe)
                     {
                         detalhe.ID = 0;
                         detalhe.PedidoId = created.ID;
+                        detalhe.DataColeta = DateTime.Now;
                         var createdDetalhe = await _service.PostDetalhe(detalhe);
                         detalhesProcessados.Add(detalhe);
+                    }
+
+                    //atualizando os status
+                    foreach (var detalhe in item.OrcamentoDetalhe)
+                    {
+                        detalhe.Status = "Em OS";
+                        await _serviceOrcamento.PutDetalhe(detalhe);
                     }
 
                     foreach (var pagamento in pedidoCompletoDto.PedidoPagamento)

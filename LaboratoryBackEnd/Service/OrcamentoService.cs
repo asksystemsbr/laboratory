@@ -73,6 +73,11 @@ namespace LaboratoryBackEnd.Service
             return await _repositoryDetalhe.Query().Where(x=>x.OrcamentoId==idCabecacalho).ToListAsync();
         }
 
+        public async Task<OrcamentoDetalhe> GetItemDetalhe(int idDetalhe)
+        {
+            return await _repositoryDetalhe.GetItem(idDetalhe);
+        }
+
         public async Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho)
         {
             return await _repositoryPagamento.Query().Where(x => x.OrcamentoId == idCabecacalho).ToListAsync();
