@@ -39,6 +39,15 @@ namespace LaboratoryBackEnd.Controllers
             return Ok(items);
         }
 
+        [HttpGet("portal/{usuarioId}")]
+        [Authorize(Policy = "CanRead")]
+        public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItemsByPaciente(int usuarioId)
+        {
+            var items = await _service.GetItemsCabecalhoByPaciente(usuarioId);
+
+            return Ok(items);
+        }
+
         [HttpGet("getItemsPedido")]
         [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItemsPedido()
