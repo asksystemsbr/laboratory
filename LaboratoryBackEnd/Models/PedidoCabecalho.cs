@@ -68,5 +68,9 @@ namespace LaboratoryBackEnd.Models
 
         [Column("tipo_desconto")]
         public string? TipoDesconto { get; set; }
+
+
+        [Column("orcamento_id")]
+        public int? OrcamentoId { get; set; }
     }
 }

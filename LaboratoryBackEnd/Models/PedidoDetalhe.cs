@@ -23,5 +23,11 @@ namespace LaboratoryBackEnd.Models
 
         [Column("data_coleta")]
         public DateTime? DataColeta { get; set; }
+
+        [Column("horario_id")]
+        public int? HorarioId { get; set; }
+
+        [Column("status")]
+        public string? Status { get; set; }
     }
 }

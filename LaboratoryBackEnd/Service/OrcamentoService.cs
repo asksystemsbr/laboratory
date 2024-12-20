@@ -54,6 +54,15 @@ namespace LaboratoryBackEnd.Service
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoByPaciente(int usuarioId)
+        {
+            return await _repository
+                .Query()
+                .Where(x=>x.PacienteId==usuarioId)
+                .OrderBy(x => x.ID)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<OrcamentoCabecalho>> GetItemsCabecalhoPedido()
         {
             return await _repository
@@ -71,6 +80,11 @@ namespace LaboratoryBackEnd.Service
         public async Task<List<OrcamentoDetalhe>> GetItemsDetalhe(int idCabecacalho)
         {
             return await _repositoryDetalhe.Query().Where(x=>x.OrcamentoId==idCabecacalho).ToListAsync();
+        }
+
+        public async Task<OrcamentoDetalhe> GetItemDetalhe(int idDetalhe)
+        {
+            return await _repositoryDetalhe.GetItem(idDetalhe);
         }
 
         public async Task<List<OrcamentoPagamento>> GetItemsPagamentos(int idCabecacalho)

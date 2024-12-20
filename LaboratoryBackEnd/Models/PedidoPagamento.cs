@@ -21,5 +21,8 @@ namespace LaboratoryBackEnd.Models
         [Column("pedido_id")]
         public int? PedidoId { get; set; }
 
+        [Column("data_pagamento")]
+        public DateTime? DataPagamento { get; set; }
+
     }
 }
