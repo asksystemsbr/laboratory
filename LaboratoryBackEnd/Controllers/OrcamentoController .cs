@@ -40,7 +40,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("portal/{usuarioId}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<OrcamentoCabecalho>>> GetItemsByPaciente(int usuarioId)
         {
             var items = await _service.GetItemsCabecalhoByPaciente(usuarioId);
@@ -70,7 +70,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("getOrcamentoCompleto/{idCabecalho}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<OrcamentoCompletoDto>> GetItemCompleto(int idCabecalho)
         {
 
@@ -102,7 +102,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("getExamesList/{idCabecalho}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<List<Exame>>> GetExamesList(int idCabecalho)
         {
 
@@ -124,7 +124,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("getPagamentosList/{idCabecalho}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<List<FormaPagamento>>> GetPagamentosList(int idCabecalho)
         {
 
@@ -146,7 +146,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("checkDescontoPermission/{idUsuario}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<bool>> CheckDescontoPermission(int idUsuario)
         {
 
@@ -190,7 +190,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("validateCreatePedido/{idOrcamento}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<string>> ValidateCreatePedido(int idOrcamento)
         {
 
@@ -212,7 +212,7 @@ namespace LaboratoryBackEnd.Controllers
         }      
 
         [HttpPut()]
-        [Authorize(Policy = "CanWrite")]
+        //[Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> PutItem( OrcamentoCompletoDto item)
         {
             List<OrcamentoDetalhe> detalhesProcessados = new List<OrcamentoDetalhe>();

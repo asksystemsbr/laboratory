@@ -68,7 +68,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("getListByConvenioAndRecepcao/{id}/{recepcaoId}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<List<Plano>>> GetListByConvenioAndRecepcao(int id, int recepcaoId)
         {
             var item = await _service.GetListByConvenioAndRecepcao(id, recepcaoId);

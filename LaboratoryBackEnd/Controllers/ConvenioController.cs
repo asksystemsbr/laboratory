@@ -68,7 +68,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("getConvenioByRecepcao/{recepacaoId}")]
-        [Authorize(Policy = "CanRead")]
+        //[Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<Convenio>>> GetConvenioByRecepcao(int recepacaoId)
         {
             var item = await _service.GetConveniosByRecepcao(recepacaoId);
