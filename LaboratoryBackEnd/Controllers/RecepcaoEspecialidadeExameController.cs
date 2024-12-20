@@ -1,11 +1,15 @@
 ﻿using LaboratoryBackEnd.DTOs;
 using LaboratoryBackEnd.Models;
 using LaboratoryBackEnd.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LaboratoryBackEnd.Controllers
 {
+
     [Route("api/[controller]")]
+    [EnableCors("AllowSpecificOrigin")]
     [ApiController]
     public class RecepcaoEspecialidadeExameController : ControllerBase
     {
@@ -17,6 +21,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpGet("byRecepcao/{recepcaoId}")]
+        [Authorize(Policy = "CanRead")]
         public async Task<ActionResult<IEnumerable<RecepcaoEspecialidadeExameDto>>> GetEspecialidadesExamesByRecepcao(int recepcaoId)
         {
             var result = await _service.GetItemsByRecepcao(recepcaoId);
@@ -24,6 +29,7 @@ namespace LaboratoryBackEnd.Controllers
         }
 
         [HttpPost("addOrUpdate/{recepcaoId}")]
+        [Authorize(Policy = "CanWrite")]
         public async Task<IActionResult> AddOrUpdateEspecialidadesExames(int recepcaoId, [FromBody] List<RecepcaoEspecialidadeExame> especialidadesExames)
         {
             try
